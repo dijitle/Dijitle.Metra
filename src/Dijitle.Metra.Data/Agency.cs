@@ -15,6 +15,8 @@ namespace Dijitle.Metra.Data
         public string agency_phone { get; private set; }
         public string agency_fare_url { get; private set; }
 
+        public List<Routes> Routes { get; private set; }
+
         public Agency(string[] csv)
         {
             agency_id = csv[0].Trim();
@@ -24,6 +26,8 @@ namespace Dijitle.Metra.Data
             agency_lang = csv[4].Trim();
             agency_phone = csv[5].Trim();
             agency_fare_url = csv[6].Trim();
+
+            Routes = new List<Routes>();
         }
 
         public override string ToString()

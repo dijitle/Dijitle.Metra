@@ -33,6 +33,29 @@ namespace Dijitle.Metra.Data
             end_date = DateTime.ParseExact(csv[9].Trim(), "yyyyMMdd", CultureInfo.InvariantCulture);
         }
 
+        public bool IsDay(DayOfWeek day)
+        {
+            switch (day)
+            {
+                case DayOfWeek.Monday:
+                    return monday;
+                case DayOfWeek.Tuesday:
+                    return tuesday;
+                case DayOfWeek.Wednesday:
+                    return wednesday;
+                case DayOfWeek.Thursday:
+                    return thursday;
+                case DayOfWeek.Friday:
+                    return friday;
+                case DayOfWeek.Saturday:
+                    return saturday;
+                case DayOfWeek.Sunday:
+                    return sunday;
+                default:
+                    return false;
+            }
+        }
+
         public override string ToString()
         {
             return service_id;

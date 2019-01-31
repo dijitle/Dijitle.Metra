@@ -25,7 +25,7 @@ namespace Dijitle.Metra.Data
             contains_id = csv[4].Trim();
         }
 
-        public void LinkFair(IEnumerable<FareAttributes> fareAttributes)
+        public void LinkFare(IEnumerable<FareAttributes> fareAttributes)
         {
             foreach (FareAttributes f in fareAttributes)
             {

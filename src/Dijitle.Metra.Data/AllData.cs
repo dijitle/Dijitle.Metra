@@ -14,6 +14,9 @@ namespace Dijitle.Metra.Data
         public List<FareRules> _fareRules { get; set; } = new List<FareRules>();
         public List<Routes> _routes { get; set; } = new List<Routes>();
         public List<Shapes> _shapes { get; set; } = new List<Shapes>();
+        public List<StopTimes> _stopTimes { get; set; } = new List<StopTimes>();
+        public List<Stops> _stops { get; set; } = new List<Stops>();
+        public List<Trips> _trips { get; set; } = new List<Trips>();
 
 
         public AllData(string folderPath)
@@ -49,6 +52,15 @@ namespace Dijitle.Metra.Data
                         case "shapes":
                             _shapes.Add(new Shapes(line.Split(",")));
                             break;
+                        case "stop_times":
+                            _stopTimes.Add(new StopTimes(line.Split(",")));
+                            break;
+                        case "stops":
+                            _stops.Add(new Stops(line.Split(",")));
+                            break;
+                        case "trips":
+                            _trips.Add(new Trips(line.Split(",")));
+                            break;
                         default:
                             break;
                     }
@@ -62,12 +74,22 @@ namespace Dijitle.Metra.Data
             }
             foreach(FareRules fr in _fareRules)
             {
-                fr.LinkFair(_fareAttributes);
+                fr.LinkFare(_fareAttributes);
             }
 
             foreach(Routes r in _routes)
             {
                 r.LinkAgency(_agencies);
+            }
+
+            foreach (Trips t in _trips)
+            {
+                t.LinkRouteAndService(_routes, _calendars);
+            }
+
+            foreach (StopTimes st in _stopTimes)
+            {
+                st.LinkTripAndStop(_trips, _stops);
             }
         }
     }

@@ -18,6 +18,8 @@ namespace Dijitle.Metra.Data
         public string route_url {get; private set;}
 
         public Agency Agency { get; private set; }
+        public List<Trips> Trips { get; private set; }
+        public List<Stops> Stops { get; private set; }
 
         public Routes(string[] csv)
         {
@@ -30,6 +32,9 @@ namespace Dijitle.Metra.Data
             route_color = csv[6].Trim();
             route_text_color = csv[7].Trim();
             route_url = csv[8].Trim();
+
+            Trips = new List<Trips>();
+            Stops = new List<Stops>();
         }
 
         public void LinkAgency(IEnumerable<Agency> agencies)
@@ -39,6 +44,7 @@ namespace Dijitle.Metra.Data
                 if (a.agency_id == agency_id)
                 {
                     Agency = a;
+                    a.Routes.Add(this);
                     break;
                 }
             }
