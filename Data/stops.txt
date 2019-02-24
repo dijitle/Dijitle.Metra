@@ -99,11 +99,11 @@ HEALY, Healy, , 41.9247222, -87.7277778, B, https://metrarail.com/maps-schedules
 WESTERNAVE, Western Ave, , 41.8891667, -87.6880556, A, https://metrarail.com/maps-schedules/train-lines/MD-N/stations/WESTERNAVE, 1
 RAVINIAPK, Ravinia Park, , 42.1580556, -87.7769444, E, https://metrarail.com/maps-schedules/train-lines/UP-N/stations/RAVINIAPK, 1
 INDIANHILL, Indian Hill, , 42.0944444, -87.7238889, D, https://metrarail.com/maps-schedules/train-lines/UP-N/stations/INDIANHILL, 0
-KENOSHA, Kenosha, , 42.5858333, -87.8258333, K, https://metrarail.com/maps-schedules/train-lines/UP-N/stations/KENOSHA, 1
-HARVARD, Harvard, , 42.4197222, -88.6175000, M, https://metrarail.com/maps-schedules/train-lines/UP-NW/stations/HARVARD, 1
-WOODSTOCK, Woodstock, , 42.3169444, -88.4475000, K, https://metrarail.com/maps-schedules/train-lines/UP-NW/stations/WOODSTOCK, 1
+KENOSHA, Kenosha, , 42.5858333, -87.8258333, J, https://metrarail.com/maps-schedules/train-lines/UP-N/stations/KENOSHA, 1
+HARVARD, Harvard, , 42.4197222, -88.6175000, J, https://metrarail.com/maps-schedules/train-lines/UP-NW/stations/HARVARD, 1
+WOODSTOCK, Woodstock, , 42.3169444, -88.4475000, J, https://metrarail.com/maps-schedules/train-lines/UP-NW/stations/WOODSTOCK, 1
 CRYSTAL, Crystal Lake, , 42.2441667, -88.3172222, I, https://metrarail.com/maps-schedules/train-lines/UP-NW/stations/CRYSTAL, 1
-MCHENRY, McHenry, , 42.3433333, -88.2761111, K, https://metrarail.com/maps-schedules/train-lines/UP-NW/stations/MCHENRY, 1
+MCHENRY, McHenry, , 42.3433333, -88.2761111, J, https://metrarail.com/maps-schedules/train-lines/UP-NW/stations/MCHENRY, 1
 CARY, Cary, , 42.2088889, -88.2413889, H, https://metrarail.com/maps-schedules/train-lines/UP-NW/stations/CARY, 1
 FOXRG, Fox River Grove, , 42.1977778, -88.2194444, H, https://metrarail.com/maps-schedules/train-lines/UP-NW/stations/FOXRG, 1
 BARRINGTON, Barrington, , 42.1527778, -88.1319444, G, https://metrarail.com/maps-schedules/train-lines/UP-NW/stations/BARRINGTON, 1
@@ -143,7 +143,7 @@ MUNDELEIN, Mundelein, , 42.2669444, -87.9980556, H, https://metrarail.com/maps-s
 PRAIRCROSS, Prairie Crossing., , 42.3180556, -88.0172222, H, https://metrarail.com/maps-schedules/train-lines/MD-N/stations/PRAIRCROSS, 1
 ROUNDLKBCH, Round Lake Beach, , 42.3850000, -88.0655556, J, https://metrarail.com/maps-schedules/train-lines/NCS/stations/ROUNDLKBCH, 1
 LAKEVILLA, Lake Villa, , 42.4175000, -88.0794444, J, https://metrarail.com/maps-schedules/train-lines/NCS/stations/LAKEVILLA, 1
-ANTIOCH, Antioch, , 42.4811111, -88.0925000, K, https://metrarail.com/maps-schedules/train-lines/NCS/stations/ANTIOCH, 1
+ANTIOCH, Antioch, , 42.4811111, -88.0925000, J, https://metrarail.com/maps-schedules/train-lines/NCS/stations/ANTIOCH, 1
 NEWLENOX, New Lenox, , 41.5144444, -87.9652778, G, https://metrarail.com/maps-schedules/train-lines/RI/stations/NEWLENOX, 1
 MOKENA, Mokena, , 41.5308333, -87.8866667, F, https://metrarail.com/maps-schedules/train-lines/RI/stations/MOKENA, 1
 HICKORYCRK, Hickory Creek, , 41.5486111, -87.8455556, F, https://metrarail.com/maps-schedules/train-lines/RI/stations/HICKORYCRK, 1
@@ -187,8 +187,8 @@ MCCORMICK, McCormick Place, , 41.8513889, -87.6163889, A, https://metrarail.com/
 27TH-UP, 27th St., , 41.8441667, -87.6133333, A, https://metrarail.com/maps-schedules/train-lines/ME/stations/27TH-UP, 0
 75TH-UP, 75th St. (Grand Crossing), , 41.7588889, -87.5952778, B, https://metrarail.com/maps-schedules/train-lines/ME/stations/75TH-UP, 0
 79TH-UP, 79th St. (Chatham), , 41.7508333, -87.5972222, B, https://metrarail.com/maps-schedules/train-lines/ME/stations/79TH-UP, 1
-83RD-UP, 83rd St. (Avalon Park), , 41.7441667, -87.5986111, C, https://metrarail.com/maps-schedules/train-lines/ME/stations/83RD-UP, 0
-87TH-UP, 87th St. (Woodruff), , 41.7369444, -87.6002778, C, https://metrarail.com/maps-schedules/train-lines/ME/stations/87TH-UP, 0
+83RD-UP, 83rd St. (Avalon Park), , 41.7441667, -87.5986111, B, https://metrarail.com/maps-schedules/train-lines/ME/stations/83RD-UP, 0
+87TH-UP, 87th St. (Woodruff), , 41.7369444, -87.6002778, B, https://metrarail.com/maps-schedules/train-lines/ME/stations/87TH-UP, 0
 91ST-UP, 91st St., , 41.7294444, -87.6019444, C, https://metrarail.com/maps-schedules/train-lines/ME/stations/91ST-UP, 0
 95TH-UP, 95th St., , 41.7219444, -87.6038889, C, https://metrarail.com/maps-schedules/train-lines/ME/stations/95TH-UP, 0
 103RD-UP, 103rd St. (Rosemoor), , 41.7069444, -87.6072222, C, https://metrarail.com/maps-schedules/train-lines/ME/stations/103RD-UP, 0
@@ -210,7 +210,7 @@ WASHHGTS, 103rd St.-Washington Hts., , 41.7055556, -87.6558333, C, https://metra
 BRAINERD, Brainerd, , 41.7322222, -87.6588889, C, https://metrarail.com/maps-schedules/train-lines/RI/stations/BRAINERD, 1
 91ST-BEV, 91st St. - Beverly Hills, , 41.7280556, -87.6672222, C, https://metrarail.com/maps-schedules/train-lines/RI/stations/91ST-BEV, 1
 PRAIRIEST, Prairie St., , 41.6625000, -87.6750000, D, https://metrarail.com/maps-schedules/train-lines/RI/stations/PRAIRIEST, 0
-123RD-BEV, 123rd St., , 41.6700000, -87.6736111, D, https://metrarail.com/maps-schedules/train-lines/RI/stations/123RD-BEV, 0
+123RD-BEV, 123rd St., , 41.6700000, -87.6736111, C, https://metrarail.com/maps-schedules/train-lines/RI/stations/123RD-BEV, 0
 119TH-BEV, 119th St., , 41.6763889, -87.6725000, C, https://metrarail.com/maps-schedules/train-lines/RI/stations/119TH-BEV, 1
 115TH-BEV, 115th St. - Morgan Park, , 41.6850000, -87.6716667, C, https://metrarail.com/maps-schedules/train-lines/RI/stations/115TH-BEV, 1
 111TH-BEV, 111th St. - Morgan Park, , 41.6927778, -87.6705556, C, https://metrarail.com/maps-schedules/train-lines/RI/stations/111TH-BEV, 1
@@ -220,11 +220,11 @@ PRAIRIEST, Prairie St., , 41.6625000, -87.6750000, D, https://metrarail.com/maps
 95TH-BEV, 95th St. - Beverly Hills, , 41.7213889, -87.6672222, C, https://metrarail.com/maps-schedules/train-lines/RI/stations/95TH-BEV, 1
 BLUEISLAND, Blue Island, , 41.6561111, -87.6758333, D, https://metrarail.com/maps-schedules/train-lines/ME/stations/BLUEISLAND, 1
 BURROAK, Burr Oak, , 41.6622222, -87.6688889, D, https://metrarail.com/maps-schedules/train-lines/ME/stations/BURROAK, 0
-ASHLAND, Ashland, , 41.6694444, -87.6605556, D, https://metrarail.com/maps-schedules/train-lines/ME/stations/ASHLAND, 0
-RACINE, Racine, , 41.6741667, -87.6519444, D, https://metrarail.com/maps-schedules/train-lines/ME/stations/RACINE, 0
-WPULLMAN, West Pullman, , 41.6741667, -87.6422222, D, https://metrarail.com/maps-schedules/train-lines/ME/stations/WPULLMAN, 0
-STEWARTRID, Stewart Ridge, , 41.6744444, -87.6316667, D, https://metrarail.com/maps-schedules/train-lines/ME/stations/STEWARTRID, 0
-STATEST, State St., , 41.6744444, -87.6219444, D, https://metrarail.com/maps-schedules/train-lines/ME/stations/STATEST, 0
+ASHLAND, Ashland, , 41.6694444, -87.6605556, C, https://metrarail.com/maps-schedules/train-lines/ME/stations/ASHLAND, 0
+RACINE, Racine, , 41.6741667, -87.6519444, C, https://metrarail.com/maps-schedules/train-lines/ME/stations/RACINE, 0
+WPULLMAN, West Pullman, , 41.6741667, -87.6422222, C, https://metrarail.com/maps-schedules/train-lines/ME/stations/WPULLMAN, 0
+STEWARTRID, Stewart Ridge, , 41.6744444, -87.6316667, C, https://metrarail.com/maps-schedules/train-lines/ME/stations/STEWARTRID, 0
+STATEST, State St., , 41.6744444, -87.6219444, C, https://metrarail.com/maps-schedules/train-lines/ME/stations/STATEST, 0
 SCHILLERPK, Schiller Park, , 41.9627778, -87.8705556, C, https://metrarail.com/maps-schedules/train-lines/NCS/stations/SCHILLERPK, 1
 PALOSHTS, Palos Heights, , 41.6819444, -87.8069444, D, https://metrarail.com/maps-schedules/train-lines/SWS/stations/PALOSHTS, 1
 PINGREE, Pingree Road, , 42.2341667, -88.2980556, I, https://metrarail.com/maps-schedules/train-lines/UP-NW/stations/PINGREE, 1

@@ -29,7 +29,7 @@ namespace Dijitle.Metra.API
 
             AllData data = new Data.AllData(@"X:\SourceCode\Dijitle.Metra\data");
             
-            DateTime selectedDate = DateTime.Now;
+            DateTime selectedDate = DateTime.Now.AddDays(1);
             string selectedRoute = "BNSF";
             string selectedOrigin = "CUS";
             string selectedDestination = "ROUTE59";
