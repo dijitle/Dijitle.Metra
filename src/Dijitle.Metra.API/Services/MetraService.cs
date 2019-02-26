@@ -10,14 +10,14 @@ namespace Dijitle.Metra.API.Services
 {
     public class MetraService : IMetraService
     {
-        private AllData _data;
+        private AllData _data = null;
 
         public MetraService()
         {
             _data = new AllData(@"X:\SourceCode\Dijitle.Metra\data");
         }
 
-        public IEnumerable<Route> GetRoutes()
+        public async Task<IEnumerable<Route>> GetRoutes()
         {
             List<Route> routes = new List<Route>();
 
@@ -33,7 +33,7 @@ namespace Dijitle.Metra.API.Services
             return routes;
         }
 
-        public IEnumerable<Time> GetTimes(string origin, string destination, bool expressOnly)
+        public async Task<IEnumerable<Time>> GetTimes(string origin, string destination, bool expressOnly)
         {
             DateTime selectedDate = DateTime.Now;
 
@@ -81,7 +81,7 @@ namespace Dijitle.Metra.API.Services
             return times;
         }
 
-        public IEnumerable<Stop> GetStops(decimal lat, decimal lon, int milesAway)
+        public async Task<IEnumerable<Stop>> GetStops(decimal lat, decimal lon, int milesAway)
         {
             List<Stop> stops = new List<Stop>();
 

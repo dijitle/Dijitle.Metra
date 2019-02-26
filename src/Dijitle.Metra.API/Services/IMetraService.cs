@@ -10,8 +10,8 @@ namespace Dijitle.Metra.API.Services
 {
     public interface IMetraService
     {
-        IEnumerable<Route> GetRoutes();
-        IEnumerable<Time> GetTimes(string origin, string destination, bool expressOnly);
-        IEnumerable<Stop> GetStops(decimal lat, decimal lon, int milesAway);
+        Task<IEnumerable<Route>> GetRoutes();
+        Task<IEnumerable<Time>> GetTimes(string origin, string destination, bool expressOnly);
+        Task<IEnumerable<Stop>> GetStops(decimal lat, decimal lon, int milesAway);
     }
 }

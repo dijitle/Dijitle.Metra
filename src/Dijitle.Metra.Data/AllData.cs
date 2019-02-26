@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Dijitle.Metra.Data
 {
@@ -21,7 +22,7 @@ namespace Dijitle.Metra.Data
 
         public AllData(string folderPath)
         {
-            foreach (string file in Directory.GetFiles(folderPath, "*.txt", SearchOption.TopDirectoryOnly))
+            Parallel.ForEach(Directory.GetFiles(folderPath, "*.txt", SearchOption.TopDirectoryOnly), file =>
             {
                 List<string> lines = File.ReadAllLines(file).ToList();
 
@@ -64,20 +65,19 @@ namespace Dijitle.Metra.Data
                         default:
                             break;
                     }
-
                 }
-            }
+            });
 
-            foreach(CalendarDate cd in _calendarDates)
+            foreach (CalendarDate cd in _calendarDates)
             {
                 cd.LinkCalendar(_calendars);
             }
-            foreach(FareRules fr in _fareRules)
+            foreach (FareRules fr in _fareRules)
             {
                 fr.LinkFare(_fareAttributes);
             }
 
-            foreach(Routes r in _routes)
+            foreach (Routes r in _routes)
             {
                 r.LinkAgency(_agencies);
             }
@@ -101,6 +101,17 @@ namespace Dijitle.Metra.Data
         public IEnumerable<Calendar> GetCurrentCalendars(DateTime date)
         {
             return _calendars.Where(c => c.start_date < date && c.end_date.AddDays(1) >= date && c.IsDay(date.DayOfWeek) == true);
+        }
+
+        private void GetItems<IMetraData>(IEnumerable<string> lines)
+        {
+            List<IMetraData> items = new List<IMetraData>();
+
+            foreach (string line in lines)
+            {
+               //items.Add(new IMetraData(line.Split(",")));
+            }
+
         }
     }
 }

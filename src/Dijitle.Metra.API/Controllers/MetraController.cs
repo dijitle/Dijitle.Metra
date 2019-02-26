@@ -22,21 +22,21 @@ namespace Dijitle.Metra.API.Controllers
         [Route("Routes")]
         public async Task<IActionResult> GetLines()
         {
-            return Ok(_metra.GetRoutes());
+            return Ok(await _metra.GetRoutes());
         }
 
         [HttpGet()]
         [Route("Times")]
         public async Task<IActionResult> GetTimes(string start = "ROUTE59", string dest = "CUS", bool expressOnly = false)
         {
-            return Ok(_metra.GetTimes(start, dest, expressOnly));
+            return Ok(await _metra.GetTimes(start, dest, expressOnly));
         }
 
         [HttpGet()]
         [Route("Stops")]
         public async Task<IActionResult> GetStops(decimal lat = 41.769649m, decimal lon = -88.215297m, int distance = 5)
         {
-            return Ok(_metra.GetStops(lat, lon, distance));
+            return Ok(await _metra.GetStops(lat, lon, distance));
         }
 
     }
