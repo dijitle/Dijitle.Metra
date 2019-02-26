@@ -24,10 +24,12 @@
     <PackageReference Include="Microsoft.AspNetCore.App" />
     <PackageReference Include="Microsoft.AspNetCore.Razor.Design" Version="2.2.0" PrivateAssets="All" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.2.0" />
+    <PackageReference Include="Newtonsoft.Json" Version="12.0.1" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="4.0.1" />
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Dijitle.Metra.API.Models\Dijitle.Metra.API.Models.csproj" />
     <ProjectReference Include="..\Dijitle.Metra.Data\Dijitle.Metra.Data.csproj" />
   </ItemGroup>
 

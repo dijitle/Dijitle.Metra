@@ -92,5 +92,15 @@ namespace Dijitle.Metra.Data
                 st.LinkTripAndStop(_trips, _stops);
             }
         }
+
+        public Stops FindStop(string id)
+        {
+            return _stops.SingleOrDefault(s => s.stop_id == id);
+        }
+
+        public IEnumerable<Calendar> GetCurrentCalendars(DateTime date)
+        {
+            return _calendars.Where(c => c.start_date < date && c.end_date.AddDays(1) >= date && c.IsDay(date.DayOfWeek) == true);
+        }
     }
 }

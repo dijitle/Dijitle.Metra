@@ -65,7 +65,7 @@ namespace Dijitle.Metra.Data
                 if (t.trip_id == trip_id)
                 {
                     Trip = t;
-                    t.StopTimes.Add(this);                    
+                    t.StopTimes.Add(this);
                     break;
                 }
             }

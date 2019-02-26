@@ -3,9 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.28307.329
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dijitle.Metra.API", "src\Dijitle.Metra.API\Dijitle.Metra.API.csproj", "{4496B4F8-6696-465E-9A9E-BDC3F55E5BE1}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Dijitle.Metra.API", "src\Dijitle.Metra.API\Dijitle.Metra.API.csproj", "{4496B4F8-6696-465E-9A9E-BDC3F55E5BE1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dijitle.Metra.Data", "src\Dijitle.Metra.Data\Dijitle.Metra.Data.csproj", "{09AC3CEC-AFEC-47DA-A774-19903393ED7D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Dijitle.Metra.Data", "src\Dijitle.Metra.Data\Dijitle.Metra.Data.csproj", "{09AC3CEC-AFEC-47DA-A774-19903393ED7D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dijitle.Metra.API.Models", "src\Dijitle.Metra.API.Models\Dijitle.Metra.API.Models.csproj", "{B7BC3997-9C66-43B0-8BE3-7B1469D2D9C3}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +23,10 @@ Global
 		{09AC3CEC-AFEC-47DA-A774-19903393ED7D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{09AC3CEC-AFEC-47DA-A774-19903393ED7D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{09AC3CEC-AFEC-47DA-A774-19903393ED7D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B7BC3997-9C66-43B0-8BE3-7B1469D2D9C3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B7BC3997-9C66-43B0-8BE3-7B1469D2D9C3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B7BC3997-9C66-43B0-8BE3-7B1469D2D9C3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B7BC3997-9C66-43B0-8BE3-7B1469D2D9C3}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

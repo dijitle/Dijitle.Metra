@@ -12,6 +12,7 @@ using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Swagger;
 using System.Reflection;
 using System.IO;
+using Dijitle.Metra.API.Services;
 
 namespace Dijitle.Metra.API
 {
@@ -30,7 +31,7 @@ namespace Dijitle.Metra.API
                 c.IncludeXmlComments(xmlPath);
             });
 
-
+            services.AddSingleton<IMetraService, MetraService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
