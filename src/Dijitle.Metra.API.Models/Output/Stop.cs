@@ -16,5 +16,8 @@ namespace Dijitle.Metra.API.Models.Output
 
         [JsonProperty("Longitude")]
         public decimal stop_lon { get; set; }
+
+        [JsonProperty("DistanceAway")]
+        public decimal DistanceAway { get; set; }
     }
 }

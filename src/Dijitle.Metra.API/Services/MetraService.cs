@@ -80,5 +80,49 @@ namespace Dijitle.Metra.API.Services
 
             return times;
         }
+
+        public IEnumerable<Stop> GetStops(decimal lat, decimal lon, int milesAway)
+        {
+            List<Stop> stops = new List<Stop>();
+
+            foreach(Stops s in _data._stops)
+            {
+                stops.Add(new Stop()
+                {
+                    stop_id = s.stop_id,
+                    stop_name = s.stop_name,
+                    stop_lat = s.stop_lat,
+                    stop_lon = s.stop_lon,
+                    DistanceAway = GetDistance(lat, lon, s.stop_lat, s.stop_lon)
+                });
+            }
+
+            return stops.Where(s => s.DistanceAway < milesAway).OrderBy(s => s.DistanceAway);
+        }
+
+        private decimal GetDistance(decimal startLat, decimal startLon, decimal destLat, decimal destLon)
+        {
+            const int EARTH_RADIUS = 3959;
+
+            double startLatRadians = GetRadians((double)startLat);
+            double destLatRadians = GetRadians((double)destLat);
+            double deltaLatRadians = GetRadians((double)(destLat - startLat));
+            double detlaLonRadians = GetRadians((double)(destLon - startLon));
+
+            double a = Math.Sin(deltaLatRadians / 2) * 
+                       Math.Sin(deltaLatRadians / 2) + 
+                       Math.Cos(startLatRadians) * 
+                       Math.Cos(destLatRadians) * 
+                       Math.Sin(detlaLonRadians / 2) * 
+                       Math.Sin(detlaLonRadians / 2);
+
+            double c = 2 * Math.Atan2(Math.Sqrt(a), Math.Sqrt(1 - a));
+            return (decimal)(EARTH_RADIUS * c);
+        }
+
+        private double GetRadians(double degrees)
+        {
+            return degrees * Math.PI / 180;
+        }
     }
 }

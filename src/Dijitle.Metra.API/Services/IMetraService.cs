@@ -12,5 +12,6 @@ namespace Dijitle.Metra.API.Services
     {
         IEnumerable<Route> GetRoutes();
         IEnumerable<Time> GetTimes(string origin, string destination, bool expressOnly);
+        IEnumerable<Stop> GetStops(decimal lat, decimal lon, int milesAway);
     }
 }

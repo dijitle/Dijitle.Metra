@@ -32,5 +32,12 @@ namespace Dijitle.Metra.API.Controllers
             return Ok(_metra.GetTimes(start, dest, expressOnly));
         }
 
+        [HttpGet()]
+        [Route("Stops")]
+        public async Task<IActionResult> GetStops(decimal lat = 41.769649m, decimal lon = -88.215297m, int distance = 5)
+        {
+            return Ok(_metra.GetStops(lat, lon, distance));
+        }
+
     }
 }
