@@ -32,6 +32,7 @@ namespace Dijitle.Metra.API
             });
 
             services.AddSingleton<IMetraService, MetraService>();
+            services.AddSingleton<IGTFSService, GTFSService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

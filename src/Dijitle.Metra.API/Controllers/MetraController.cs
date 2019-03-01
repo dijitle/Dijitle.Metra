@@ -12,10 +12,12 @@ namespace Dijitle.Metra.API.Controllers
     public class MetraController : Controller
     {
         private IMetraService _metra;
+        private IGTFSService _gtfs;
 
-        public MetraController(IMetraService metra)
+        public MetraController(IMetraService metra, IGTFSService gtfs)
         {
             _metra = metra;
+            _gtfs = gtfs;
         }
 
         [HttpGet()]
@@ -37,6 +39,13 @@ namespace Dijitle.Metra.API.Controllers
         public async Task<IActionResult> GetStops(decimal lat = 41.769649m, decimal lon = -88.215297m, int distance = 5)
         {
             return Ok(await _metra.GetStops(lat, lon, distance));
+        }
+
+        [HttpGet()]
+        [Route("Positions")]
+        public async Task<IActionResult> GetPositions()
+        {
+            return Ok(await _gtfs.GetPositions());
         }
 
     }
