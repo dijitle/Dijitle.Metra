@@ -28,44 +28,73 @@ namespace Dijitle.Metra.Data
 
                 lines.RemoveAt(0); //remove header row
 
-                foreach (string line in lines)
+
+                switch (Path.GetFileNameWithoutExtension(file))
                 {
-                    switch (Path.GetFileNameWithoutExtension(file))
-                    {
-                        case "agency":
+                    case "agency":
+                        foreach (string line in lines)
+                        {
                             _agencies.Add(new Agency(line.Split(",")));
-                            break;
-                        case "calendar":
+                        }
+                        break;
+                    case "calendar":
+                        foreach (string line in lines)
+                        {
                             _calendars.Add(new Calendar(line.Split(",")));
-                            break;
-                        case "calendar_dates":
+                        }
+                        break;
+                    case "calendar_dates":
+                        foreach (string line in lines)
+                        {
                             _calendarDates.Add(new CalendarDate(line.Split(",")));
-                            break;
-                        case "fare_attributes":
+                        }
+                        break;
+                    case "fare_attributes":
+                        foreach (string line in lines)
+                        {
                             _fareAttributes.Add(new FareAttributes(line.Split(",")));
-                            break;
-                        case "fare_rules":
+                        }
+                        break;
+                    case "fare_rules":
+                        foreach (string line in lines)
+                        {
                             _fareRules.Add(new FareRules(line.Split(",")));
-                            break;
-                        case "routes":
+                        }
+                        break;
+                    case "routes":
+                        foreach (string line in lines)
+                        {
                             _routes.Add(new Routes(line.Split(",")));
-                            break;
-                        case "shapes":
+                        }
+                        break;
+                    case "shapes":
+                        foreach (string line in lines)
+                        {
                             _shapes.Add(new Shapes(line.Split(",")));
-                            break;
-                        case "stop_times":
+                        }
+                        break;
+                    case "stop_times":
+                        foreach (string line in lines)
+                        {
                             _stopTimes.Add(new StopTimes(line.Split(",")));
-                            break;
-                        case "stops":
+                        }
+                        break;
+                    case "stops":
+                        foreach (string line in lines)
+                        {
                             _stops.Add(new Stops(line.Split(",")));
-                            break;
-                        case "trips":
+                        }
+                        break;
+                    case "trips":
+                        foreach (string line in lines)
+                        {
                             _trips.Add(new Trips(line.Split(",")));
-                            break;
-                        default:
-                            break;
-                    }
+                        }
+                        break;
+                    default:
+                        break;
                 }
+
             });
 
             foreach (CalendarDate cd in _calendarDates)
@@ -109,7 +138,7 @@ namespace Dijitle.Metra.Data
 
             foreach (string line in lines)
             {
-               //items.Add(new IMetraData(line.Split(",")));
+                //items.Add(new IMetraData(line.Split(",")));
             }
 
         }
