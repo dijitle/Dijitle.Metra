@@ -57,10 +57,7 @@ namespace Dijitle.Metra.Data
         {
             int indexOrigin = StopTimes.OrderBy(st => st.stop_sequence).ToList().IndexOf(origin);
             int indexDestination = StopTimes.OrderBy(st => st.stop_sequence).ToList().IndexOf(destination);
-
-            
-
-            return indexDestination - indexOrigin < 4;
+            return indexDestination - indexOrigin < StopTimes.OrderBy(st => st.stop_sequence).LastOrDefault().stop_sequence / 2;
         }
     }
 }

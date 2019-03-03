@@ -51,7 +51,8 @@ namespace Dijitle.Metra.API.Services
                 IEnumerable<Trips> ts = r.Trips.Where(t => currentCalendars.Contains(t.Calendar));
                 ts = ts.Where(t => t.StopTimes.Any(st => st.Stop == originStop));
                 ts = ts.Where(t => t.StopTimes.Any(st => st.Stop == destinationStop));
-                ts = ts.Where(t => t.StopTimes.Single(st => st.Stop == originStop).stop_sequence < t.StopTimes.Single(st => st.Stop == destinationStop).stop_sequence).OrderBy(t => t.StopTimes.Single(st => st.Stop == originStop).departure_time);
+                ts = ts.Where(t => t.StopTimes.Single(st => st.Stop == originStop).stop_sequence < t.StopTimes.Single(st => st.Stop == destinationStop).stop_sequence);
+                ts = ts.OrderBy(t => t.StopTimes.Single(st => st.Stop == originStop).departure_time);
 
                 foreach (Trips t in ts)
                 {
