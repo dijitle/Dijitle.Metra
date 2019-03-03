@@ -5,9 +5,9 @@ EXPOSE 80
 FROM microsoft/dotnet:2.2-sdk AS build
 
 COPY ["src/Dijitle.Metra.API/Dijitle.Metra.API.csproj", "src/Dijitle.Metra.API/"]
-COPY ["src/Dijitle.Metra.Data/Dijitle.Metra.Data.csproj", "src/Dijitle.Metra.Data/"]
-
 RUN dotnet restore "src/Dijitle.Metra.API/Dijitle.Metra.API.csproj"
+
+COPY ["src/Dijitle.Metra.Data/Dijitle.Metra.Data.csproj", "src/Dijitle.Metra.Data/"]
 RUN dotnet restore "src/Dijitle.Metra.Data/Dijitle.Metra.Data.csproj"
 
 COPY . .

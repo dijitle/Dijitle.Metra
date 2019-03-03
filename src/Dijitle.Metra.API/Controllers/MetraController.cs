@@ -48,5 +48,13 @@ namespace Dijitle.Metra.API.Controllers
             return Ok(await _gtfs.GetPositions());
         }
 
+        [HttpGet()]
+        [Route("Data")]
+        public async Task<IActionResult> GetData()
+        {
+            await _gtfs.RefreshData();
+            return NoContent();
+        }
+
     }
 }

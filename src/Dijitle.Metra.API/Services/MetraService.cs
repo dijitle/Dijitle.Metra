@@ -10,18 +10,18 @@ namespace Dijitle.Metra.API.Services
 {
     public class MetraService : IMetraService
     {
-        private AllData _data = null;
+        private readonly IGTFSService _gtfs;
 
-        public MetraService()
+        public MetraService(IGTFSService gtfs)
         {
-            _data = new AllData(@"X:\SourceCode\Dijitle.Metra\data");
+            _gtfs = gtfs;
         }
 
         public async Task<IEnumerable<Route>> GetRoutes()
         {
             List<Route> routes = new List<Route>();
 
-            foreach(Routes r in _data._routes)
+            foreach(Routes r in _gtfs.Data.Routes)
             {
                 routes.Add(new Route()
                 {
@@ -37,15 +37,14 @@ namespace Dijitle.Metra.API.Services
         {
             DateTime selectedDate = DateTime.Now;
 
-            Stops originStop = _data.FindStop(origin);
-            Stops destinationStop = _data.FindStop(destination);
+            Stops originStop = _gtfs.Data.FindStop(origin);
+            Stops destinationStop = _gtfs.Data.FindStop(destination);
 
             List<Time> times = new List<Time>();
 
-            IEnumerable<Routes> routes = _data._routes.Where(r => r.Stops.Contains(originStop) && r.Stops.Contains(destinationStop));
+            IEnumerable<Routes> routes = _gtfs.Data.Routes.Where(r => r.Stops.Contains(originStop) && r.Stops.Contains(destinationStop));
 
-            IEnumerable<Calendar> currentCalendars = _data._calendars.Where(c => c.start_date < selectedDate && c.end_date.AddDays(1) >= selectedDate && c.IsDay(selectedDate.DayOfWeek) == true);
-
+            IEnumerable<Calendar> currentCalendars = _gtfs.Data.GetCurrentCalendars(selectedDate);
             
             foreach(Routes r in routes)
             {
@@ -85,7 +84,7 @@ namespace Dijitle.Metra.API.Services
         {
             List<Stop> stops = new List<Stop>();
 
-            foreach(Stops s in _data._stops)
+            foreach(Stops s in _gtfs.Data.Stops)
             {
                 stops.Add(new Stop()
                 {
