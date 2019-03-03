@@ -5,30 +5,30 @@ namespace Dijitle.Metra.API.Models.Output
 {
     public class Time
     {
-        [JsonProperty("Id")]
-        public string trip_id { get; set; }
+        [JsonProperty("id")]
+        public string Id { get; set; }
 
-        [JsonProperty("ArrivalTimeAtDestination")]
-        public DateTime arrival_time { get; set; }
+        [JsonProperty("arrivalTimeAtDestination")]
+        public DateTime ArrivalTime { get; set; }
 
-        [JsonProperty("DepartureTimeAtOrgin")]
-        public DateTime departure_time { get; set; }
+        [JsonProperty("departureTimeAtOrgin")]
+        public DateTime DepartureTime { get; set; }
 
-        [JsonProperty("IsExpress")]
+        [JsonProperty("isExpress")]
         public bool IsExpress { get; set; }
 
-        [JsonProperty("StopsIn")]
+        [JsonProperty("stopsIn")]
         public int StopsIn { get; set; }
 
-        [JsonProperty("StopsUntil")]
+        [JsonProperty("stopsUntil")]
         public int StopsUntil { get; set; }
 
-        [JsonProperty("Minutes")]
+        [JsonProperty("minutes")]
         public int Minutes
         {
             get
             {
-                TimeSpan ts = new TimeSpan(arrival_time.Ticks - departure_time.Ticks);
+                TimeSpan ts = new TimeSpan(ArrivalTime.Ticks - DepartureTime.Ticks);
                 return (int)Math.Ceiling(ts.TotalMinutes);
             }
         }

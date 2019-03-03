@@ -25,21 +25,19 @@ namespace Dijitle.Metra.API.Services
             {
                 routes.Add(new Route()
                 {
-                    route_id = r.route_id,
-                    route_long_name = r.route_long_name
+                    Id = r.route_id,
+                    ShortName = r.route_short_name,
+                    LongName = r.route_long_name
                 });
             }
 
             return routes;
         }
 
-        public async Task<IEnumerable<Time>> GetTimes(string origin, string destination, bool expressOnly)
+        public async Task<IEnumerable<Time>> GetTimes(Stops originStop, Stops destinationStop, bool expressOnly)
         {
             DateTime selectedDate = DateTime.Now;
-
-            Stops originStop = _gtfs.Data.Stops[origin];
-            Stops destinationStop = _gtfs.Data.Stops[destination];
-
+            
             List<Time> times = new List<Time>();
 
             IEnumerable<Routes> routes = _gtfs.Data.Routes.Values.Where(r => r.Stops.Contains(originStop) && r.Stops.Contains(destinationStop));
@@ -69,9 +67,9 @@ namespace Dijitle.Metra.API.Services
                     {
                         times.Add(new Time
                         {
-                            trip_id = t.trip_id,
-                            arrival_time = destinationStopTime.departure_time,
-                            departure_time = originStopTime.arrival_time,
+                            Id = t.trip_id,
+                            ArrivalTime = destinationStopTime.departure_time,
+                            DepartureTime = originStopTime.arrival_time,
                             IsExpress = t.IsExpress(originStopTime, destinationStopTime),
                             StopsIn = indexOrigin,
                             StopsUntil = indexDestination - indexOrigin - 1
@@ -91,15 +89,45 @@ namespace Dijitle.Metra.API.Services
             {
                 stops.Add(new Stop()
                 {
-                    stop_id = s.stop_id,
-                    stop_name = s.stop_name,
-                    stop_lat = s.stop_lat,
-                    stop_lon = s.stop_lon,
+                    Id = s.stop_id,
+                    Name = s.stop_name,
+                    Lat = s.stop_lat,
+                    Lon = s.stop_lon,
                     DistanceAway = GetDistance(lat, lon, s.stop_lat, s.stop_lon)
                 });
             }
 
             return stops.Where(s => s.DistanceAway < milesAway).OrderBy(s => s.DistanceAway);
+        }
+
+        public async Task<IEnumerable<Shape>> GetShapes(Routes route)
+        {
+            List<Shape> shapes = new List<Shape>();
+
+            foreach (var skvp in route.Shapes)
+            {
+                Shape s = new Shape()
+                {
+                    Id = skvp.Key,
+                    Color = route.route_color,
+                    TextColor = route.route_text_color,
+                    Points = new List<ShapePoint>()
+                };
+
+                foreach (Shapes shape in skvp.Value)
+                {
+                    s.Points.Add(new ShapePoint()
+                    {
+                        Lat = shape.shape_pt_lat,
+                        Lon = shape.shape_pt_lon,
+                        Sequence = shape.shape_pt_sequence
+                    });
+                }
+
+                shapes.Add(s);
+            }
+
+            return shapes;
         }
 
         private decimal GetDistance(decimal startLat, decimal startLon, decimal destLat, decimal destLon)
