@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using System.IO;
+using System.Linq;
 
 namespace Dijitle.Metra.Data
 {
@@ -22,7 +23,7 @@ namespace Dijitle.Metra.Data
 
         public override string ToString()
         {
-            return shape_id;
+            return shape_pt_sequence.ToString();
         }
     }
 }

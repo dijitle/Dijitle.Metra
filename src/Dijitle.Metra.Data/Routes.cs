@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using System.IO;
+using System.Linq;
 
 namespace Dijitle.Metra.Data
 {
@@ -20,6 +21,7 @@ namespace Dijitle.Metra.Data
         public Agency Agency { get; private set; }
         public List<Trips> Trips { get; private set; }
         public List<Stops> Stops { get; private set; }
+        public Dictionary<string, List<Shapes>> Shapes { get; private set; }
 
         public Routes(string[] csv)
         {
@@ -35,13 +37,21 @@ namespace Dijitle.Metra.Data
 
             Trips = new List<Trips>();
             Stops = new List<Stops>();
+            Shapes = new Dictionary<string, List<Shapes>>();
         }
 
-        public void Link(IDictionary<string, Agency> agencies)
+        public void Link(IDictionary<string, Agency> agencies,IDictionary<string, List<Shapes>> shapes)
         {
-            Agency a = agencies[agency_id];
-            Agency = a;
-            a.Routes.Add(this);
+            Agency = agencies[agency_id];
+            Agency.Routes.Add(this);
+
+            foreach (var kvp in shapes)
+            {
+                if(kvp.Key.Split("_").FirstOrDefault() == route_id)
+                {
+                    Shapes.Add(kvp.Key, kvp.Value);
+                }
+            }
         }
 
         public override string ToString()

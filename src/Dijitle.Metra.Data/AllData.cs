@@ -47,7 +47,7 @@ namespace Dijitle.Metra.Data
 
             foreach (Routes r in Routes.Values)
             {
-                r.Link(Agencies);
+                r.Link(Agencies, Shapes);
             }
 
             foreach (Trips t in Trips.Values)
