@@ -43,26 +43,14 @@ namespace Dijitle.Metra.Data
             return trip_id;
         }
 
-        public void LinkRouteAndService(IEnumerable<Routes> routes, IEnumerable<Calendar> calendars)
+        public void LinkRouteAndService(IDictionary<string, Routes> routes, IDictionary<string, Calendar> calendars)
         {
-            foreach (Routes r in routes)
-            {
-                if (r.route_id == route_id)
-                {
-                    Route = r;
-                    r.Trips.Add(this);
-                    break;
-                }
-            }
+            Routes r = routes[route_id];
+            Route = r;
+            r.Trips.Add(this);
 
-            foreach (Calendar c in calendars)
-            {
-                if (c.service_id == service_id)
-                {
-                    Calendar = c;
-                    break;
-                }
-            }
+            Calendar c = calendars[service_id];
+            Calendar = c;
         }
 
         public bool IsExpress(StopTimes origin, StopTimes destination)

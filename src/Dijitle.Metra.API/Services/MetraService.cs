@@ -21,7 +21,7 @@ namespace Dijitle.Metra.API.Services
         {
             List<Route> routes = new List<Route>();
 
-            foreach(Routes r in _gtfs.Data.Routes)
+            foreach(Routes r in _gtfs.Data.Routes.Values)
             {
                 routes.Add(new Route()
                 {
@@ -37,21 +37,23 @@ namespace Dijitle.Metra.API.Services
         {
             DateTime selectedDate = DateTime.Now;
 
-            Stops originStop = _gtfs.Data.FindStop(origin);
-            Stops destinationStop = _gtfs.Data.FindStop(destination);
+            Stops originStop = _gtfs.Data.Stops[origin];
+            Stops destinationStop = _gtfs.Data.Stops[destination];
 
             List<Time> times = new List<Time>();
 
-            IEnumerable<Routes> routes = _gtfs.Data.Routes.Where(r => r.Stops.Contains(originStop) && r.Stops.Contains(destinationStop));
+            IEnumerable<Routes> routes = _gtfs.Data.Routes.Values.Where(r => r.Stops.Contains(originStop) && r.Stops.Contains(destinationStop));
 
             IEnumerable<Calendar> currentCalendars = _gtfs.Data.GetCurrentCalendars(selectedDate);
             
             foreach(Routes r in routes)
             {
-                foreach (Trips t in r.Trips.Where(t => currentCalendars.Contains(t.Calendar) && 
-                                                           t.StopTimes.Any(st => st.Stop == originStop) && 
-                                                           t.StopTimes.Any(st => st.Stop == destinationStop) && 
-                                                           t.StopTimes.Single(st => st.Stop == originStop).stop_sequence < t.StopTimes.Single(st => st.Stop == destinationStop).stop_sequence).OrderBy(t => t.StopTimes.Single(st => st.Stop == originStop).departure_time))
+                IEnumerable<Trips> ts = r.Trips.Where(t => currentCalendars.Contains(t.Calendar));
+                ts = ts.Where(t => t.StopTimes.Any(st => st.Stop == originStop));
+                ts = ts.Where(t => t.StopTimes.Any(st => st.Stop == destinationStop));
+                ts = ts.Where(t => t.StopTimes.Single(st => st.Stop == originStop).stop_sequence < t.StopTimes.Single(st => st.Stop == destinationStop).stop_sequence).OrderBy(t => t.StopTimes.Single(st => st.Stop == originStop).departure_time);
+
+                foreach (Trips t in ts)
                 {
                     Stops firstStop = t.StopTimes.OrderBy(st => st.stop_sequence).FirstOrDefault().Stop;
                     Stops lastStop = t.StopTimes.OrderBy(st => st.stop_sequence).LastOrDefault().Stop;
@@ -84,7 +86,7 @@ namespace Dijitle.Metra.API.Services
         {
             List<Stop> stops = new List<Stop>();
 
-            foreach(Stops s in _gtfs.Data.Stops)
+            foreach(Stops s in _gtfs.Data.Stops.Values)
             {
                 stops.Add(new Stop()
                 {

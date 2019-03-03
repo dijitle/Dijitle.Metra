@@ -37,17 +37,11 @@ namespace Dijitle.Metra.Data
             Stops = new List<Stops>();
         }
 
-        public void LinkAgency(IEnumerable<Agency> agencies)
+        public void LinkAgency(IDictionary<string, Agency> agencies)
         {
-            foreach (Agency a in agencies)
-            {
-                if (a.agency_id == agency_id)
-                {
-                    Agency = a;
-                    a.Routes.Add(this);
-                    break;
-                }
-            }
+            Agency a = agencies[agency_id];
+            Agency = a;
+            a.Routes.Add(this);
         }
 
         public override string ToString()

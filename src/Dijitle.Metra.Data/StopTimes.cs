@@ -58,33 +58,22 @@ namespace Dijitle.Metra.Data
             return new DateTime(1,1,1).AddHours(hour).AddMinutes(minute).AddSeconds(second);
         }
 
-        public void LinkTripAndStop(IEnumerable<Trips> trips, IEnumerable<Stops> stops)
+        public void LinkTripAndStop(IDictionary<string, Trips> trips, IDictionary<string, Stops> stops)
         {
-            foreach (Trips t in trips)
-            {
-                if (t.trip_id == trip_id)
-                {
-                    Trip = t;
-                    t.StopTimes.Add(this);
-                    break;
-                }
-            }
+            Trips t = trips[trip_id];
+            Trip = t;
+            t.StopTimes.Add(this);
 
-            foreach (Stops s in stops)
+
+            Stops s = stops[stop_id];
+            Stop = s;
+            if (!Trip.Route.Stops.Contains(Stop))
             {
-                if (s.stop_id == stop_id)
-                {
-                    Stop = s;
-                    if(!Trip.Route.Stops.Contains(Stop))
-                    {
-                        Trip.Route.Stops.Add(Stop);
-                    }
-                    if(!Stop.Routes.Contains(Trip.Route))
-                    {
-                        Stop.Routes.Add(Trip.Route);
-                    }
-                    break;
-                }
+                Trip.Route.Stops.Add(Stop);
+            }
+            if (!Stop.Routes.Contains(Trip.Route))
+            {
+                Stop.Routes.Add(Trip.Route);
             }
         }
 

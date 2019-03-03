@@ -58,7 +58,7 @@ namespace Dijitle.Metra.API.Services
                                 while (!rdr.EndOfStream)
                                 {
                                     line = rdr.ReadLine();
-                                    Data.Agencies.Add(new Agency(line.Split(",")));
+                                    Data.Agencies.Add(line.Split(",").FirstOrDefault().Trim(), new Agency(line.Split(",")));
                                 }
                                 break;
                             case "calendar":
@@ -66,7 +66,7 @@ namespace Dijitle.Metra.API.Services
                                 while (!rdr.EndOfStream)
                                 {
                                     line = rdr.ReadLine();
-                                    Data.Calendars.Add(new Calendar(line.Split(",")));
+                                    Data.Calendars.Add(line.Split(",").FirstOrDefault().Trim(), new Calendar(line.Split(",")));
                                 }
                                 break;
                             case "calendar_dates":
@@ -82,7 +82,7 @@ namespace Dijitle.Metra.API.Services
                                 while (!rdr.EndOfStream)
                                 {
                                     line = rdr.ReadLine();
-                                    Data.FareAttributes.Add(new FareAttributes(line.Split(",")));
+                                    Data.FareAttributes.Add(Convert.ToInt32(line.Split(",").FirstOrDefault().Trim()), new FareAttributes(line.Split(",")));
                                 }
                                 break;
                             case "fare_rules":
@@ -98,7 +98,7 @@ namespace Dijitle.Metra.API.Services
                                 while (!rdr.EndOfStream)
                                 {
                                     line = rdr.ReadLine();
-                                    Data.Routes.Add(new Routes(line.Split(",")));
+                                    Data.Routes.Add(line.Split(",").FirstOrDefault().Trim(), new Routes(line.Split(",")));
                                 }
                                 break;
                             case "shapes":
@@ -106,7 +106,12 @@ namespace Dijitle.Metra.API.Services
                                 while (!rdr.EndOfStream)
                                 {
                                     line = rdr.ReadLine();
-                                    Data.Shapes.Add(new Shapes(line.Split(",")));
+                                    string key = line.Split(",").FirstOrDefault().Trim();
+                                    if(!Data.Shapes.ContainsKey(key))
+                                    {
+                                        Data.Shapes.Add(key, new List<Shapes>());
+                                    }
+                                    Data.Shapes[key].Add(new Shapes(line.Split(",")));
                                 }
                                 break;
                             case "stop_times":
@@ -114,7 +119,12 @@ namespace Dijitle.Metra.API.Services
                                 while (!rdr.EndOfStream)
                                 {
                                     line = rdr.ReadLine();
-                                    Data.StopTimes.Add(new StopTimes(line.Split(",")));
+                                    string key = line.Split(",").FirstOrDefault().Trim();
+                                    if (!Data.StopTimes.ContainsKey(key))
+                                    {
+                                        Data.StopTimes.Add(key, new List<StopTimes>());
+                                    }
+                                    Data.StopTimes[key].Add(new StopTimes(line.Split(",")));
                                 }
                                 break;
                             case "stops":
@@ -122,7 +132,7 @@ namespace Dijitle.Metra.API.Services
                                 while (!rdr.EndOfStream)
                                 {
                                     line = rdr.ReadLine();
-                                    Data.Stops.Add(new Stops(line.Split(",")));
+                                    Data.Stops.Add(line.Split(",").FirstOrDefault().Trim(), new Stops(line.Split(",")));
                                 }
                                 break;
                             case "trips":
@@ -130,7 +140,7 @@ namespace Dijitle.Metra.API.Services
                                 while (!rdr.EndOfStream)
                                 {
                                     line = rdr.ReadLine();
-                                    Data.Trips.Add(new Trips(line.Split(",")));
+                                    Data.Trips.Add(line.Split(",")[2].Trim(), new Trips(line.Split(",")));
                                 }
                                 break;
                             default:

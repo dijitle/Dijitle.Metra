@@ -19,6 +19,8 @@ namespace Dijitle.Metra.Data
         public DateTime start_date { get; private set; }
         public DateTime end_date { get; private set; }
 
+        public List<CalendarDate> CalendarDates { get; private set; }
+
         public Calendar(string[] csv)
         {
             service_id = csv[0].Trim();
@@ -31,6 +33,8 @@ namespace Dijitle.Metra.Data
             sunday = (csv[7].Trim() == "1");
             start_date = DateTime.ParseExact(csv[8].Trim(),"yyyyMMdd", CultureInfo.InvariantCulture);
             end_date = DateTime.ParseExact(csv[9].Trim(), "yyyyMMdd", CultureInfo.InvariantCulture);
+
+            CalendarDates = new List<CalendarDate>();
         }
 
         public bool IsDay(DayOfWeek day)

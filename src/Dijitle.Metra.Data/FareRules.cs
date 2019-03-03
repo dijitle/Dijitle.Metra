@@ -14,7 +14,7 @@ namespace Dijitle.Metra.Data
         public string destination_id { get; private set; }
         public string contains_id { get; private set; }
 
-        public FareAttributes Fair { get; private set; }
+        public FareAttributes Fare { get; private set; }
 
         public FareRules(string[] csv)
         {
@@ -25,16 +25,9 @@ namespace Dijitle.Metra.Data
             contains_id = csv[4].Trim();
         }
 
-        public void LinkFare(IEnumerable<FareAttributes> fareAttributes)
+        public void LinkFare(IDictionary<int, FareAttributes> fareAttributes)
         {
-            foreach (FareAttributes f in fareAttributes)
-            {
-                if (f.fare_id == fare_id)
-                {
-                    Fair = f;
-                    break;
-                }
-            }
+            Fare = fareAttributes[fare_id];
         }
 
         public override string ToString()

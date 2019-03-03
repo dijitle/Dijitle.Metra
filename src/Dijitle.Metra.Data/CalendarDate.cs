@@ -27,16 +27,13 @@ namespace Dijitle.Metra.Data
             exception_type = (Exception_Type)Convert.ToInt32(csv[2].Trim());
         }
 
-        public void LinkCalendar(IEnumerable<Calendar> calendars)
+        public void LinkCalendar(IDictionary<string, Calendar> calendars)
         {
-            foreach (Calendar c in calendars)
-            {
-                if (c.service_id == service_id)
-                {
-                    Calendar = c;
-                    break;
-                }
-            }
+            Calendar c = calendars[service_id];
+
+            Calendar = c;
+            c.CalendarDates.Add(this);
+            
         }
 
         public override string ToString()

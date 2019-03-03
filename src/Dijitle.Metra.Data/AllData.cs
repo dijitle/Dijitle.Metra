@@ -8,67 +8,66 @@ namespace Dijitle.Metra.Data
 {
     public class AllData
     {
-        public List<Agency> Agencies { get; set; }
-        public List<Calendar> Calendars { get; set; }
+        public Dictionary<string, Agency> Agencies { get; set; }
+        public Dictionary<string, Calendar> Calendars { get; set; }
         public List<CalendarDate> CalendarDates { get; set; }
-        public List<FareAttributes> FareAttributes { get; set; }
+        public Dictionary<int, FareAttributes> FareAttributes { get; set; }
         public List<FareRules> FareRules { get; set; }
-        public List<Routes> Routes { get; set; }
-        public List<Shapes> Shapes { get; set; }
-        public List<StopTimes> StopTimes { get; set; }
-        public List<Stops> Stops { get; set; }
-        public List<Trips> Trips { get; set; }
+        public Dictionary<string, Routes> Routes { get; set; }
+        public Dictionary<string, List<Shapes>> Shapes { get; set; }
+        public Dictionary<string, List<StopTimes>> StopTimes { get; set; }
+        public Dictionary<string, Stops> Stops { get; set; }
+        public Dictionary<string, Trips> Trips { get; set; }
 
         public AllData()
         {
-            Agencies = new List<Agency>();
-            Calendars = new List<Calendar>();
+            Agencies = new Dictionary<string, Agency>();
+            Calendars = new Dictionary<string, Calendar>();
             CalendarDates = new List<CalendarDate>();
-            FareAttributes = new List<FareAttributes>();
+            FareAttributes = new Dictionary<int, FareAttributes>();
             FareRules = new List<FareRules>();
-            Routes = new List<Routes>();
-            Shapes = new List<Shapes>();
-            StopTimes = new List<StopTimes>();
-            Stops = new List<Stops>();
-            Trips = new List<Trips>();
+            Routes = new Dictionary<string, Routes>();
+            Shapes = new Dictionary<string, List<Shapes>>();
+            StopTimes = new Dictionary<string, List<StopTimes>>();
+            Stops = new Dictionary<string, Stops>();
+            Trips = new Dictionary<string, Trips>();
         }
 
         public void LinkItems()
         {
-            Parallel.ForEach(CalendarDates, cd =>
+            foreach (CalendarDate cd in CalendarDates)
             {
                 cd.LinkCalendar(Calendars);
-            });
+            }
 
-            Parallel.ForEach(FareRules, fr =>
+            foreach (FareRules fr in FareRules)
             {
                 fr.LinkFare(FareAttributes);
-            });
+            }
 
-            Parallel.ForEach(Routes, r =>
+            foreach (Routes r in Routes.Values)
             {
                 r.LinkAgency(Agencies);
-            });
+            }
 
-            Parallel.ForEach(Trips, t =>
+            foreach (Trips t in Trips.Values)
             {
                 t.LinkRouteAndService(Routes, Calendars);
-            });
+            }
 
-            Parallel.ForEach(StopTimes, st =>
+            foreach (List<StopTimes> kvpst in StopTimes.Values)
             {
-                st.LinkTripAndStop(Trips, Stops);
-            });
+                foreach(StopTimes st in kvpst)
+                {
+                    st.LinkTripAndStop(Trips, Stops);
+                }
+            }
         }
 
-        public Stops FindStop(string id)
-        {
-            return Stops.SingleOrDefault(s => s.stop_id == id);
-        }
 
         public IEnumerable<Calendar> GetCurrentCalendars(DateTime date)
         {
-            return Calendars.Where(c => c.start_date < date && c.end_date.AddDays(1) >= date  && c.IsDay(date.DayOfWeek) == true);
+            return Calendars.Where(c => c.Value.start_date < date && c.Value.end_date.AddDays(1) >= date  && c.Value.IsDay(date.DayOfWeek) == true).Select(o => o.Value);
         }
     }
 }
