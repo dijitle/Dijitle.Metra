@@ -37,30 +37,22 @@ namespace Dijitle.Metra.Data
         {
             foreach (CalendarDate cd in CalendarDates)
             {
-                cd.LinkCalendar(Calendars);
+                cd.Link(Calendars);
             }
 
             foreach (FareRules fr in FareRules)
             {
-                fr.LinkFare(FareAttributes);
+                fr.Link(FareAttributes);
             }
 
             foreach (Routes r in Routes.Values)
             {
-                r.LinkAgency(Agencies);
+                r.Link(Agencies);
             }
 
             foreach (Trips t in Trips.Values)
             {
-                t.LinkRouteAndService(Routes, Calendars);
-            }
-
-            foreach (List<StopTimes> kvpst in StopTimes.Values)
-            {
-                foreach(StopTimes st in kvpst)
-                {
-                    st.LinkTripAndStop(Trips, Stops);
-                }
+                t.Link(Routes, Calendars, StopTimes, Stops);
             }
         }
 

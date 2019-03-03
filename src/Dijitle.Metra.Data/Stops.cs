@@ -15,7 +15,7 @@ namespace Dijitle.Metra.Data
         public string stop_url { get; private set; }
         public bool wheelchair_boarding { get; private set; }
 
-        public List<Routes> Routes { get; private set; }
+        public List<Trips> Trips { get; private set; }
 
         public Stops(string[] csv)
         {
@@ -28,7 +28,7 @@ namespace Dijitle.Metra.Data
             stop_url = csv[6].Trim();
             wheelchair_boarding = (csv[7].Trim() == "1");
 
-            Routes = new List<Routes>();
+            Trips = new List<Trips>();
         }
 
         public override string ToString()

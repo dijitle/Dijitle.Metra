@@ -21,8 +21,8 @@ namespace Dijitle.Metra.Data
         public bool bikes_allowed { get; private set; } 
         public string notice { get; private set; }
 
-        public Trips Trip { get; private set; }
-        public Stops Stop { get; private set; }
+        public Trips Trip { get; set; }
+        public Stops Stop { get; set; }
 
         public enum StopType
         {
@@ -57,26 +57,7 @@ namespace Dijitle.Metra.Data
             
             return new DateTime(1,1,1).AddHours(hour).AddMinutes(minute).AddSeconds(second);
         }
-
-        public void LinkTripAndStop(IDictionary<string, Trips> trips, IDictionary<string, Stops> stops)
-        {
-            Trips t = trips[trip_id];
-            Trip = t;
-            t.StopTimes.Add(this);
-
-
-            Stops s = stops[stop_id];
-            Stop = s;
-            if (!Trip.Route.Stops.Contains(Stop))
-            {
-                Trip.Route.Stops.Add(Stop);
-            }
-            if (!Stop.Routes.Contains(Trip.Route))
-            {
-                Stop.Routes.Add(Trip.Route);
-            }
-        }
-
+        
         public override string ToString()
         {
             return stop_id;

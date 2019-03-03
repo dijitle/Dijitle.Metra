@@ -34,8 +34,6 @@ namespace Dijitle.Metra.Data
             block_id = csv[4].Trim();
             shape_id = csv[5].Trim();
             direction_id = (Direction)Convert.ToInt32(csv[6].Trim());
-
-            StopTimes = new List<StopTimes>();
         }
 
         public override string ToString()
@@ -43,14 +41,25 @@ namespace Dijitle.Metra.Data
             return trip_id;
         }
 
-        public void LinkRouteAndService(IDictionary<string, Routes> routes, IDictionary<string, Calendar> calendars)
+        public void Link(IDictionary<string, Routes> routes, IDictionary<string, Calendar> calendars, IDictionary<string, List<StopTimes>> stoptimes, IDictionary<string, Stops> stops)
         {
-            Routes r = routes[route_id];
-            Route = r;
-            r.Trips.Add(this);
+            Route = routes[route_id];
+            Route.Trips.Add(this);
 
-            Calendar c = calendars[service_id];
-            Calendar = c;
+            Calendar = calendars[service_id];
+
+            StopTimes = stoptimes[trip_id];
+            
+            foreach(StopTimes st in StopTimes)
+            {
+                st.Trip = this;
+                Stops s = stops[st.stop_id];
+                st.Stop = s;
+                if (!Route.Stops.Contains(s))
+                {
+                    Route.Stops.Add(s);
+                }
+            }
         }
 
         public bool IsExpress(StopTimes origin, StopTimes destination)

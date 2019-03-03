@@ -37,7 +37,7 @@ namespace Dijitle.Metra.Data
             Stops = new List<Stops>();
         }
 
-        public void LinkAgency(IDictionary<string, Agency> agencies)
+        public void Link(IDictionary<string, Agency> agencies)
         {
             Agency a = agencies[agency_id];
             Agency = a;

@@ -25,7 +25,7 @@ namespace Dijitle.Metra.Data
             contains_id = csv[4].Trim();
         }
 
-        public void LinkFare(IDictionary<int, FareAttributes> fareAttributes)
+        public void Link(IDictionary<int, FareAttributes> fareAttributes)
         {
             Fare = fareAttributes[fare_id];
         }

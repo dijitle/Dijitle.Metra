@@ -27,7 +27,7 @@ namespace Dijitle.Metra.Data
             exception_type = (Exception_Type)Convert.ToInt32(csv[2].Trim());
         }
 
-        public void LinkCalendar(IDictionary<string, Calendar> calendars)
+        public void Link(IDictionary<string, Calendar> calendars)
         {
             Calendar c = calendars[service_id];
 
