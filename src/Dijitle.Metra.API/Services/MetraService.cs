@@ -21,7 +21,12 @@ namespace Dijitle.Metra.API.Services
         {
             List<Route> routes = new List<Route>();
 
-            foreach(Routes r in _gtfs.Data.Routes.Values)
+            if (_gtfs.Data == null)
+            {
+                await _gtfs.RefreshData();
+            }
+
+            foreach (Routes r in _gtfs.Data.Routes.Values)
             {
                 routes.Add(new Route()
                 {
@@ -86,7 +91,7 @@ namespace Dijitle.Metra.API.Services
             return times;
         }
 
-        public async Task<IEnumerable<Stop>> GetStops(decimal lat, decimal lon, int milesAway)
+        public async Task<IEnumerable<Stop>> GetStopsByDistance(decimal lat, decimal lon, int milesAway)
         {
             List<Stop> stops = new List<Stop>();
 
@@ -108,6 +113,58 @@ namespace Dijitle.Metra.API.Services
             }
 
             return stops.Where(s => s.DistanceAway < milesAway).OrderBy(s => s.DistanceAway);
+        }
+
+        public async Task<IEnumerable<Stop>> GetAllStops()
+        {
+            List<Stop> stops = new List<Stop>();
+
+            if (_gtfs.Data == null)
+            {
+                await _gtfs.RefreshData();
+            }
+
+            foreach (Stops s in _gtfs.Data.Stops.Values)
+            {
+                stops.Add(new Stop()
+                {
+                    Id = s.stop_id,
+                    Name = s.stop_name,
+                    Lat = s.stop_lat,
+                    Lon = s.stop_lon,
+                    DistanceAway = 0
+                });
+            }
+
+            return stops.OrderBy(s => s.Name);
+        }
+
+        public async Task<IEnumerable<Stop>> GetStopsByRoute(string route, bool sortAsc)
+        {
+            List<Stop> stops = new List<Stop>();
+
+            if (_gtfs.Data == null)
+            {
+                await _gtfs.RefreshData();
+            }
+
+            foreach (Stops s in _gtfs.Data.Routes.SingleOrDefault(r => r.Key == route).Value.Stops)
+            {
+                stops.Add(new Stop()
+                {
+                    Id = s.stop_id,
+                    Name = s.stop_name,
+                    Lat = s.stop_lat,
+                    Lon = s.stop_lon,
+                    DistanceAway = GetDistance(41.882077m, -87.627807m, s.stop_lat, s.stop_lon)
+                });
+            }
+
+            if (sortAsc)
+            {
+                return stops.OrderBy(s => s.DistanceAway);
+            }
+            return stops.OrderByDescending(s => s.DistanceAway);
         }
 
         public async Task<IEnumerable<Shape>> GetShapes(Routes route)

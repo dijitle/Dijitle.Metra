@@ -12,7 +12,9 @@ namespace Dijitle.Metra.API.Services
     {
         Task<IEnumerable<Route>> GetRoutes();
         Task<IEnumerable<Time>> GetTimes(Stops origin, Stops destination, bool expressOnly);
-        Task<IEnumerable<Stop>> GetStops(decimal lat, decimal lon, int milesAway);
+        Task<IEnumerable<Stop>> GetStopsByDistance(decimal lat, decimal lon, int milesAway);
+        Task<IEnumerable<Stop>> GetAllStops();
+        Task<IEnumerable<Stop>> GetStopsByRoute(string route, bool sortAsc);
         Task<IEnumerable<Shape>> GetShapes(Routes route);
     }
 }

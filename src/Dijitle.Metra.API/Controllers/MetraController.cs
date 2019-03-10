@@ -74,11 +74,27 @@ namespace Dijitle.Metra.API.Controllers
         }
 
         [HttpGet()]
-        [Route("Stops")]
+        [Route("StopsByDistance")]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<IActionResult> GetStops(decimal lat = 41.769649m, decimal lon = -88.215297m, int distance = 5)
+        public async Task<IActionResult> GetStopsByDistance(decimal lat = 41.882077m, decimal lon = -87.627807m, int distance = 5)
         {
-            return Ok(await _metra.GetStops(lat, lon, distance));
+            return Ok(await _metra.GetStopsByDistance(lat, lon, distance));
+        }
+
+        [HttpGet()]
+        [Route("StopsByRoute")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public async Task<IActionResult> GetStopsByRoute(string route = "BNSF", bool sortAsc = true)
+        {
+            return Ok(await _metra.GetStopsByRoute(route, sortAsc));
+        }
+
+        [HttpGet()]
+        [Route("AllStops")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public async Task<IActionResult> GetAllStops()
+        {
+            return Ok(await _metra.GetAllStops());
         }
     }
 }
