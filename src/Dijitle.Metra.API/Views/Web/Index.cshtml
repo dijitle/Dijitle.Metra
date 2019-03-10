@@ -1,4 +1,4 @@
-﻿@model IEnumerable<Time>
+﻿@model TimeViewModel
 @{
     ViewData["Title"] = "Index";
 }
@@ -6,18 +6,32 @@
 <table class="table table-striped">
     <thead class="tablehead">
         <tr>
-            <th>Departure</th>
-            <th>Arrival</th>
-            <th>Express</th>
+            <th colspan="2">@Model.Start</th>
+            <th colspan="2" class="text-right">@Model.Destination</th>
         </tr>
     </thead>
 
-    @foreach (Time t in Model)
+    @foreach (Time t in Model.Times)
     {
         <tr>
-            <td>@t.DepartureTime.ToShortTimeString()</td>
-            <td>@t.ArrivalTime.ToShortTimeString()</td>
-            <td>@if (t.IsExpress) { <b>YES</b> }</td>
+            <td width="1px">@t.DepartureTime.ToShortTimeString()</td>
+            <td colspan="2" class="text-center" style='font-size:8px'>
+
+                @for (int i = 0; i < t.StopsUntil; i++)
+                {
+                <i class='fas fa-circle align-middle'></i> <i class='fas fa-grip-lines align-middle'></i>
+                }
+
+
+                @if (t.IsExpress)
+                {
+
+                    <i class='fas fa-angle-double-right align-middle' style='font-size:24px'></i>
+                }
+
+            </td>
+
+            <td width="1px" class="text-right">@t.ArrivalTime.ToShortTimeString()</td>
         </tr>
     }
 

@@ -36,7 +36,7 @@ namespace Dijitle.Metra.API.Services
 
         public async Task<IEnumerable<Time>> GetTimes(Stops originStop, Stops destinationStop, bool expressOnly)
         {
-            DateTime selectedDate = DateTime.Now;
+            DateTime selectedDate = DateTime.Now.AddDays(1).AddHours(10);
             
             List<Time> times = new List<Time>();
 

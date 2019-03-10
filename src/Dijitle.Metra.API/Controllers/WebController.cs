@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Dijitle.Metra.API.Models.Output;
 using Dijitle.Metra.API.Services;
+using Dijitle.Metra.API.ViewModels;
 
 namespace Dijitle.Metra.API.Controllers
 {
@@ -27,7 +28,14 @@ namespace Dijitle.Metra.API.Controllers
             {
                 await _gtfs.RefreshData();
             }
-            return View(await _metra.GetTimes(_gtfs.Data.Stops[start], _gtfs.Data.Stops[dest], expressOnly));
+            var tvm = new TimeViewModel()
+            {
+                Times = await _metra.GetTimes(_gtfs.Data.Stops[start], _gtfs.Data.Stops[dest], expressOnly),
+                Start = _gtfs.Data.Stops[start].stop_name,
+                Destination = _gtfs.Data.Stops[dest].stop_name
+            };
+
+            return View(tvm);
         }
     }
 }
