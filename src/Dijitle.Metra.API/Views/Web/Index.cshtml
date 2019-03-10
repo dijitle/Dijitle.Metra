@@ -3,36 +3,47 @@
     ViewData["Title"] = "Index";
 }
 
-<table class="table table-striped">
+<table class="table table-striped" style="margin-top:60px">
     <thead class="tablehead">
         <tr>
             <th colspan="2">@Model.Start</th>
-            <th colspan="2" class="text-right">@Model.Destination</th>
+            <th colspan="2"class="text-right">@Model.Destination</th>
         </tr>
     </thead>
 
     @foreach (Time t in Model.Times)
     {
-        <tr>
-            <td width="1px">@t.DepartureTime.ToShortTimeString()</td>
-            <td colspan="2" class="text-center" style='font-size:8px'>
+    <tr>
+        <td width="1px" class="font-weight-bolder" data-toggle="tooltip" data-html="true" data-placement="left"
+            title="Trip ID: @t.Id">
+            @t.DepartureTime.ToShortTimeString()
+            <span width="1px" class="font-weight-lighter" style="font-size:8pt;" name="timeUntil" current-time="@t.DepartureTime.ToShortTimeString()"></span>
+        </td>
 
-                @for (int i = 0; i < t.StopsUntil; i++)
-                {
+
+        <td colspan="2" class="text-center align-middle" style='font-size:8px' data-toggle="tooltip" data-html="true" data-placement="bottom"
+            title="@t.StopsUntil Stops <br/> @t.Minutes minutes">
+
+            @for (int i = 0; i < t.StopsUntil; i++)
+            {
                 <i class='fas fa-circle align-middle'></i> <i class='fas fa-grip-lines align-middle'></i>
-                }
+            }
 
 
-                @if (t.IsExpress)
-                {
+            @if (t.IsExpress)
+            {
 
-                    <i class='fas fa-angle-double-right align-middle' style='font-size:24px'></i>
-                }
+                <i class='fas fa-angle-double-right align-middle' style='font-size:24px'></i>
+            }
 
-            </td>
+        </td>
 
-            <td width="1px" class="text-right">@t.ArrivalTime.ToShortTimeString()</td>
-        </tr>
+        <td width="1px" class="text-right font-weight-bolder">
+        @t.ArrivalTime.ToShortTimeString()
+        <span width="1px" class="font-weight-lighter" style="font-size:8pt;" name="timeUntil" current-time="@t.ArrivalTime.ToShortTimeString()"></span>        
+        </td>
+    </tr>
     }
 
 </table>
+
