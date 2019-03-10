@@ -1,0 +1,24 @@
+﻿@model IEnumerable<Time>
+@{
+    ViewData["Title"] = "Index";
+}
+
+<table class="table table-striped">
+    <thead class="tablehead">
+        <tr>
+            <th>Departure</th>
+            <th>Arrival</th>
+            <th>Express</th>
+        </tr>
+    </thead>
+
+    @foreach (Time t in Model)
+    {
+        <tr>
+            <td>@t.DepartureTime.ToShortTimeString()</td>
+            <td>@t.ArrivalTime.ToShortTimeString()</td>
+            <td>@if (t.IsExpress) { <b>YES</b> }</td>
+        </tr>
+    }
+
+</table>

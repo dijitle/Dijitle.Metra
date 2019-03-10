@@ -36,6 +36,11 @@ namespace Dijitle.Metra.API.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> GetShapes(string route = "BNSF")
         {
+            if (_gtfs.Data == null)
+            {
+                await _gtfs.RefreshData();
+            }
+
             if (!_gtfs.Data.Routes.ContainsKey(route))
             {
                 return NotFound($"No route named {route} was found!");
@@ -51,6 +56,10 @@ namespace Dijitle.Metra.API.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> GetTimes(string start = "ROUTE59", string dest = "CUS", bool expressOnly = false)
         {
+            if (_gtfs.Data == null)
+            {
+                await _gtfs.RefreshData();
+            }
             if (!_gtfs.Data.Stops.ContainsKey(start))
             {
                 return NotFound($"No stop named {start} was found!");

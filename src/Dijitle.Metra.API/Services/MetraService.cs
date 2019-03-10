@@ -40,6 +40,11 @@ namespace Dijitle.Metra.API.Services
             
             List<Time> times = new List<Time>();
 
+            if (_gtfs.Data == null)
+            {
+                await _gtfs.RefreshData();
+            }
+
             IEnumerable<Routes> routes = _gtfs.Data.Routes.Values.Where(r => r.Stops.Contains(originStop) && r.Stops.Contains(destinationStop));
 
             IEnumerable<Calendar> currentCalendars = _gtfs.Data.GetCurrentCalendars(selectedDate);
@@ -85,7 +90,12 @@ namespace Dijitle.Metra.API.Services
         {
             List<Stop> stops = new List<Stop>();
 
-            foreach(Stops s in _gtfs.Data.Stops.Values)
+            if (_gtfs.Data == null)
+            {
+                await _gtfs.RefreshData();
+            }
+
+            foreach (Stops s in _gtfs.Data.Stops.Values)
             {
                 stops.Add(new Stop()
                 {
