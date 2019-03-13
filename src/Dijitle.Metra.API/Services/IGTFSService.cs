@@ -10,7 +10,7 @@ namespace Dijitle.Metra.API.Services
     {
         AllData Data { get; }
 
-        Task<Object> GetPositions();
+        Task<IEnumerable<Positions>> GetPositions();
         Task RefreshData();
     }
 }

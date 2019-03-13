@@ -23,14 +23,16 @@ namespace Dijitle.Metra.API.Services
             _httpClientFactory = httpClientFactory;
         }
 
-        public async Task<object> GetPositions()
+        public async Task<IEnumerable<Positions>> GetPositions()
         {
             HttpClient client = _httpClientFactory.CreateClient("GTFSClient");
 
             var response = await client.GetAsync("/gtfs/positions");
             var content = await response.Content.ReadAsStringAsync();
             
-            return JsonConvert.DeserializeObject(content);
+            List<Positions> pos = JsonConvert.DeserializeObject<List<Positions>>(content);
+
+            return pos;
         }
 
         public async Task RefreshData()

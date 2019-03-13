@@ -57,8 +57,9 @@ function checkTime(i) {
 function getTimes() {
     var from = document.getElementById('stopsFrom').selectedOptions[0].value;
     var to = document.getElementById('stopsTo').selectedOptions[0].value;
+    var express = document.getElementById('expressOnly').checked
  
-    window.location.href = 'times?start=' + from +'&dest=' + to;
+    window.location.href = 'times?start=' + from +'&dest=' + to + "&expressOnly=" + express;
 }
 
 function loadRoutes() {
