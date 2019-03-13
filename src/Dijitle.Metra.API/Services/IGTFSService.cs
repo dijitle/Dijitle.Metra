@@ -1,4 +1,5 @@
-﻿using Dijitle.Metra.Data;
+﻿using Dijitle.Metra.API.Models.Output;
+using Dijitle.Metra.Data;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,7 +11,7 @@ namespace Dijitle.Metra.API.Services
     {
         AllData Data { get; }
 
-        Task<IEnumerable<Positions>> GetPositions();
+        Task<IEnumerable<Position>> GetPositions();
         Task RefreshData();
     }
 }

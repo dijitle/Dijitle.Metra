@@ -16,5 +16,6 @@ namespace Dijitle.Metra.API.Services
         Task<IEnumerable<Stop>> GetAllStops();
         Task<IEnumerable<Stop>> GetStopsByRoute(string route, bool sortAsc);
         Task<IEnumerable<Shape>> GetShapes(Routes route);
+        decimal GetDistance(decimal startLat, decimal startLon, decimal endLat, decimal endLon);
     }
 }

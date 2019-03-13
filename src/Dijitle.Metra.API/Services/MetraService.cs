@@ -80,6 +80,21 @@ namespace Dijitle.Metra.API.Services
                             Id = t.trip_id,
                             ArrivalTime = destinationStopTime.departure_time,
                             DepartureTime = originStopTime.arrival_time,
+                            DestinationStop = new Stop()
+                            {
+                                Id = destinationStopTime.Stop.stop_id,
+                                Name = destinationStopTime.Stop.stop_name,
+                                Lat = destinationStopTime.Stop.stop_lat,
+                                Lon = destinationStopTime.Stop.stop_lon
+
+                            },
+                            OriginStop = new Stop()
+                            {
+                                Id = originStopTime.Stop.stop_id,
+                                Name = originStopTime.Stop.stop_name,
+                                Lat = originStopTime.Stop.stop_lat,
+                                Lon = originStopTime.Stop.stop_lon
+                            },
                             IsExpress = t.IsExpress(originStopTime, destinationStopTime),
                             StopsIn = indexOrigin,
                             StopsUntil = indexDestination - indexOrigin - 1
@@ -197,14 +212,14 @@ namespace Dijitle.Metra.API.Services
             return shapes;
         }
 
-        private decimal GetDistance(decimal startLat, decimal startLon, decimal destLat, decimal destLon)
+        public decimal GetDistance(decimal startLat, decimal startLon, decimal endLat, decimal endLon)
         {
             const int EARTH_RADIUS = 3959;
 
             double startLatRadians = GetRadians((double)startLat);
-            double destLatRadians = GetRadians((double)destLat);
-            double deltaLatRadians = GetRadians((double)(destLat - startLat));
-            double detlaLonRadians = GetRadians((double)(destLon - startLon));
+            double destLatRadians = GetRadians((double)endLat);
+            double deltaLatRadians = GetRadians((double)(endLat - startLat));
+            double detlaLonRadians = GetRadians((double)(endLon - startLon));
 
             double a = Math.Sin(deltaLatRadians / 2) * 
                        Math.Sin(deltaLatRadians / 2) + 

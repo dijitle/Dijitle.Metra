@@ -69,8 +69,8 @@ function loadRoutes() {
 
     $.get("api/metra/routes", function (data) {
 
-        data.forEach(function (i) {
-            routeComboBox.innerHTML += "<option value=" + i.id + ">" + i.longName + " (" + i.shortName + ")</option>";
+        data.forEach(function (d) {
+            routeComboBox.innerHTML += "<option value=" + d.id + ">" + d.longName + " (" + d.shortName + ")</option>";
         })
     });
 }
@@ -86,28 +86,74 @@ function loadStops() {
     if (route === '-1') {
         $.get("api/metra/AllStops", function (data) {
 
-            data.forEach(function (i) {
-                fromComboBox.innerHTML += "<option value=" + i.id + ">" + i.name + "</option>";
-                toComboBox.innerHTML += "<option value=" + i.id + ">" + i.name + "</option>";
+            data.forEach(function (d) {
+                fromComboBox.innerHTML += "<option value=" + d.id + ">" + d.name + "</option>";
+                toComboBox.innerHTML += "<option value=" + d.id + ">" + d.name + "</option>";
             })
         });
     }
     else {
         $.get("api/metra/StopsByRoute?route=" + route + "&sortAsc=false", function (data) {
 
-            data.forEach(function (i) {
-                fromComboBox.innerHTML += "<option value=" + i.id + ">" + i.name + "</option>";
+            data.forEach(function (d) {
+                fromComboBox.innerHTML += "<option value=" + d.id + ">" + d.name + "</option>";
             })
         });
 
         $.get("api/metra/StopsByRoute?route=" + route + "&sortAsc=true", function (data) {
 
-            data.forEach(function (i) {
-                toComboBox.innerHTML += "<option value=" + i.id + ">" + i.name + "</option>";
+            data.forEach(function (d) {
+                toComboBox.innerHTML += "<option value=" + d.id + ">" + d.name + "</option>";
             })
         });
-
     }
+}
 
-    
+function getPositions() {
+
+    var items = document.getElementsByName('gpsPositions');
+
+
+
+    $.get("api/gtfs/positions", function (data) {
+        data.forEach(function (d) {
+            items.forEach(function (i) {
+                if (d.tripId === i.attributes.trip_id.value) {
+                    i.innerHTML = '<i class="fas fa-satellite-dish"></i>';
+
+                    var distToOrigin = 0.0;
+                    var distToDestination = 0.0;
+
+                    $.ajax({
+                        url: "api/metra/distance?" +
+                             "lat1=" + i.attributes.origin_lat.value +
+                             "&lon1=" + i.attributes.origin_lon.value +
+                             "&lat2=" + d.latitude +
+                             "&lon2=" + d.longitude,
+                        async: false,
+                        success: function (dist) {
+                            distToOrigin = dist;
+                        }
+                     });
+
+                    $.ajax({
+                        url : "api/metra/distance?" +
+                              "lat1=" + i.attributes.destination_lat.value +
+                              "&lon1=" + i.attributes.destination_lon.value +
+                              "&lat2=" + d.latitude +
+                              "&lon2=" + d.longitude,
+                        async: false,
+                        success: function (dist) {
+                            distToDestination = dist;
+                        }
+                    });
+
+                    i.setAttribute("data-original-title", d.label + "<br/>" + i.attributes.origin_name.value + ": " + distToOrigin + " miles<br/>" +
+                        i.attributes.destination_name.value + ": " + distToDestination + " miles");
+                }
+            });
+        });
+    });
+
+    var t = setTimeout(getPositions, 60000);
 }

@@ -14,6 +14,12 @@ namespace Dijitle.Metra.API.Models.Output
         [JsonProperty("departureTimeAtOrgin")]
         public DateTime DepartureTime { get; set; }
 
+        [JsonProperty("destinationStop")]
+        public Stop DestinationStop { get; set; }
+
+        [JsonProperty("orginStop")]
+        public Stop OriginStop { get; set; }
+
         [JsonProperty("isExpress")]
         public bool IsExpress { get; set; }
 

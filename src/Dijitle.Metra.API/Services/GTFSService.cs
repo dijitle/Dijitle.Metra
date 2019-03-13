@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using Newtonsoft.Json;
 using System.IO.Compression;
 using Dijitle.Metra.Data;
+using Dijitle.Metra.API.Models.Output;
 
 namespace Dijitle.Metra.API.Services
 {
@@ -23,7 +24,7 @@ namespace Dijitle.Metra.API.Services
             _httpClientFactory = httpClientFactory;
         }
 
-        public async Task<IEnumerable<Positions>> GetPositions()
+        public async Task<IEnumerable<Position>> GetPositions()
         {
             HttpClient client = _httpClientFactory.CreateClient("GTFSClient");
 
@@ -32,7 +33,21 @@ namespace Dijitle.Metra.API.Services
             
             List<Positions> pos = JsonConvert.DeserializeObject<List<Positions>>(content);
 
-            return pos;
+            List<Position> retPositions = new List<Position>();
+
+            foreach (Positions p in pos)
+            {
+                retPositions.Add(new Position()
+                {
+                    Id = p.Id,
+                    TripId = p.Vehicle.Trip.TripId,
+                    Label = p.Vehicle.VehicleVehicle.Label,
+                    Latitude = p.Vehicle.Position.Latitude,
+                    Longitude = p.Vehicle.Position.Longitude
+                });
+            }
+
+            return retPositions;
         }
 
         public async Task RefreshData()

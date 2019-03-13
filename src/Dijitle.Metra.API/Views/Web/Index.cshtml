@@ -14,10 +14,17 @@
     @foreach (Time t in Model.Times)
     {
     <tr>
-        <td width="1px" class="font-weight-bolder" data-toggle="tooltip" data-html="true" data-placement="left"
-            title="Trip ID: @t.Id">
-            @t.DepartureTime.ToShortTimeString()
+        <td width="1px" class="font-weight-bolder" >
+            <span>
+                @t.DepartureTime.ToShortTimeString()
+            </span>
+            
             <span width="1px" class="font-weight-lighter" style="font-size:8pt;" name="timeUntil" current-time="@t.DepartureTime.ToShortTimeString()"></span>
+            
+            <span name="gpsPositions" data-toggle="tooltip" data-html="true" data-placement="left" title="" 
+                  trip_id="@t.Id" 
+                  origin_name="@t.OriginStop.Name" origin_lat="@t.OriginStop.Lat" origin_lon="@t.OriginStop.Lon" 
+                  destination_name="@t.DestinationStop.Name" destination_lat="@t.DestinationStop.Lat" destination_lon="@t.DestinationStop.Lon"></span>
         </td>
 
 
