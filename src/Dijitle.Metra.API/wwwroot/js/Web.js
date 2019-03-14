@@ -1,9 +1,4 @@
-﻿
-$(document).ready(function () {
-    $('[data-toggle="tooltip"]').tooltip();
-});
-
-function startTime() {
+﻿function startTime() {
     var today = new Date();
     var h = today.getHours();
     var m = today.getMinutes();
@@ -43,8 +38,6 @@ function startTime() {
         else {
             i.innerHTML = diffHours + ":" + checkTime(diffMinutes) + ":" + checkTime(diffSeconds)
         }
-
-
     });
 
     var t = setTimeout(startTime, 500);
@@ -80,8 +73,8 @@ function loadStops() {
     var toComboBox = document.getElementById('stopsTo');
     var route = document.getElementById('routes').selectedOptions[0].value;
 
-    fromComboBox.innerHTML = "<option selected hidden>Choose a origin stop...</option>";
-    toComboBox.innerHTML = "<option selected hidden>Choose a destination stop...</option>";
+    fromComboBox.innerHTML = "<option selected value='ROUTE59' hidden>Choose a origin stop...</option>";
+    toComboBox.innerHTML = "<option selected value='CUS' hidden>Choose a destination stop...</option>";
 
     if (route === '-1') {
         $.get("api/metra/AllStops", function (data) {
@@ -113,47 +106,53 @@ function getPositions() {
 
     var items = document.getElementsByName('gpsPositions');
 
-
-
     $.get("api/gtfs/positions", function (data) {
         data.forEach(function (d) {
             items.forEach(function (i) {
                 if (d.tripId === i.attributes.trip_id.value) {
                     i.innerHTML = '<i class="fas fa-satellite-dish"></i>';
 
-                    var distToOrigin = 0.0;
-                    var distToDestination = 0.0;
+                    var dist = getDistance(i.attributes.lat.value, i.attributes.lon.value, d.latitude, d.longitude);
 
-                    $.ajax({
-                        url: "api/metra/distance?" +
-                             "lat1=" + i.attributes.origin_lat.value +
-                             "&lon1=" + i.attributes.origin_lon.value +
-                             "&lat2=" + d.latitude +
-                             "&lon2=" + d.longitude,
-                        async: false,
-                        success: function (dist) {
-                            distToOrigin = dist;
-                        }
-                     });
-
-                    $.ajax({
-                        url : "api/metra/distance?" +
-                              "lat1=" + i.attributes.destination_lat.value +
-                              "&lon1=" + i.attributes.destination_lon.value +
-                              "&lat2=" + d.latitude +
-                              "&lon2=" + d.longitude,
-                        async: false,
-                        success: function (dist) {
-                            distToDestination = dist;
-                        }
-                    });
-
-                    i.setAttribute("data-original-title", d.label + "<br/>" + i.attributes.origin_name.value + ": " + distToOrigin + " miles<br/>" +
-                        i.attributes.destination_name.value + ": " + distToDestination + " miles");
+                    i.innerHTML += dist + " miles";
                 }
             });
         });
     });
 
     var t = setTimeout(getPositions, 60000);
+}
+
+function getDistance(lat1, lon1, lat2, lon2) {
+    var EARTH_RADIUS = 3959;
+
+    var startLatRadians = getRadians(lat1);
+    var destLatRadians = getRadians(lat2);
+    var deltaLatRadians = getRadians(lat2 - lat1);
+    var detlaLonRadians = getRadians(lon2 - lon1);
+
+    var a = Math.sin(deltaLatRadians / 2) *
+        Math.sin(deltaLatRadians / 2) +
+        Math.cos(startLatRadians) *
+        Math.cos(destLatRadians) *
+        Math.sin(detlaLonRadians / 2) *
+        Math.sin(detlaLonRadians / 2);
+
+    var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    return Math.round(EARTH_RADIUS * c * 100) / 100;
+}
+
+function getRadians(degrees) {
+    return degrees * (Math.PI / 180)
+}
+
+function getLocation() {
+    if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(showPosition);
+    } 
+}
+
+function showPosition(position) {
+   alert( "Latitude: " + position.coords.latitude +
+        "<br>Longitude: " + position.coords.longitude);
 }

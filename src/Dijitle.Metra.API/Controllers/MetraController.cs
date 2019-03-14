@@ -96,13 +96,5 @@ namespace Dijitle.Metra.API.Controllers
         {
             return Ok(await _metra.GetAllStops());
         }
-
-        [HttpGet()]
-        [Route("Distance")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<IActionResult> GetDistance(decimal lat1, decimal lon1, decimal lat2, decimal lon2)
-        {
-            return Ok(_metra.GetDistance(lat1, lon1, lat2, lon2));
-        }
     }
 }

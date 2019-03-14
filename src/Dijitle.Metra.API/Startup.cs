@@ -82,7 +82,7 @@ namespace Dijitle.Metra.API
 
             app.UseMvc();
 
-            
+
         }
     }
 }

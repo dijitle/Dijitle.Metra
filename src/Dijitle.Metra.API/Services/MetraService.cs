@@ -41,7 +41,7 @@ namespace Dijitle.Metra.API.Services
 
         public async Task<IEnumerable<Time>> GetTimes(Stops originStop, Stops destinationStop, bool expressOnly)
         {
-            DateTime selectedDate = DateTime.Now;
+            DateTime selectedDate = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, TimeZoneInfo.FindSystemTimeZoneById("Central Standard Time"));
             
             List<Time> times = new List<Time>();
 
@@ -64,9 +64,6 @@ namespace Dijitle.Metra.API.Services
 
                 foreach (Trips t in ts)
                 {
-                    Stops firstStop = t.StopTimes.OrderBy(st => st.stop_sequence).FirstOrDefault().Stop;
-                    Stops lastStop = t.StopTimes.OrderBy(st => st.stop_sequence).LastOrDefault().Stop;
-
                     StopTimes originStopTime = t.StopTimes.Single(st => st.Stop == originStop);
                     StopTimes destinationStopTime = t.StopTimes.Single(st => st.Stop == destinationStop);
 
@@ -212,14 +209,14 @@ namespace Dijitle.Metra.API.Services
             return shapes;
         }
 
-        public decimal GetDistance(decimal startLat, decimal startLon, decimal endLat, decimal endLon)
+        private decimal GetDistance(decimal lat1, decimal lon1, decimal lat2, decimal lon2)
         {
             const int EARTH_RADIUS = 3959;
 
-            double startLatRadians = GetRadians((double)startLat);
-            double destLatRadians = GetRadians((double)endLat);
-            double deltaLatRadians = GetRadians((double)(endLat - startLat));
-            double detlaLonRadians = GetRadians((double)(endLon - startLon));
+            double startLatRadians = GetRadians((double)lat1);
+            double destLatRadians = GetRadians((double)lat2);
+            double deltaLatRadians = GetRadians((double)(lat2 - lat1));
+            double detlaLonRadians = GetRadians((double)(lon2 - lon1));
 
             double a = Math.Sin(deltaLatRadians / 2) * 
                        Math.Sin(deltaLatRadians / 2) + 

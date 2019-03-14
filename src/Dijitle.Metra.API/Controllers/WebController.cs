@@ -9,6 +9,7 @@ using Dijitle.Metra.API.ViewModels;
 
 namespace Dijitle.Metra.API.Controllers
 {
+    [Route("")]
     [Route("times")]
     public class WebController : Controller
     {

@@ -7,49 +7,45 @@
     <thead class="tablehead">
         <tr>
             <th colspan="2">@Model.Start</th>
-            <th colspan="2"class="text-right">@Model.Destination</th>
+            <th colspan="2" class="text-right">@Model.Destination</th>
         </tr>
     </thead>
 
     @foreach (Time t in Model.Times)
     {
-    <tr>
-        <td width="1px" class="font-weight-bolder" >
-            <span>
-                @t.DepartureTime.ToShortTimeString()
-            </span>
-            
-            <span width="1px" class="font-weight-lighter" style="font-size:8pt;" name="timeUntil" current-time="@t.DepartureTime.ToShortTimeString()"></span>
-            
-            <span name="gpsPositions" data-toggle="tooltip" data-html="true" data-placement="left" title="" 
-                  trip_id="@t.Id" 
-                  origin_name="@t.OriginStop.Name" origin_lat="@t.OriginStop.Lat" origin_lon="@t.OriginStop.Lon" 
-                  destination_name="@t.DestinationStop.Name" destination_lat="@t.DestinationStop.Lat" destination_lon="@t.DestinationStop.Lon"></span>
-        </td>
+        <tr>
+            <td width="1px" class="font-weight-bolder">
+                <span>
+                    @t.DepartureTime.ToShortTimeString()
+                </span>
+
+                <span width="1px" class="font-weight-lighter" style="font-size:8pt;" name="timeUntil" current-time="@t.DepartureTime.ToShortTimeString()"></span>
+
+                <span width="1px" class="font-weight-lighter" style="font-size:8pt;" name="gpsPositions" trip_id="@t.Id" stop_name="@t.OriginStop.Name" lat="@t.OriginStop.Lat" lon="@t.OriginStop.Lon"></span>
+            </td>
 
 
-        <td colspan="2" class="text-center align-middle" style='font-size:8px' data-toggle="tooltip" data-html="true" data-placement="bottom"
-            title="@t.StopsUntil Stops <br/> @t.Minutes minutes">
+            <td colspan="2" class="text-center align-middle" style='font-size:8px'>
 
-            @for (int i = 0; i < t.StopsUntil; i++)
-            {
-                <i class='fas fa-circle align-middle'></i> <i class='fas fa-grip-lines align-middle'></i>
-            }
+                @for (int i = 0; i < t.StopsUntil; i++)
+                {
+                    <i class='fas fa-circle align-middle'></i> <i class='fas fa-grip-lines align-middle'></i>
+                }
 
 
-            @if (t.IsExpress)
-            {
+                @if (t.IsExpress)
+                {
+                    <i class='fas fa-angle-double-right align-middle' style='font-size:24px'></i>
+                }
 
-                <i class='fas fa-angle-double-right align-middle' style='font-size:24px'></i>
-            }
+            </td>
 
-        </td>
-
-        <td width="1px" class="text-right font-weight-bolder">
-        @t.ArrivalTime.ToShortTimeString()
-        <span width="1px" class="font-weight-lighter" style="font-size:8pt;" name="timeUntil" current-time="@t.ArrivalTime.ToShortTimeString()"></span>        
-        </td>
-    </tr>
+            <td width="1px" class="text-right font-weight-bolder">
+                @t.ArrivalTime.ToShortTimeString()
+                <span width="1px" class="font-weight-lighter" style="font-size:8pt;" name="timeUntil" current-time="@t.ArrivalTime.ToShortTimeString()"></span>
+                <span width="1px" class="font-weight-lighter" style="font-size:8pt;" name="gpsPositions" trip_id="@t.Id" stop_name="@t.DestinationStop.Name" lat="@t.DestinationStop.Lat" lon="@t.DestinationStop.Lon"></span>
+            </td>
+        </tr>
     }
 
 </table>
