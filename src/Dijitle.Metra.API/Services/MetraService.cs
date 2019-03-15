@@ -39,11 +39,22 @@ namespace Dijitle.Metra.API.Services
             return routes;
         }
 
-        public async Task<IEnumerable<Time>> GetTimes(Stops originStop, Stops destinationStop, bool expressOnly)
+        public async Task<IEnumerable<Trip>> GetTrips(Stops originStop, Stops destinationStop, bool expressOnly)
         {
-            DateTime selectedDate = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, TimeZoneInfo.FindSystemTimeZoneById("Central Standard Time"));
+            DateTime selectedDate;
             
-            List<Time> times = new List<Time>();
+            if(Environment.OSVersion.Platform == PlatformID.Unix)
+            {
+                selectedDate = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, TimeZoneInfo.FindSystemTimeZoneById("America/Chicago"));
+            }
+            else
+            {
+                selectedDate = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, TimeZoneInfo.FindSystemTimeZoneById("Central Standard Time"));
+            }
+                
+
+            
+            List<Trip> trips = new List<Trip>();
 
             if (_gtfs.Data == null)
             {
@@ -61,49 +72,62 @@ namespace Dijitle.Metra.API.Services
                 ts = ts.Where(t => t.StopTimes.Any(st => st.Stop == destinationStop));
                 ts = ts.Where(t => t.StopTimes.Single(st => st.Stop == originStop).stop_sequence < t.StopTimes.Single(st => st.Stop == destinationStop).stop_sequence);
                 ts = ts.OrderBy(t => t.StopTimes.Single(st => st.Stop == originStop).departure_time);
-
+                                
                 foreach (Trips t in ts)
                 {
                     StopTimes originStopTime = t.StopTimes.Single(st => st.Stop == originStop);
                     StopTimes destinationStopTime = t.StopTimes.Single(st => st.Stop == destinationStop);
 
-                    int indexOrigin = t.StopTimes.OrderBy(st => st.stop_sequence).ToList().IndexOf(originStopTime);
-                    int indexDestination = t.StopTimes.OrderBy(st => st.stop_sequence).ToList().IndexOf(destinationStopTime);
+                    List<StopTimes> indexStopTimes = t.StopTimes.OrderBy(st => st.stop_sequence).ToList();
+                    int indexOrigin = indexStopTimes.IndexOf(originStopTime);
+                    int indexDestination = indexStopTimes.IndexOf(destinationStopTime);
 
-                    if(t.IsExpress(originStopTime, destinationStopTime) || !expressOnly)
+                    IEnumerable<Stop> routeStops = await GetStopsByRoute(r.route_id, t.direction_id == Trips.Direction.Outbound);
+
+                    if (t.IsExpress(originStopTime, destinationStopTime) || !expressOnly)
                     {
-                        times.Add(new Time
+                        Trip trip = new Trip()
                         {
                             Id = t.trip_id,
-                            ArrivalTime = destinationStopTime.departure_time,
-                            DepartureTime = originStopTime.arrival_time,
-                            DestinationStop = new Stop()
-                            {
-                                Id = destinationStopTime.Stop.stop_id,
-                                Name = destinationStopTime.Stop.stop_name,
-                                Lat = destinationStopTime.Stop.stop_lat,
-                                Lon = destinationStopTime.Stop.stop_lon
+                            IsExpress = t.IsExpress(originStopTime, destinationStopTime)
+                        };
 
-                            },
-                            OriginStop = new Stop()
+                        foreach(Stop st in routeStops)
+                        {
+                            trip.RouteStops.Add(st);
+
+                            if(st.Id == destinationStopTime.stop_id)
                             {
-                                Id = originStopTime.Stop.stop_id,
-                                Name = originStopTime.Stop.stop_name,
-                                Lat = originStopTime.Stop.stop_lat,
-                                Lon = originStopTime.Stop.stop_lon
-                            },
-                            IsExpress = t.IsExpress(originStopTime, destinationStopTime),
-                            StopsIn = indexOrigin,
-                            StopsUntil = indexDestination - indexOrigin - 1
-                        });
+                                trip.DestinationStop = st;
+                            }
+                            else if(st.Id == originStopTime.stop_id)
+                            {
+                                trip.OriginStop = st;
+                            }
+                        }
+
+                        foreach(StopTimes st in indexStopTimes)
+                        {
+                            foreach(Stop s in trip.RouteStops)
+                            {
+                                if(s.Id == st.stop_id)
+                                {
+                                    s.ArrivalTime = st.arrival_time;
+                                    s.DepartureTime = st.departure_time;
+                                    trip.TripStops.Add(s);
+                                    break;
+                                }
+                            }
+                        }
+                        trips.Add(trip);
                     }
                 }
             }
 
-            return times;
+            return trips;
         }
 
-        public async Task<IEnumerable<Stop>> GetStopsByDistance(decimal lat, decimal lon, int milesAway)
+        public async Task<IEnumerable<Stop>> GetStopsByDistance(double lat, double lon, int milesAway)
         {
             List<Stop> stops = new List<Stop>();
 
@@ -168,7 +192,7 @@ namespace Dijitle.Metra.API.Services
                     Name = s.stop_name,
                     Lat = s.stop_lat,
                     Lon = s.stop_lon,
-                    DistanceAway = GetDistance(41.882077m, -87.627807m, s.stop_lat, s.stop_lon)
+                    DistanceAway = GetDistance(41.882077d, -87.627807d, s.stop_lat, s.stop_lon)
                 });
             }
 
@@ -209,14 +233,14 @@ namespace Dijitle.Metra.API.Services
             return shapes;
         }
 
-        private decimal GetDistance(decimal lat1, decimal lon1, decimal lat2, decimal lon2)
+        private double GetDistance(double lat1, double lon1, double lat2, double lon2)
         {
             const int EARTH_RADIUS = 3959;
 
-            double startLatRadians = GetRadians((double)lat1);
-            double destLatRadians = GetRadians((double)lat2);
-            double deltaLatRadians = GetRadians((double)(lat2 - lat1));
-            double detlaLonRadians = GetRadians((double)(lon2 - lon1));
+            double startLatRadians = GetRadians(lat1);
+            double destLatRadians = GetRadians(lat2);
+            double deltaLatRadians = GetRadians(lat2 - lat1);
+            double detlaLonRadians = GetRadians(lon2 - lon1);
 
             double a = Math.Sin(deltaLatRadians / 2) * 
                        Math.Sin(deltaLatRadians / 2) + 
@@ -226,7 +250,7 @@ namespace Dijitle.Metra.API.Services
                        Math.Sin(detlaLonRadians / 2);
 
             double c = 2 * Math.Atan2(Math.Sqrt(a), Math.Sqrt(1 - a));
-            return (decimal)(EARTH_RADIUS * c);
+            return (EARTH_RADIUS * c);
         }
 
         private double GetRadians(double degrees)

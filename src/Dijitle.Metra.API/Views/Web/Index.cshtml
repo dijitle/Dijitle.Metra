@@ -3,46 +3,69 @@
     ViewData["Title"] = "Index";
 }
 
-<table class="table table-striped" style="margin-top:60px">
+<table class="table table-striped table-bordered" style="margin-top:60px">
     <thead class="tablehead">
         <tr>
             <th colspan="2">@Model.Start</th>
+            <th width="1px"><button class="btn btn-outline-primary"><i class='fas fa-exchange-alt'></i></button></th>
             <th colspan="2" class="text-right">@Model.Destination</th>
         </tr>
     </thead>
 
-    @foreach (Time t in Model.Times)
+    @foreach (Trip t in Model.Trips)
     {
         <tr>
             <td width="1px" class="font-weight-bolder">
                 <span>
-                    @t.DepartureTime.ToShortTimeString()
+                    @t.OriginStop.DepartureTime.ToShortTimeString()
                 </span>
 
-                <span width="1px" class="font-weight-lighter" style="font-size:8pt;" name="timeUntil" current-time="@t.DepartureTime.ToShortTimeString()"></span>
+                <span width="1px" class="font-weight-lighter" style="font-size:8pt;" name="timeUntil" current-time="@t.OriginStop.DepartureTime.ToShortTimeString()"></span>
 
                 <span width="1px" class="font-weight-lighter" style="font-size:8pt;" name="gpsPositions" trip_id="@t.Id" stop_name="@t.OriginStop.Name" lat="@t.OriginStop.Lat" lon="@t.OriginStop.Lon"></span>
             </td>
 
 
-            <td colspan="2" class="text-center align-middle" style='font-size:8px'>
+            <td colspan="3" class="text-center align-middle" style='font-size:8px'>
+                @{bool expressShown = false; }
 
-                @for (int i = 0; i < t.StopsUntil; i++)
+                @for (int i = 0; i < t.RouteStops.Count; i++)
                 {
-                    <i class='fas fa-circle align-middle'></i> <i class='fas fa-grip-lines align-middle'></i>
-                }
 
+                    @if (t.TripStops.Contains(t.RouteStops[i]))
+                    {
 
-                @if (t.IsExpress)
-                {
-                    <i class='fas fa-angle-double-right align-middle' style='font-size:24px'></i>
-                }
+                        if (i > 0)
+                        {
+                            <i class="fas fa-grip-lines align-middle"></i>
+                        }
+
+                        <i class="fas fa-circle align-middle" data-toggle="tooltip" title="@t.RouteStops[i].Name"
+                           style="@(i == 0 ? "color:green" : (i == t.RouteStops.Count - 1  || t.TripStops.Last() == t.RouteStops[i] ? "color:red" : "color:black"));
+                                  @(t.RouteStops[i] == t.OriginStop || t.RouteStops[i] == t.DestinationStop ? "font-size:16px" : "font-size:8px");"></i>
+
+                        expressShown = false;
+
+                        if (t.TripStops.Last() == t.RouteStops[i])
+                        {
+                            break;
+                        }
+                    }
+                    else if (!expressShown)
+                    {
+                        <i class="fas fa-grip-lines align-middle"></i><i class="fas fa-angle-double-right align-middle" style="color:blue; font-size:16px;"></i>
+                            
+                        expressShown = true;
+
+                    }
+                  }
+                
 
             </td>
 
             <td width="1px" class="text-right font-weight-bolder">
-                @t.ArrivalTime.ToShortTimeString()
-                <span width="1px" class="font-weight-lighter" style="font-size:8pt;" name="timeUntil" current-time="@t.ArrivalTime.ToShortTimeString()"></span>
+                @t.DestinationStop.ArrivalTime.ToShortTimeString()
+                <span width="1px" class="font-weight-lighter" style="font-size:8pt;" name="timeUntil" current-time="@t.DestinationStop.ArrivalTime.ToShortTimeString()"></span>
                 <span width="1px" class="font-weight-lighter" style="font-size:8pt;" name="gpsPositions" trip_id="@t.Id" stop_name="@t.DestinationStop.Name" lat="@t.DestinationStop.Lat" lon="@t.DestinationStop.Lon"></span>
             </td>
         </tr>

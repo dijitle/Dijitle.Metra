@@ -51,10 +51,10 @@ namespace Dijitle.Metra.API.Controllers
         }
 
         [HttpGet()]
-        [Route("Times")]
+        [Route("Trips")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> GetTimes(string start = "ROUTE59", string dest = "CUS", bool expressOnly = false)
+        public async Task<IActionResult> GetTrips(string start = "ROUTE59", string dest = "CUS", bool expressOnly = false)
         {
             if (_gtfs.Data == null)
             {
@@ -70,13 +70,13 @@ namespace Dijitle.Metra.API.Controllers
                 return NotFound($"No stop named {dest} was found!");
             }
 
-            return Ok(await _metra.GetTimes(_gtfs.Data.Stops[start], _gtfs.Data.Stops[dest], expressOnly));
+            return Ok(await _metra.GetTrips(_gtfs.Data.Stops[start], _gtfs.Data.Stops[dest], expressOnly));
         }
 
         [HttpGet()]
         [Route("StopsByDistance")]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<IActionResult> GetStopsByDistance(decimal lat = 41.882077m, decimal lon = -87.627807m, int distance = 5)
+        public async Task<IActionResult> GetStopsByDistance(double lat = 41.882077d, double lon = -87.627807d, int distance = 5)
         {
             return Ok(await _metra.GetStopsByDistance(lat, lon, distance));
         }

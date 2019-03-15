@@ -16,6 +16,7 @@ using Dijitle.Metra.API.Services;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using Microsoft.Extensions.Configuration;
+using Microsoft.OpenApi.Models;
 
 namespace Dijitle.Metra.API
 {
@@ -48,7 +49,7 @@ namespace Dijitle.Metra.API
 
             services.AddSwaggerGen(c =>
             {
-                c.SwaggerDoc("v1", new Info { Title = "Dijitle Metra API", Version = "v1" });
+                c.SwaggerDoc("v1", new OpenApiInfo { Title = "Dijitle Metra API", Version = "v1" });
                 var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
                 var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
                 c.IncludeXmlComments(xmlPath);
@@ -56,6 +57,8 @@ namespace Dijitle.Metra.API
 
             services.AddSingleton<IMetraService, MetraService>();
             services.AddSingleton<IGTFSService, GTFSService>();
+
+            services.AddHealthChecks();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -82,7 +85,7 @@ namespace Dijitle.Metra.API
 
             app.UseMvc();
 
-
+            app.UseHealthChecks("/health");
         }
     }
 }

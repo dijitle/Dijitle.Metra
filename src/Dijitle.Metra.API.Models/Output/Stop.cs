@@ -12,12 +12,18 @@ namespace Dijitle.Metra.API.Models.Output
         public string Name { get; set; }
 
         [JsonProperty("lat")]
-        public decimal Lat { get; set; }
+        public double Lat { get; set; }
 
         [JsonProperty("lon")]
-        public decimal Lon { get; set; }
+        public double Lon { get; set; }
 
         [JsonProperty("distance")]
-        public decimal DistanceAway { get; set; }
+        public double DistanceAway { get; set; }
+
+        [JsonProperty("arrivalTime")]
+        public DateTime ArrivalTime { get; set; }
+
+        [JsonProperty("departureTime")]
+        public DateTime DepartureTime { get; set; }
     }
 }

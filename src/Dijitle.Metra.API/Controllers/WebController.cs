@@ -10,7 +10,7 @@ using Dijitle.Metra.API.ViewModels;
 namespace Dijitle.Metra.API.Controllers
 {
     [Route("")]
-    [Route("times")]
+    [Route("Trips")]
     public class WebController : Controller
     {
         private IMetraService _metra;
@@ -31,7 +31,7 @@ namespace Dijitle.Metra.API.Controllers
             }
             var tvm = new TimeViewModel()
             {
-                Times = await _metra.GetTimes(_gtfs.Data.Stops[start], _gtfs.Data.Stops[dest], expressOnly),
+                Trips = await _metra.GetTrips(_gtfs.Data.Stops[start], _gtfs.Data.Stops[dest], expressOnly),
                 Start = _gtfs.Data.Stops[start].stop_name,
                 Destination = _gtfs.Data.Stops[dest].stop_name
             };

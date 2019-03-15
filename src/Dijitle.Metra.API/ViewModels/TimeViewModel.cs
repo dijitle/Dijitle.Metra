@@ -10,6 +10,6 @@ namespace Dijitle.Metra.API.ViewModels
     {
         public string Start { get; set; }
         public string Destination { get; set; }
-        public IEnumerable<Time> Times { get; set; }
+        public IEnumerable<Trip> Trips { get; set; }
     }
 }

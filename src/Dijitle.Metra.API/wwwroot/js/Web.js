@@ -1,4 +1,8 @@
-﻿function startTime() {
+﻿$(document).ready(function () {
+    $('[data-toggle="tooltip"]').tooltip();
+});
+
+function startTime() {
     var today = new Date();
     var h = today.getHours();
     var m = today.getMinutes();
@@ -52,7 +56,7 @@ function getTimes() {
     var to = document.getElementById('stopsTo').selectedOptions[0].value;
     var express = document.getElementById('expressOnly').checked
  
-    window.location.href = 'times?start=' + from +'&dest=' + to + "&expressOnly=" + express;
+    window.location.href = '?start=' + from +'&dest=' + to + "&expressOnly=" + express;
 }
 
 function loadRoutes() {
@@ -105,6 +109,10 @@ function loadStops() {
 function getPositions() {
 
     var items = document.getElementsByName('gpsPositions');
+
+    items.forEach(function (i) {
+            i.innerHTML = '';
+    });
 
     $.get("api/gtfs/positions", function (data) {
         data.forEach(function (d) {

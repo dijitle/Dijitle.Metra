@@ -12,6 +12,10 @@
     <script src="~/js/Web.js"></script>
     <link href="~/css/web.css" rel="stylesheet" />
     <link href="~/Images/DijitleLogo.png" rel="shortcut icon" type="image/png" />
+    <link rel="apple-touch-icon" sizes="57x57" href="~/Images/apple-icon-57x57.png" />
+    <link rel="apple-touch-icon" sizes="72x72" href="~/Images/apple-icon-72x72.png" />
+    <link rel="apple-touch-icon" sizes="114x114" href="~/Images/apple-icon-114x114.png" />
+    <link rel="apple-touch-icon" sizes="144x144" href="~/Images/apple-icon-144x144.png" />
 </head>
 <body onload="startTime(); loadRoutes(); loadStops(); getPositions();">
     <nav class="navbar bg-primary navbar-dark fixed-top">
@@ -35,12 +39,12 @@
 
                 <span class="navbar-text align-middle">From:</span>
                 <select id="stopsFrom" class="custom-select">
-                    <option selected hidden>Choose a origin stop...</option>
+                    <option selected hidden value="ROUTE59">Choose a origin stop...</option>
                 </select>
 
                 <span class="navbar-text align-middle">To:</span>
                 <select id="stopsTo" class="custom-select">
-                    <option selected hidden>Choose a destination stop...</option>
+                    <option selected hidden value="CUS">Choose a destination stop...</option>
                 </select>
             </div>
 
