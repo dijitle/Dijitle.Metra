@@ -60,9 +60,12 @@ function getTimes() {
 }
 
 function loadRoutes() {
-    var routeComboBox = document.getElementById('routes')
+    var routeComboBox = document.getElementById('routes');
+    var expressCheck = document.getElementById('expressOnly');
 
-    routeComboBox.innerHTML = "<option selected value='-1'>All Routes</option>"
+    expressCheck.checked = window.location.href.indexOf("expressOnly=true") > -1;
+
+    routeComboBox.innerHTML = "<option selected value='-1'>All Routes</option>";
 
     $.get("api/metra/routes", function (data) {
 
@@ -163,4 +166,36 @@ function getLocation() {
 function showPosition(position) {
    alert( "Latitude: " + position.coords.latitude +
         "<br>Longitude: " + position.coords.longitude);
+}
+
+function switchStops() {
+
+    if (window.location.href.indexOf('?') > - 1) {
+        var params = window.location.href.split('?')[1];
+
+        var oldStart = params.split('&')[0].split('=')[1]
+        var oldDest = params.split('&')[1].split('=')[1]
+        var oldExpress = params.split('&')[2].split('=')[1]
+
+        window.location.href = "?start=" + oldDest + "&dest=" + oldStart + "&expressOnly=" + oldExpress;
+    }
+    else {
+        window.location.href = window.location.href + "?start=CUS&dest=ROUTE59&expressOnly=false";
+    }
+
+}
+
+function changeExpress() {
+
+    if (document.getElementById('expressOnly').checked) {
+
+        window.location.href = window.location.href.replace('expressOnly=false', 'expressOnly=true');
+    }
+    else {
+        window.location.href = window.location.href.replace('expressOnly=true', 'expressOnly=false');
+    }
+
+    
+
+
 }

@@ -31,32 +31,52 @@
 
         <div class="collapse navbar-collapse" id="collapsibleNavbar">
             
-            <div class="form-group">
-                <span class="navbar-text align-middle">Routes:</span>
+
+            <div class="input-group my-3">
+
+                <div class="input-group-prepend mp-3">
+                    <span class="input-group-text fas fa-route" style="font-size:24px; width:64px;"></span>
+                </div>
                 <select id="routes" class="custom-select" onchange="loadStops();">
                     <option selected>All Routes</option>
                 </select>
+            </div>
 
-                <span class="navbar-text align-middle">From:</span>
+            <div class="input-group mb-3">
+
+                <div class="input-group-prepend">
+                    <span class="input-group-text fas fa-home" style="font-size:24px; width:64px;"></span>
+                </div>
                 <select id="stopsFrom" class="custom-select">
                     <option selected hidden value="ROUTE59">Choose a origin stop...</option>
                 </select>
 
-                <span class="navbar-text align-middle">To:</span>
+                <div class="input-group-append">
+                    <button class="btn btn-success" type="button">Set</button>
+                </div>
+            </div>
+
+            <div class="input-group mb-3">
+
+                <div class="input-group-prepend">
+                    <span class="input-group-text fas fa-building" style="font-size:24px; width:64px;"></span>
+                </div>
                 <select id="stopsTo" class="custom-select">
                     <option selected hidden value="CUS">Choose a destination stop...</option>
                 </select>
+                <div class="input-group-append">
+                    <button class="btn btn-success" type="button">Set</button>
+                </div>
             </div>
 
-            <div class="form-group">
-                <span class="navbar-text align-middle">Express Only</span>
+            <div class="input-group mb-3">
+                
+                <span class="navbar-text" style="margin-right:5px;">Express Only</span>
 
                 <label class="switch">
-                    <input id="expressOnly" type="checkbox" />
+                    <input id="expressOnly" type="checkbox" onclick="changeExpress()" />
                     <span class="slider round"></span>
                 </label>
-
-                <button class="btn btn-success align-middle float-right" type="button" onclick="getTimes()">Get Times</button>
             </div>
         </div>
     </nav>
