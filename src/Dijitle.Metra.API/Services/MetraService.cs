@@ -32,7 +32,9 @@ namespace Dijitle.Metra.API.Services
                 {
                     Id = r.route_id,
                     ShortName = r.route_short_name,
-                    LongName = r.route_long_name
+                    LongName = r.route_long_name,
+                    RouteColor = r.route_color,
+                    TextColor = r.route_text_color
                 });
             }
 
@@ -51,8 +53,6 @@ namespace Dijitle.Metra.API.Services
             {
                 selectedDate = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, TimeZoneInfo.FindSystemTimeZoneById("Central Standard Time"));
             }
-                
-
             
             List<Trip> trips = new List<Trip>();
 
@@ -89,7 +89,15 @@ namespace Dijitle.Metra.API.Services
                         Trip trip = new Trip()
                         {
                             Id = t.trip_id,
-                            IsExpress = t.IsExpress(originStopTime, destinationStopTime)
+                            IsExpress = t.IsExpress(originStopTime, destinationStopTime),
+                            Route = new Route()
+                            {
+                                Id = r.route_id,
+                                ShortName = r.route_short_name,
+                                LongName = r.route_long_name,
+                                RouteColor = r.route_color,
+                                TextColor = r.route_text_color
+                            }
                         };
 
                         foreach(Stop st in routeStops)

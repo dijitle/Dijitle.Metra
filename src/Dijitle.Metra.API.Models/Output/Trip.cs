@@ -21,6 +21,9 @@ namespace Dijitle.Metra.API.Models.Output
         [JsonProperty("orginStop")]
         public Stop OriginStop { get; set; }
 
+        [JsonProperty("route")]
+        public Route Route { get; set; }
+
         [JsonIgnore]
         public List<Stop> RouteStops { get; set; }
 

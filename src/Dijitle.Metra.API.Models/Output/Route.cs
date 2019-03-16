@@ -12,5 +12,11 @@ namespace Dijitle.Metra.API.Models.Output
 
         [JsonProperty("longName")]
         public string LongName { get; set; }
+
+        [JsonProperty("routecolor")]
+        public string RouteColor { get; set; }
+
+        [JsonProperty("textColor")]
+        public string TextColor { get; set; }
     }
 }

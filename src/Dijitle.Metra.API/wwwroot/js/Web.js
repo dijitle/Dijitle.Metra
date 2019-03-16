@@ -21,6 +21,10 @@ function startTime() {
         var then = i.getAttribute('current-time');
 
         var then = today.setHours(then.split(':')[0], then.split(':')[1], 0, 0);
+
+        if (i.getAttribute('next_day') === 'next_day') {
+            then += 1000 * 60 * 60 * 24
+        }
         
         var diff = then - now;
         
@@ -35,12 +39,24 @@ function startTime() {
         
         if (diffHours < 0) {
             i.innerHTML = "";
+            i.setAttribute("style", "")
         }
         else if(diffHours < 1) {
             i.innerHTML = diffMinutes + ":" + checkTime(diffSeconds)
+
+            if (diffMinutes < 1) {
+                i.setAttribute("style", "font-color:red;")
+            }
+            else if (diffMinutes < 10) {
+                i.setAttribute("style", "font-color:orange;")
+            }
+            else {
+                i.setAttribute("style", "")
+            }
         }
         else {
             i.innerHTML = diffHours + ":" + checkTime(diffMinutes) + ":" + checkTime(diffSeconds)
+            i.setAttribute("style", "")
         }
     });
 
@@ -111,21 +127,47 @@ function loadStops() {
 
 function getPositions() {
 
-    var items = document.getElementsByName('gpsPositions');
+    var items = document.getElementsByName('progressBar');
+
+    var today = new Date();
+    var now = today.getTime();
 
     items.forEach(function (i) {
-            i.innerHTML = '';
+
+        var departTime = i.getAttribute('route_StartTime');
+        departTime = today.setHours(departTime.split(':')[0], departTime.split(':')[1], 0, 0);
+
+        if (i.getAttribute('route_StartNextDay') === 'route_StartNextDay') {
+            departTime += 1000 * 60 * 60 * 24
+        }
+
+        var arriveTime = i.getAttribute('route_DestTime');
+        arriveTime = today.setHours(arriveTime.split(':')[0], arriveTime.split(':')[1], 0, 0);
+
+        if (i.getAttribute('route_DestNextDay') === 'route_DestNextDay') {
+            arriveTime += 1000 * 60 * 60 * 24
+        }
+
+        if (departTime < now) {
+
+            i.setAttribute("aria-valuenow", 0);
+            i.setAttribute("style", "width: 0%;");
+        }
+        else if (now > arriveTime) {
+            i.setAttribute("aria-valuenow", 100);
+            i.setAttribute("style", "width: 100%;");
+        }
     });
 
     $.get("api/gtfs/positions", function (data) {
         data.forEach(function (d) {
             items.forEach(function (i) {
                 if (d.tripId === i.attributes.trip_id.value) {
-                    i.innerHTML = '<i class="fas fa-satellite-dish"></i>';
+                    var distTotal = getDistance(i.attributes.latStart.value, i.attributes.lonStart.value, i.attributes.latDest.value, i.attributes.lonDest.value);
+                    var distTraveled = getDistance(i.attributes.latStart.value, i.attributes.lonStart.value, d.latitude, d.longitude);
 
-                    var dist = getDistance(i.attributes.lat.value, i.attributes.lon.value, d.latitude, d.longitude);
-
-                    i.innerHTML += dist + " miles";
+                    i.setAttribute("aria-valuenow", (distTraveled / distTotal) * 100);
+                    i.setAttribute("style", "width: " + (distTraveled / distTotal * 100) + "%;");
                 }
             });
         });
