@@ -12,6 +12,7 @@ namespace Dijitle.Metra.API.Services
         AllData Data { get; }
 
         Task<IEnumerable<Position>> GetPositions();
+        Task<object> GetAlerts();
         Task RefreshData();
     }
 }

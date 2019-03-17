@@ -28,6 +28,14 @@ namespace Dijitle.Metra.API.Controllers
         }
 
         [HttpGet()]
+        [Route("Alerts")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public async Task<IActionResult> GetAlerts()
+        {
+            return Ok(await _gtfs.GetAlerts());
+        }
+
+        [HttpGet()]
         [Route("RefreshData")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         public async Task<IActionResult> RefreshData()

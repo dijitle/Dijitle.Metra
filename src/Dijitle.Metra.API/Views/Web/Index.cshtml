@@ -71,7 +71,7 @@
                                 {
                                     if (t.TripStops.Contains(t.RouteStops[i]))
                                     {
-                                <div class="fas fa-circle d-block mb-1" 
+                                <div class="fas fa-circle d-block mb-1 mx-3" 
                                       style="@(i == 0 ? "color:green" : (i == t.RouteStops.Count - 1  || t.TripStops.Last() == t.RouteStops[i] ? "color:red" : "color:black"));
                                       @(t.RouteStops[i] == t.OriginStop || t.RouteStops[i] == t.DestinationStop ? "font-weight: bold" : "font-weight: normal");">
                                     <span class="mr-3">@t.RouteStops[i].DepartureTime.ToShortTimeString()</span> <span>@t.RouteStops[i].Name</span>

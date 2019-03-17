@@ -2,6 +2,35 @@
     $('[data-toggle="tooltip"]').tooltip();
 });
 
+function setCookie(cname, cvalue, exdays) {
+    var d = new Date();
+    d.setTime(d.getTime() + (exdays * 24 * 60 * 60 * 1000));
+    var expires = "expires=" + d.toUTCString();
+    document.cookie = cname + "=" + cvalue + ";Secure;" + expires + ";path=/";
+}
+
+function getCookie(cname) {
+    var name = cname + "=";
+    var ca = document.cookie.split(';');
+    for (var i = 0; i < ca.length; i++) {
+        var c = ca[i];
+        while (c.charAt(0) == ' ') {
+            c = c.substring(1);
+        }
+        if (c.indexOf(name) == 0) {
+            return c.substring(name.length, c.length);
+        }
+    }
+    return "";
+}
+
+function start() {
+    loadRoutes();
+    loadStops();
+    startTime();
+    getPositions();
+}
+
 function startTime() {
     var today = new Date();
     var h = today.getHours();
@@ -88,8 +117,6 @@ function checkTime(i) {
     return i;
 }
 
-
-
 function getTimes() {
     var from = document.getElementById('stopsFrom').selectedOptions[0].value;
     var to = document.getElementById('stopsTo').selectedOptions[0].value;
@@ -122,12 +149,30 @@ function loadStops() {
     fromComboBox.innerHTML = "<option selected value='ROUTE59' hidden>Choose a origin stop...</option>";
     toComboBox.innerHTML = "<option selected value='CUS' hidden>Choose a destination stop...</option>";
 
+    var cookieStopsFrom = getCookie("stopsFrom")
+    var cookieStopsTo = getCookie("stopsTo")
+
     if (route === '-1') {
         $.get("api/metra/AllStops", function (data) {
 
             data.forEach(function (d) {
-                fromComboBox.innerHTML += "<option value=" + d.id + ">" + d.name + "</option>";
-                toComboBox.innerHTML += "<option value=" + d.id + ">" + d.name + "</option>";
+
+                var fromOption = document.createElement("OPTION");                
+                if (cookieStopsFrom == d.id) {
+                    fromOption.selected = true;
+                }
+                fromOption.setAttribute("value", d.id)
+                fromOption.innerText = d.name;
+                fromComboBox.appendChild(fromOption);
+
+
+                var toOption = document.createElement("OPTION");
+                if (cookieStopsTo == d.id) {
+                    toOption.selected = true;
+                }
+                toOption.setAttribute("value", d.id)
+                toOption.innerText = d.name;
+                toComboBox.appendChild(toOption);
             })
         });
     }
@@ -135,17 +180,34 @@ function loadStops() {
         $.get("api/metra/StopsByRoute?route=" + route + "&sortAsc=false", function (data) {
 
             data.forEach(function (d) {
-                fromComboBox.innerHTML += "<option value=" + d.id + ">" + d.name + "</option>";
+                var fromOption = document.createElement("OPTION");
+                if (cookieStopsFrom == d.id) {
+                    fromOption.selected = true;
+                }
+                fromOption.setAttribute("value", d.id)
+                fromOption.innerText = d.name;
+                fromComboBox.appendChild(fromOption);
             })
         });
 
         $.get("api/metra/StopsByRoute?route=" + route + "&sortAsc=true", function (data) {
 
             data.forEach(function (d) {
-                toComboBox.innerHTML += "<option value=" + d.id + ">" + d.name + "</option>";
+                var toOption = document.createElement("OPTION");
+                if (cookieStopsTo == d.id) {
+                    toOption.selected = true;
+                }
+                toOption.setAttribute("value", d.id)
+                toOption.innerText = d.name;
+                toComboBox.appendChild(toOption);
             })
         });
     }
+}
+
+
+function save(item) {
+    setCookie(item, document.getElementById(item).selectedOptions[0].value, 365); 
 }
 
 function getPositions() {
