@@ -18,17 +18,38 @@ function startTime() {
 
     items.forEach(function (i) {
 
-        var then = i.getAttribute('current-time');
+        var depart = i.getAttribute('depart_time');
 
-        var then = today.setHours(then.split(':')[0], then.split(':')[1], 0, 0);
+        depart = today.setHours(depart.split(':')[0], depart.split(':')[1], 0, 0);
 
-        if (i.getAttribute('next_day') === 'next_day') {
-            then += 1000 * 60 * 60 * 24
+        if (i.getAttribute('depart_next_day') === 'depart_next_day') {
+            depart += 1000 * 60 * 60 * 24;
+        }
+
+        var arrive = i.getAttribute('arrive_time');
+
+        arrive = today.setHours(arrive.split(':')[0], arrive.split(':')[1], 0, 0);
+
+        if (i.getAttribute('arrive_next_day') === 'arrive_next_day') {
+            arrive += 1000 * 60 * 60 * 24;
         }
         
-        var diff = then - now;
+        var diffDepart = depart - now;
+        var diffArrive = arrive - now;
+
+        var diff;
+        var preText;
+
+        if (diffDepart > 0) {
+            diff = diffDepart;
+            preText = "Departing: ";
+        }
+        else {
+            diff = diffArrive;
+            preText = "Arriving: ";
+        }
         
-        var diffHours = Math.floor(diff / (1000 * 60 * 60));
+        var diffHours = Math.floor(diff  / (1000 * 60 * 60));
         diff -= diffHours * (1000 * 60 * 60);
 
         var diffMinutes = Math.floor(diff / (1000 * 60));
@@ -38,25 +59,25 @@ function startTime() {
         diff -= diffSeconds * (1000);
         
         if (diffHours < 0) {
-            i.innerHTML = "";
-            i.setAttribute("style", "")
+            i.innerHTML = "Complete";
+            i.setAttribute("class", "text-success")
         }
         else if(diffHours < 1) {
-            i.innerHTML = diffMinutes + ":" + checkTime(diffSeconds)
+            i.innerHTML = preText + diffMinutes + ":" + checkTime(diffSeconds)
 
             if (diffMinutes < 1) {
-                i.setAttribute("style", "font-color:red;")
+                i.setAttribute("class", "text-danger")
             }
             else if (diffMinutes < 10) {
-                i.setAttribute("style", "font-color:orange;")
+                i.setAttribute("class", "text-warning")
             }
             else {
-                i.setAttribute("style", "")
+                i.setAttribute("class", "")
             }
         }
         else {
-            i.innerHTML = diffHours + ":" + checkTime(diffMinutes) + ":" + checkTime(diffSeconds)
-            i.setAttribute("style", "")
+            i.innerHTML = preText + diffHours + ":" + checkTime(diffMinutes) + ":" + checkTime(diffSeconds)
+            i.setAttribute("class", "")
         }
     });
 
@@ -66,6 +87,8 @@ function checkTime(i) {
     if (i < 10) { i = "0" + i };  // add zero in front of numbers < 10
     return i;
 }
+
+
 
 function getTimes() {
     var from = document.getElementById('stopsFrom').selectedOptions[0].value;
@@ -148,14 +171,14 @@ function getPositions() {
             arriveTime += 1000 * 60 * 60 * 24
         }
 
-        if (departTime < now) {
+        if (now < departTime) {
 
             i.setAttribute("aria-valuenow", 0);
-            i.setAttribute("style", "width: 0%;");
+            i.setAttribute("style", "height: 0%;");
         }
         else if (now > arriveTime) {
             i.setAttribute("aria-valuenow", 100);
-            i.setAttribute("style", "width: 100%;");
+            i.setAttribute("style", "height: 100%;");
         }
     });
 
@@ -167,7 +190,7 @@ function getPositions() {
                     var distTraveled = getDistance(i.attributes.latStart.value, i.attributes.lonStart.value, d.latitude, d.longitude);
 
                     i.setAttribute("aria-valuenow", (distTraveled / distTotal) * 100);
-                    i.setAttribute("style", "width: " + (distTraveled / distTotal * 100) + "%;");
+                    i.setAttribute("style", "height: " + (distTraveled / distTotal * 100) + "%;");
                 }
             });
         });

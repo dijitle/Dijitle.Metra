@@ -3,7 +3,7 @@
     ViewData["Title"] = "Trips";
 }
 
-    <div class="row shadow p-3 mb-5 bg-white rounded align-items-center" style="margin-top:64px;">
+    <div class="row shadow p-3 mb-1 bg-white rounded align-items-center" style="margin-top:64px; position: sticky;">
         <div class="col font-weight-bolder ">
                 @Model.Start
         </div>
@@ -15,87 +15,84 @@
         </div>
     </div>
 
+    <div id="accordion">
 
-<table class="table" style="margin-top:-42px">
+        @foreach (Trip t in Model.Trips)
+        {
+            <div class="card">
+                <div class="card-header" data-toggle="collapse" data-target="#@($"collapse{t.Id}")" aria-expanded="false" aria-controls="@($"collapse{t.Id}")" style="cursor: pointer;">
+                    <div class="d-flex justify-content-between">
+                        <div class="row">
+                            <div width="1px" class="font-weight-bolder mr-3">
+                                <span>
+                                    @t.OriginStop.DepartureTime.ToShortTimeString()
+                                </span>
 
-    @foreach (Trip t in Model.Trips)
-    {
-        <tr>
-            <td width="1px" class="font-weight-bolder">
-                <span>
-                    @t.OriginStop.DepartureTime.ToShortTimeString()
-                </span>
+                                <span width="1px" class="font-weight-lighter" style="font-size:8pt;" name="gpsPositions" trip_id="@t.Id" stop_name="@t.OriginStop.Name" lat="@t.OriginStop.Lat" lon="@t.OriginStop.Lon"></span>
+                            </div>
 
-                <span width="1px" class="font-weight-lighter" style="font-size:8pt;" name="gpsPositions" trip_id="@t.Id" stop_name="@t.OriginStop.Name" lat="@t.OriginStop.Lat" lon="@t.OriginStop.Lon"></span>
-            </td>
-
-            <td width="1px" class="font-weight-bolder">
-                <span class="badge-pill" style="font-size:16px; background-color:#@t.Route.RouteColor; foreground-color:#@t.Route.TextColor">
-                    @t.Route.ShortName
-                </span>
-            </td>
-            <td>
-                @t.Id.Split('_')[1].Substring(2)
-            </td>
-            <td class="font-weight-bolder">
-                <span width="1px" name="timeUntil" next_day="@(t.OriginStop.DepartureTime.Day == 2)" current-time="@t.OriginStop.DepartureTime.ToShortTimeString()"></span>
-                <span width="1px" name="timeUntil" next_day="@(t.DestinationStop.DepartureTime.Day == 2)" current-time="@t.DestinationStop.ArrivalTime.ToShortTimeString()"></span>
-            </td>
-            
-
-            <td width="1px" class="text-right font-weight-bolder">
-                @t.DestinationStop.ArrivalTime.ToShortTimeString()
-                <span width="1px" class="font-weight-lighter" style="font-size:8pt;" name="gpsPositions" trip_id="@t.Id" stop_name="@t.DestinationStop.Name" lat="@t.DestinationStop.Lat" lon="@t.DestinationStop.Lon"></span>
-            </td>
-        </tr>
-        <tr style="box-shadow: 0 .1rem .1rem inset;">
-            <td colspan="5" class="align-middle" style='font-size:8px'>
-                
-                <div class="d-flex justify-content-between">
-
-                    
-                    @for (int i = 0; i < t.RouteStops.Count; i++)
-                    {
-
-                        @if (t.TripStops.Contains(t.RouteStops[i]))
-                        {
-
-                            if (i > 0)
-                            {
-                                <i class="fas fa-grip-lines align-middle"></i>
-                            }
-
-                            <i class="fas fa-circle align-middle" data-toggle="tooltip" title="@t.RouteStops[i].Name"
-                               style="@(i == 0 ? "color:green" : (i == t.RouteStops.Count - 1  || t.TripStops.Last() == t.RouteStops[i] ? "color:red" : "color:black"));
-                                  @(t.RouteStops[i] == t.OriginStop || t.RouteStops[i] == t.DestinationStop ? "font-size:16px" : "font-size:8px");"></i>
+                            <div width="1px" class="font-weight-bolder">
+                                <span class="badge-pill" style="font-size:16px; background-color:#@t.Route.RouteColor; foreground-color:#@t.Route.TextColor">
+                                    @t.Route.ShortName
+                                </span>
+                                @t.Id.Split('_')[1].Substring(2)
+                            </div>
+                        </div>
+                        <div class="font-weight-bolder">
+                            <span width="1px" name="timeUntil"
+                                  depart_next_day="@(t.OriginStop.DepartureTime.Day == 2)" depart_time="@t.OriginStop.DepartureTime.ToShortTimeString()"
+                                  arrive_next_day="@(t.DestinationStop.ArrivalTime.Day == 2)" arrive_time="@t.DestinationStop.ArrivalTime.ToShortTimeString()">
+                            </span>
+                        </div>
 
 
-                            if (t.TripStops.Last() == t.RouteStops[i])
-                            {
-                                break;
-                            }
-                        }
-                        else
-                        {
-                            <i class="fas fa-grip-lines align-middle"></i> <i class="fas fa-grip-lines align-middle"></i>
-
-
-                        }
-                    }
+                        <div width="1px" class="text-right font-weight-bolder">
+                            @t.DestinationStop.ArrivalTime.ToShortTimeString()
+                            <span width="1px" class="font-weight-lighter" style="font-size:8pt;" name="gpsPositions" trip_id="@t.Id" stop_name="@t.DestinationStop.Name" lat="@t.DestinationStop.Lat" lon="@t.DestinationStop.Lon"></span>
+                        </div>
+                    </div>
                 </div>
 
-                <div name="progress" class="progress mt-3">
-                    <div class="progress-bar progress-bar-striped bg-success" name="progressBar" 
-                         trip_id="@t.Id" latStart="@t.RouteStops.First().Lat" lonStart="@t.RouteStops.First().Lon" latDest="@t.RouteStops.Last().Lat" lonDest="@t.RouteStops.Last().Lon"
-                         route_StartNextDay="@(t.RouteStops.First().DepartureTime.Day == 2)" route_DestNextDay="@(t.RouteStops.Last().DepartureTime.Day == 2)"
-                         route_StartTime="@t.RouteStops.First().DepartureTime.ToShortTimeString()" route_EndTime="@t.RouteStops.Last().DepartureTime.ToShortTimeString()"
-                         role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%"></div>
-                    <span class="badge badge-primary"><i class='fas fa-train'></i></span>
+                <div id="@($"collapse{t.Id}")" class="collapse" aria-labelledby="@($"collapse{t.Id}")" data-parent="#accordion">
+                    <div class="card-body">
+                        <div class="row mx-3">
+                            <div name="progress" class="progress-bar-vertical">
+                                <div class="progress-bar progress-bar-striped bg-success" name="progressBar"
+                                     trip_id="@t.Id" latStart="@t.RouteStops.First().Lat" lonStart="@t.RouteStops.First().Lon" latDest="@t.RouteStops.Last().Lat" lonDest="@t.RouteStops.Last().Lon"
+                                     route_StartNextDay="@(t.RouteStops.First().DepartureTime.Day == 2)" route_DestNextDay="@(t.RouteStops.Last().DepartureTime.Day == 2)"
+                                     route_StartTime="@t.RouteStops.First().DepartureTime.ToShortTimeString()" route_DestTime="@t.RouteStops.Last().DepartureTime.ToShortTimeString()"
+                                     role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="height: 0%">
+                                    <span class="badge-success mt-auto" ><i class='fas fa-train'></i></span>
+                                </div>
+                            </div>
+                            <div>
+                                
+                                @for (int i = 0; i < t.RouteStops.Count; i++)
+                                {
+                                    if (t.TripStops.Contains(t.RouteStops[i]))
+                                    {
+                                <div class="fas fa-circle d-block mb-1" 
+                                      style="@(i == 0 ? "color:green" : (i == t.RouteStops.Count - 1  || t.TripStops.Last() == t.RouteStops[i] ? "color:red" : "color:black"));
+                                      @(t.RouteStops[i] == t.OriginStop || t.RouteStops[i] == t.DestinationStop ? "font-weight: bold" : "font-weight: normal");">
+                                    <span class="mr-3">@t.RouteStops[i].DepartureTime.ToShortTimeString()</span> <span>@t.RouteStops[i].Name</span>
+                                </div>
+
+
+                                        if (t.TripStops.Last() == t.RouteStops[i])
+                                        {
+                                            break;
+                                        }
+                                    }
+                                }
+
+                            </div>
+                        </div>
+                        
+                    </div>
                 </div>
+            </div>
 
-            </td>
-        </tr>
-    }
+        }
+        </div>
 
-</table>
 

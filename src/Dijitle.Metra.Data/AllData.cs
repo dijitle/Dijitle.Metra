@@ -59,7 +59,10 @@ namespace Dijitle.Metra.Data
 
         public IEnumerable<Calendar> GetCurrentCalendars(DateTime date)
         {
-            return Calendars.Where(c => c.Value.start_date < date && c.Value.end_date.AddDays(1) >= date  && c.Value.IsDay(date.DayOfWeek) == true).Select(o => o.Value);
+            return Calendars.Where(c => c.Value.start_date < date && 
+                                   c.Value.end_date.AddDays(1) >= date  && 
+                                   c.Value.IsDay(date.DayOfWeek) == true &&
+                                   c.Value.CalendarDates.Any(cd => cd.exception_type != CalendarDate.Exception_Type.Removed)).Select(o => o.Value);
         }
     }
 }

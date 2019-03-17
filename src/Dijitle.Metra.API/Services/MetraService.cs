@@ -206,9 +206,19 @@ namespace Dijitle.Metra.API.Services
 
             if (sortAsc)
             {
-                return stops.OrderBy(s => s.DistanceAway);
+                stops = stops.OrderBy(s => s.DistanceAway).ToList();
             }
-            return stops.OrderByDescending(s => s.DistanceAway);
+            else
+            {
+                stops = stops.OrderByDescending(s => s.DistanceAway).ToList();
+            }
+
+            foreach(Stop s in stops)
+            {
+                s.DistanceAway = GetDistance(stops.First().Lat, stops.First().Lon, s.Lat, s.Lon);
+            }
+
+            return stops;
         }
 
         public async Task<IEnumerable<Shape>> GetShapes(Routes route)
