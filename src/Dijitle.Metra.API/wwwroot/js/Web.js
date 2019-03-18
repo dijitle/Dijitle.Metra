@@ -110,6 +110,53 @@ function startTime() {
         }
     });
 
+    items = document.getElementsByName('timeUntilStop')
+    
+    items.forEach(function (i) {
+
+        
+        var arrive = i.getAttribute('arrive_time');
+
+        arrive = today.setHours(arrive.split(':')[0], arrive.split(':')[1], 0, 0);
+
+        if (i.getAttribute('arrive_next_day') === 'arrive_next_day') {
+            arrive += 1000 * 60 * 60 * 24;
+        }
+
+        var diff = arrive - now;
+        
+        var diffHours = Math.floor(diff / (1000 * 60 * 60));
+        diff -= diffHours * (1000 * 60 * 60);
+
+        var diffMinutes = Math.floor(diff / (1000 * 60));
+        diff -= diffMinutes * (1000 * 60);
+
+        var diffSeconds = Math.floor(diff / (1000));
+        diff -= diffSeconds * (1000);
+
+        if (diffHours < 0) {
+            i.innerHTML = "-";
+            i.setAttribute("class", "text-success text-monospaced")
+        }
+        else if (diffHours < 1) {
+            i.innerHTML = diffMinutes + ":" + checkTime(diffSeconds)
+
+            if (diffMinutes < 1) {
+                i.setAttribute("class", "text-danger text-monospaced")
+            }
+            else if (diffMinutes < 10) {
+                i.setAttribute("class", "text-warning text-monospaced")
+            }
+            else {
+                i.setAttribute("class", "text-monospaced")
+            }
+        }
+        else {
+            i.innerHTML = diffHours + ":" + checkTime(diffMinutes) + ":" + checkTime(diffSeconds)
+            i.setAttribute("class", "text-monospaced")
+        }
+    });
+
     var t = setTimeout(startTime, 500);
 }
 function checkTime(i) {
