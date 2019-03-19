@@ -57,7 +57,36 @@ namespace Dijitle.Metra.API.Services
             var response = await client.GetAsync("/gtfs/alerts");
             var content = await response.Content.ReadAsStringAsync();
 
-            return content;
+            List<Alerts> alerts = JsonConvert.DeserializeObject<List<Alerts>>(content);
+
+            List<Alert> retAlerts = new List<Alert>();
+
+            foreach(Alerts a in alerts)
+            {
+                Alert alert = new Alert()
+                {
+                    Id = a.id,
+                    URL = a.alert.url.translation.FirstOrDefault().text,
+                    Header = a.alert.header_text.translation.FirstOrDefault().text,
+                    Description = a.alert.description_text.translation.FirstOrDefault().text
+                };
+
+                foreach(InformedEntity ie in a.alert.informed_entity)
+                {
+                    if(ie.trip == null)
+                    {
+                        alert.AffectedIds.Add(ie.route_id);
+                    }
+                    else
+                    {
+                        alert.AffectedIds.Add(ie.trip.trip_id);
+                    }
+                }
+
+                retAlerts.Add(alert);
+            }
+
+            return retAlerts;
         }
 
         public async Task RefreshData()

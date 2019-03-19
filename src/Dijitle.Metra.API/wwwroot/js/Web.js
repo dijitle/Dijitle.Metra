@@ -259,12 +259,12 @@ function save(item) {
 
 function getPositions() {
 
-    var items = document.getElementsByName('progressBar');
+    var prgBars = document.getElementsByName('progressBar');
 
     var today = new Date();
     var now = today.getTime();
 
-    items.forEach(function (i) {
+    prgBars.forEach(function (i) {
 
         var departTime = i.getAttribute('route_StartTime');
         departTime = today.setHours(departTime.split(':')[0], departTime.split(':')[1], 0, 0);
@@ -293,7 +293,7 @@ function getPositions() {
 
     $.get("api/gtfs/positions", function (data) {
         data.forEach(function (d) {
-            items.forEach(function (i) {
+            prgBars.forEach(function (i) {
                 if (d.tripId === i.attributes.trip_id.value) {
                     var distTotal = getDistance(i.attributes.latStart.value, i.attributes.lonStart.value, i.attributes.latDest.value, i.attributes.lonDest.value);
                     var distTraveled = getDistance(i.attributes.latStart.value, i.attributes.lonStart.value, d.latitude, d.longitude);

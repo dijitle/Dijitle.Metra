@@ -66,29 +66,50 @@
                                 </div>
                             </div>
                             <div>
+
+                                <table class="table table-borderless small">
                                 
-                                @for (int i = 0; i < t.RouteStops.Count; i++)
-                                {
-                                    if (t.TripStops.Contains(t.RouteStops[i]))
+                                    @for (int i = 0; i < t.RouteStops.Count; i++)
                                     {
-                                <div class="fas fa-circle d-block mb-1 mx-3"
-                                     style="@(i == 0 ? "color:green" : (i == t.RouteStops.Count - 1  || t.TripStops.Last() == t.RouteStops[i] ? "color:red" : "color:black"));
-                                      @(t.RouteStops[i] == t.OriginStop || t.RouteStops[i] == t.DestinationStop ? "font-weight: bold" : "font-weight: normal");">
-                                    <span class="mr-3">@t.RouteStops[i].DepartureTime.ToShortTimeString()</span>
-                                    <span name="timeUntilStop"
-                                          arrive_next_day="@(t.RouteStops[i].DepartureTime.Day == 2)" arrive_time="@t.RouteStops[i].ArrivalTime.ToShortTimeString()">
-                                    </span>
-                                    <span class="mx-3">@t.RouteStops[i].Name</span>
-                                </div>
-
-
-                                        if (t.TripStops.Last() == t.RouteStops[i])
+                                        if (t.TripStops.Contains(t.RouteStops[i]))
                                         {
-                                            break;
+                                    <tr style="@(i == 0 ? "color:green" : (i == t.RouteStops.Count - 1  || t.TripStops.Last() == t.RouteStops[i] ? "color:red" : "color:black"));
+                                          @(t.RouteStops[i] == t.OriginStop || t.RouteStops[i] == t.DestinationStop ? "font-weight: bold" : "font-weight: normal");">
+                                        <td width="1px">
+                                            <i class="fas fa-circle font-weight-lighter"></i>
+                                        </td>
+
+                                        <td width="1px">
+                                            <span class="mr-3">@t.RouteStops[i].DepartureTime.ToShortTimeString()</span>
+                                        </td>
+
+
+                                        <td width="1px">
+                                            <span name="timeUntilStop"
+                                                  arrive_next_day="@(t.RouteStops[i].DepartureTime.Day == 2)" arrive_time="@t.RouteStops[i].ArrivalTime.ToShortTimeString()">
+                                            </span>
+                                        </td>
+
+                                        <td width="1px"> 
+                                            <span name="distanceFromStation" 
+                                                  lat="@(t.RouteStops[i].Lat)" lon="@t.RouteStops[i].Lon">
+                                            </span>
+                                        </td>
+
+                                        <td>
+                                            <span class="mx-3">@t.RouteStops[i].Name</span>
+                                        </td>
+                                    </tr>
+
+
+                                            if (t.TripStops.Last() == t.RouteStops[i])
+                                            {
+                                                break;
+                                            }
                                         }
                                     }
-                                }
 
+                                </table>
                             </div>
                         </div>
                         
