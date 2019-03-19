@@ -32,10 +32,14 @@
                             </div>
 
                             <div width="1px" class="font-weight-bolder">
-                                <span class="badge-pill" style="font-size:16px; background-color:#@t.Route.RouteColor; foreground-color:#@t.Route.TextColor">
-                                    @t.Route.ShortName
-                                </span>
-                                @t.Id.Split('_')[1].Substring(2)
+                                <span class="badge-pill" style="font-size:16px; background-color:#@t.Route.RouteColor; foreground-color:#@t.Route.TextColor">@t.Route.ShortName</span>
+                                <span class="badge badge-secondary">@t.Id.Split('_')[1].Substring(2)</span>
+                                
+                                @if (t.IsExpress)
+                                {
+                                    <i class='fas fa-angle-double-right text-success'></i>
+                                }
+
                             </div>
                         </div>
                         <div class="font-weight-bolder">
@@ -67,7 +71,7 @@
                             </div>
                             <div>
 
-                                <table class="table table-borderless small">
+                                <table class="table table-borderless table-sm small">
                                 
                                     @for (int i = 0; i < t.RouteStops.Count; i++)
                                     {
