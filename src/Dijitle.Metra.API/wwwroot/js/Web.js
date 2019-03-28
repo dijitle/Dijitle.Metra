@@ -157,6 +157,38 @@ function startTime() {
         }
     });
 
+    items = document.getElementsByName('stopdot')
+
+    items.forEach(function (i) {
+
+
+        var arrive = i.getAttribute('arrive_time');
+
+        arrive = today.setHours(arrive.split(':')[0], arrive.split(':')[1], 0, 0);
+
+        if (i.getAttribute('arrive_next_day') === 'arrive_next_day') {
+            arrive += 1000 * 60 * 60 * 24;
+        }
+
+        var diff = arrive - now;
+
+        var diffHours = Math.floor(diff / (1000 * 60 * 60));
+        diff -= diffHours * (1000 * 60 * 60);
+
+        var diffMinutes = Math.floor(diff / (1000 * 60));
+        diff -= diffMinutes * (1000 * 60);
+
+        var diffSeconds = Math.floor(diff / (1000));
+        diff -= diffSeconds * (1000);
+
+        if (diffHours < 0) {
+            i.setAttribute("class", "fas fa-circle font-weight-bold")
+        }        
+        else {
+            i.setAttribute("class", "fas fa-circle font-weight-lighter")
+        }
+    });
+
     var t = setTimeout(startTime, 500);
 }
 function checkTime(i) {

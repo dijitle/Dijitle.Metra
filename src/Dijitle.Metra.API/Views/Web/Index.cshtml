@@ -39,6 +39,11 @@
                                 {
                                     <i class='fas fa-angle-double-right text-success'></i>
                                 }
+                                else
+                                {
+                                    <span style="width: 14px; display: inline-block"></span>
+                                }
+
 
                             </div>
                         </div>
@@ -79,8 +84,8 @@
                                         {
                                     <tr style="@(i == 0 ? "color:green" : (i == t.RouteStops.Count - 1  || t.TripStops.Last() == t.RouteStops[i] ? "color:red" : "color:black"));
                                           @(t.RouteStops[i] == t.OriginStop || t.RouteStops[i] == t.DestinationStop ? "font-weight: bold" : "font-weight: normal");">
-                                        <td width="1px">
-                                            <i class="fas fa-circle font-weight-lighter"></i>
+                                        <td width="1px">                                            
+                                            <i name="stopdot" arrive_next_day="@(t.RouteStops[i].DepartureTime.Day == 2)" arrive_time="@t.RouteStops[i].ArrivalTime.ToShortTimeString()" class="fas fa-circle font-weight-lighter"></i> 
                                         </td>
 
                                         <td width="1px">
@@ -89,8 +94,7 @@
 
 
                                         <td width="1px">
-                                            <span name="timeUntilStop"
-                                                  arrive_next_day="@(t.RouteStops[i].DepartureTime.Day == 2)" arrive_time="@t.RouteStops[i].ArrivalTime.ToShortTimeString()">
+                                            <span name="timeUntilStop" arrive_next_day="@(t.RouteStops[i].DepartureTime.Day == 2)" arrive_time="@t.RouteStops[i].ArrivalTime.ToShortTimeString()">
                                             </span>
                                         </td>
 
