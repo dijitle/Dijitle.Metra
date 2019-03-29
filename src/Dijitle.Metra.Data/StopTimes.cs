@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.Text;
-using System.Text.RegularExpressions;
 
 namespace Dijitle.Metra.Data
 {
@@ -10,8 +6,8 @@ namespace Dijitle.Metra.Data
     {
 
         public string trip_id { get; private set; } 
-        public DateTime arrival_time { get; private set; } 
-        public DateTime departure_time { get; private set; } 
+        public string arrival_time { get; private set; } 
+        public string departure_time { get; private set; } 
         public string stop_id { get; private set; } 
         public int stop_sequence { get; private set; } 
         public StopType pickup_type { get; private set; } 
@@ -34,9 +30,9 @@ namespace Dijitle.Metra.Data
 
         public StopTimes(string[] csv)
         {
-            trip_id = csv[0].Trim();     
-            arrival_time = GetTime(csv[1].Trim());
-            departure_time = GetTime(csv[2].Trim());
+            trip_id = csv[0].Trim();
+            arrival_time = csv[1].Trim();
+            departure_time = csv[2].Trim();
             stop_id = csv[3].Trim();
             stop_sequence = Convert.ToInt32(csv[4].Trim());
             pickup_type = (StopType)Convert.ToInt32(csv[5].Trim());
@@ -45,18 +41,7 @@ namespace Dijitle.Metra.Data
             south_boarding = (csv[8].Trim() == "1");
             bikes_allowed = (csv[9].Trim() == "1");
             notice = csv[10].Trim();
-        }
-
-        private DateTime GetTime(string time)
-        {
-            MatchCollection matches = Regex.Matches(time, @"^(?<hour>\d{2}):(?<minute>\d{2}):(?<second>\d{2})$");
-
-            int hour = Convert.ToInt32(matches[0].Groups["hour"].Value);
-            int minute = Convert.ToInt32(matches[0].Groups["minute"].Value);
-            int second = Convert.ToInt32(matches[0].Groups["second"].Value);
-            
-            return new DateTime(1,1,1).AddHours(hour).AddMinutes(minute).AddSeconds(second);
-        }
+        }        
         
         public override string ToString()
         {

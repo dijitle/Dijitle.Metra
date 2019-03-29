@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Dijitle.Metra.API.Models.Output;
+using System.Text.RegularExpressions;
 
 namespace Dijitle.Metra.API.Services
 {
@@ -63,9 +64,10 @@ namespace Dijitle.Metra.API.Services
 
             IEnumerable<Routes> routes = _gtfs.Data.Routes.Values.Where(r => r.Stops.Contains(originStop) && r.Stops.Contains(destinationStop));
 
-            IEnumerable<Calendar> currentCalendars = _gtfs.Data.GetCurrentCalendars(selectedDate);
+
+            List<Calendar> currentCalendars = new List<Calendar>(_gtfs.Data.GetCurrentCalendars(selectedDate));
             
-            foreach(Routes r in routes)
+            foreach (Routes r in routes)
             {
                 IEnumerable<Trips> ts = r.Trips.Where(t => currentCalendars.Contains(t.Calendar));
                 ts = ts.Where(t => t.StopTimes.Any(st => st.Stop == originStop));
@@ -77,11 +79,7 @@ namespace Dijitle.Metra.API.Services
                 {
                     StopTimes originStopTime = t.StopTimes.Single(st => st.Stop == originStop);
                     StopTimes destinationStopTime = t.StopTimes.Single(st => st.Stop == destinationStop);
-
-                    List<StopTimes> indexStopTimes = t.StopTimes.OrderBy(st => st.stop_sequence).ToList();
-                    int indexOrigin = indexStopTimes.IndexOf(originStopTime);
-                    int indexDestination = indexStopTimes.IndexOf(destinationStopTime);
-
+                    
                     IEnumerable<Stop> routeStops = await GetStopsByRoute(r.route_id, t.direction_id == Trips.Direction.Outbound);
 
                     if (t.IsExpress(originStopTime, destinationStopTime) || !expressOnly)
@@ -114,14 +112,14 @@ namespace Dijitle.Metra.API.Services
                             }
                         }
 
-                        foreach(StopTimes st in indexStopTimes)
+                        foreach(StopTimes st in t.StopTimes.OrderBy(st => st.stop_sequence))
                         {
                             foreach(Stop s in trip.RouteStops)
                             {
                                 if(s.Id == st.stop_id)
                                 {
-                                    s.ArrivalTime = st.arrival_time;
-                                    s.DepartureTime = st.departure_time;
+                                    s.ArrivalTime = GetTime(selectedDate, st.arrival_time);
+                                    s.DepartureTime = GetTime(selectedDate, st.departure_time);
                                     trip.TripStops.Add(s);
                                     break;
                                 }
@@ -200,7 +198,7 @@ namespace Dijitle.Metra.API.Services
                     Name = s.stop_name,
                     Lat = s.stop_lat,
                     Lon = s.stop_lon,
-                    DistanceAway = GetDistance(41.882077d, -87.627807d, s.stop_lat, s.stop_lon)
+                    DistanceAway = GetDistance(41.882077d, -87.627807d, s.stop_lat, s.stop_lon)                    
                 });
             }
 
@@ -274,6 +272,17 @@ namespace Dijitle.Metra.API.Services
         private double GetRadians(double degrees)
         {
             return degrees * Math.PI / 180;
+        }
+
+        private DateTime GetTime(DateTime date, string time)
+        {
+            MatchCollection matches = Regex.Matches(time, @"^(?<hour>\d{2}):(?<minute>\d{2}):(?<second>\d{2})$");
+
+            int hour = Convert.ToInt32(matches[0].Groups["hour"].Value);
+            int minute = Convert.ToInt32(matches[0].Groups["minute"].Value);
+            int second = Convert.ToInt32(matches[0].Groups["second"].Value);
+
+            return new DateTime(date.Year, date.Month, date.Day).AddHours(hour).AddMinutes(minute).AddSeconds(second);
         }
     }
 }

@@ -47,21 +47,8 @@ function startTime() {
 
     items.forEach(function (i) {
 
-        var depart = i.getAttribute('depart_time');
-
-        depart = today.setHours(depart.split(':')[0], depart.split(':')[1], 0, 0);
-
-        if (i.getAttribute('depart_next_day') === 'depart_next_day') {
-            depart += 1000 * 60 * 60 * 24;
-        }
-
-        var arrive = i.getAttribute('arrive_time');
-
-        arrive = today.setHours(arrive.split(':')[0], arrive.split(':')[1], 0, 0);
-
-        if (i.getAttribute('arrive_next_day') === 'arrive_next_day') {
-            arrive += 1000 * 60 * 60 * 24;
-        }
+        var depart = new Date(i.getAttribute('depart_time')); 
+        var arrive = new Date(i.getAttribute('arrive_time'));
         
         var diffDepart = depart - now;
         var diffArrive = arrive - now;
@@ -113,15 +100,7 @@ function startTime() {
     items = document.getElementsByName('timeUntilStop')
     
     items.forEach(function (i) {
-
-        
-        var arrive = i.getAttribute('arrive_time');
-
-        arrive = today.setHours(arrive.split(':')[0], arrive.split(':')[1], 0, 0);
-
-        if (i.getAttribute('arrive_next_day') === 'arrive_next_day') {
-            arrive += 1000 * 60 * 60 * 24;
-        }
+        var arrive = new Date(i.getAttribute('arrive_time'));
 
         var diff = arrive - now;
         
@@ -160,15 +139,7 @@ function startTime() {
     items = document.getElementsByName('stopdot')
 
     items.forEach(function (i) {
-
-
-        var arrive = i.getAttribute('arrive_time');
-
-        arrive = today.setHours(arrive.split(':')[0], arrive.split(':')[1], 0, 0);
-
-        if (i.getAttribute('arrive_next_day') === 'arrive_next_day') {
-            arrive += 1000 * 60 * 60 * 24;
-        }
+        var arrive = new Date(i.getAttribute('arrive_time'));
 
         var diff = arrive - now;
 

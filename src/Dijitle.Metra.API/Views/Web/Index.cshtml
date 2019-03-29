@@ -49,8 +49,8 @@
                         </div>
                         <div class="font-weight-bolder">
                             <span width="1px" name="timeUntil"
-                                  depart_next_day="@(t.OriginStop.DepartureTime.Day == 2)" depart_time="@t.OriginStop.DepartureTime.ToShortTimeString()"
-                                  arrive_next_day="@(t.DestinationStop.ArrivalTime.Day == 2)" arrive_time="@t.DestinationStop.ArrivalTime.ToShortTimeString()">
+                                  depart_time="@t.OriginStop.DepartureTime"
+                                  arrive_time="@t.DestinationStop.ArrivalTime">
                             </span>
                         </div>
 
@@ -68,8 +68,7 @@
                             <div name="progress" class="progress-bar-vertical">
                                 <div class="progress-bar progress-bar-striped bg-success" name="progressBar"
                                      trip_id="@t.Id" latStart="@t.RouteStops.First().Lat" lonStart="@t.RouteStops.First().Lon" latDest="@t.RouteStops.Last().Lat" lonDest="@t.RouteStops.Last().Lon"
-                                     route_StartNextDay="@(t.RouteStops.First().DepartureTime.Day == 2)" route_DestNextDay="@(t.RouteStops.Last().DepartureTime.Day == 2)"
-                                     route_StartTime="@t.RouteStops.First().DepartureTime.ToShortTimeString()" route_DestTime="@t.RouteStops.Last().DepartureTime.ToShortTimeString()"
+                                     route_StartTime="@t.RouteStops.First().DepartureTime" route_DestTime="@t.RouteStops.Last().DepartureTime"
                                      role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="height: 0%">
                                     <span class="badge-success mt-auto" ><i class='fas fa-train'></i></span>
                                 </div>
@@ -85,7 +84,7 @@
                                     <tr style="@(i == 0 ? "color:green" : (i == t.RouteStops.Count - 1  || t.TripStops.Last() == t.RouteStops[i] ? "color:red" : "color:black"));
                                           @(t.RouteStops[i] == t.OriginStop || t.RouteStops[i] == t.DestinationStop ? "font-weight: bold" : "font-weight: normal");">
                                         <td width="1px">                                            
-                                            <i name="stopdot" arrive_next_day="@(t.RouteStops[i].DepartureTime.Day == 2)" arrive_time="@t.RouteStops[i].ArrivalTime.ToShortTimeString()" class="fas fa-circle font-weight-lighter"></i> 
+                                            <i name="stopdot" arrive_time="@t.RouteStops[i].ArrivalTime" class="fas fa-circle font-weight-lighter"></i> 
                                         </td>
 
                                         <td width="1px">
@@ -94,7 +93,7 @@
 
 
                                         <td width="1px">
-                                            <span name="timeUntilStop" arrive_next_day="@(t.RouteStops[i].DepartureTime.Day == 2)" arrive_time="@t.RouteStops[i].ArrivalTime.ToShortTimeString()">
+                                            <span name="timeUntilStop" arrive_time="@t.RouteStops[i].ArrivalTime">
                                             </span>
                                         </td>
 
@@ -118,6 +117,9 @@
                                     }
 
                                 </table>
+                            </div>
+                            <div name="map" style="background-color: lightgray; width: 66%; display: inline-block;">
+
                             </div>
                         </div>
                         
