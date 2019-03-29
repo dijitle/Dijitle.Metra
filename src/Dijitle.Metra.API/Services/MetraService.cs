@@ -62,14 +62,25 @@ namespace Dijitle.Metra.API.Services
                 await _gtfs.RefreshData();
             }
 
-            IEnumerable<Routes> routes = _gtfs.Data.Routes.Values.Where(r => r.Stops.Contains(originStop) && r.Stops.Contains(destinationStop));
+            Routes route = _gtfs.Data.Routes.Values.Where(r => r.Stops.Contains(originStop) && r.Stops.Contains(destinationStop)).FirstOrDefault();
 
+            Dictionary<DateTime, IEnumerable<Calendar>> days = new Dictionary<DateTime, IEnumerable<Calendar>>();
 
-            List<Calendar> currentCalendars = new List<Calendar>(_gtfs.Data.GetCurrentCalendars(selectedDate));
-            
-            foreach (Routes r in routes)
+            if(selectedDate.Hour <= 4)
             {
-                IEnumerable<Trips> ts = r.Trips.Where(t => currentCalendars.Contains(t.Calendar));
+                days.Add(selectedDate.AddDays(-1), _gtfs.Data.GetCurrentCalendars(selectedDate.AddDays(-1)));
+            }
+
+            days.Add(selectedDate, _gtfs.Data.GetCurrentCalendars(selectedDate));
+
+            if (selectedDate.Hour >= 20)
+            {
+                days.Add(selectedDate.AddDays(1), _gtfs.Data.GetCurrentCalendars(selectedDate.AddDays(1)));
+            }
+
+            foreach (KeyValuePair<DateTime, IEnumerable<Calendar>> day in days)
+            {
+                IEnumerable<Trips> ts = route.Trips.Where(t => day.Value.Contains(t.Calendar));
                 ts = ts.Where(t => t.StopTimes.Any(st => st.Stop == originStop));
                 ts = ts.Where(t => t.StopTimes.Any(st => st.Stop == destinationStop));
                 ts = ts.Where(t => t.StopTimes.Single(st => st.Stop == originStop).stop_sequence < t.StopTimes.Single(st => st.Stop == destinationStop).stop_sequence);
@@ -80,7 +91,7 @@ namespace Dijitle.Metra.API.Services
                     StopTimes originStopTime = t.StopTimes.Single(st => st.Stop == originStop);
                     StopTimes destinationStopTime = t.StopTimes.Single(st => st.Stop == destinationStop);
                     
-                    IEnumerable<Stop> routeStops = await GetStopsByRoute(r.route_id, t.direction_id == Trips.Direction.Outbound);
+                    IEnumerable<Stop> routeStops = await GetStopsByRoute(route.route_id, t.direction_id == Trips.Direction.Outbound);
 
                     if (t.IsExpress(originStopTime, destinationStopTime) || !expressOnly)
                     {
@@ -90,11 +101,11 @@ namespace Dijitle.Metra.API.Services
                             IsExpress = t.IsExpress(originStopTime, destinationStopTime),
                             Route = new Route()
                             {
-                                Id = r.route_id,
-                                ShortName = r.route_short_name,
-                                LongName = r.route_long_name,
-                                RouteColor = r.route_color,
-                                TextColor = r.route_text_color
+                                Id = route.route_id,
+                                ShortName = route.route_short_name,
+                                LongName = route.route_long_name,
+                                RouteColor = route.route_color,
+                                TextColor = route.route_text_color
                             }
                         };
 
@@ -118,8 +129,8 @@ namespace Dijitle.Metra.API.Services
                             {
                                 if(s.Id == st.stop_id)
                                 {
-                                    s.ArrivalTime = GetTime(selectedDate, st.arrival_time);
-                                    s.DepartureTime = GetTime(selectedDate, st.departure_time);
+                                    s.ArrivalTime = GetTime(day.Key, st.arrival_time);
+                                    s.DepartureTime = GetTime(day.Key, st.departure_time);
                                     trip.TripStops.Add(s);
                                     break;
                                 }
@@ -130,7 +141,22 @@ namespace Dijitle.Metra.API.Services
                 }
             }
 
-            return trips;
+            List<Trip> currentTrips = null;
+
+            for (int i = 0; i < trips.Count; i++)
+            {
+                if (trips[i].DestinationStop.ArrivalTime > selectedDate)
+                {
+                    if (i < 3)
+                    {
+                        i = 3;
+                    }
+                    currentTrips = trips.GetRange(i - 3, trips.Count - (i - 3));
+                    break;
+                }
+            }
+
+            return currentTrips;
         }
 
         public async Task<IEnumerable<Stop>> GetStopsByDistance(double lat, double lon, int milesAway)
