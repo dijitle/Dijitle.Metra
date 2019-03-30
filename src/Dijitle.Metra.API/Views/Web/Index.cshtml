@@ -4,7 +4,7 @@
 }
 
     <div class="row shadow p-3 mb-1 bg-white rounded align-items-center" style="margin-top:64px; position: sticky;">
-        <div class="col font-weight-bolder ">
+        <div class="col font-weight-bolder" id="routeId" routeId="@Model.Trips.FirstOrDefault().Route.Id">
                 @Model.Start
         </div>
         <div class="col text-center">
@@ -65,16 +65,7 @@
                 <div id="@($"collapse{t.Id}")" class="collapse" aria-labelledby="@($"collapse{t.Id}")" data-parent="#accordion">
                     <div class="card-body">
                         <div class="row mx-3">
-                            <div name="progress" class="progress-bar-vertical">
-                                <div class="progress-bar progress-bar-striped bg-success" name="progressBar"
-                                     trip_id="@t.Id" latStart="@t.RouteStops.First().Lat" lonStart="@t.RouteStops.First().Lon" latDest="@t.RouteStops.Last().Lat" lonDest="@t.RouteStops.Last().Lon"
-                                     route_StartTime="@t.RouteStops.First().DepartureTime" route_DestTime="@t.RouteStops.Last().DepartureTime"
-                                     role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="height: 0%">
-                                    <span class="badge-success mt-auto" ><i class='fas fa-train'></i></span>
-                                </div>
-                            </div>
                             <div>
-
                                 <table class="table table-borderless table-sm small">
                                 
                                     @for (int i = 0; i < t.RouteStops.Count; i++)
@@ -118,7 +109,7 @@
 
                                 </table>
                             </div>
-                            <div name="map" style="background-color: lightgray; width: 66%; display: inline-block;">
+                            <div name="map" id="map_@t.Id" style="background-color: lightgray; width: 66%; display: inline-block;">
 
                             </div>
                         </div>

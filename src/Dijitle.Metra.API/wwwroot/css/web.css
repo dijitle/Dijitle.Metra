@@ -75,3 +75,12 @@ input:checked + .slider:before {
     -o-transition: height 0.6s ease;
     transition: height 0.6s ease;
 }
+.element::-webkit-scrollbar {
+    width: 0 !important
+}
+.element {
+    overflow: -moz-scrollbars-none;
+}
+.element {
+    -ms-overflow-style: none;
+}

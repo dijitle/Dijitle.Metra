@@ -1,4 +1,6 @@
-﻿$(document).ready(function () {
+﻿var map;
+
+$(document).ready(function () {
     $('[data-toggle="tooltip"]').tooltip();
 });
 
@@ -28,6 +30,7 @@ function start() {
     loadRoutes();
     loadStops();
     startTime();
+    setupMap();
     getPositions();
 }
 
@@ -262,53 +265,99 @@ function save(item) {
 
 function getPositions() {
 
-    var prgBars = document.getElementsByName('progressBar');
+    var maps = document.getElementsByName('map');
+       
 
-    var today = new Date();
-    var now = today.getTime();
+    maps.forEach(function (i) {
 
-    prgBars.forEach(function (i) {
-
-        var departTime = i.getAttribute('route_StartTime');
-        departTime = today.setHours(departTime.split(':')[0], departTime.split(':')[1], 0, 0);
-
-        if (i.getAttribute('route_StartNextDay') === 'route_StartNextDay') {
-            departTime += 1000 * 60 * 60 * 24
-        }
-
-        var arriveTime = i.getAttribute('route_DestTime');
-        arriveTime = today.setHours(arriveTime.split(':')[0], arriveTime.split(':')[1], 0, 0);
-
-        if (i.getAttribute('route_DestNextDay') === 'route_DestNextDay') {
-            arriveTime += 1000 * 60 * 60 * 24
-        }
-
-        if (now < departTime) {
-
-            i.setAttribute("aria-valuenow", 0);
-            i.setAttribute("style", "height: 0%;");
-        }
-        else if (now > arriveTime) {
-            i.setAttribute("aria-valuenow", 100);
-            i.setAttribute("style", "height: 100%;");
+        if (i.offsetHeight > 0)
+        {
+            map.setTarget(i.id);
         }
     });
 
-    $.get("api/gtfs/positions", function (data) {
+    //$.get("api/gtfs/positions", function (data) {
+    //    data.forEach(function (d) {
+    //        maps.forEach(function (i) {
+    //            if (d.tripId === i.attributes.trip_id.value) {
+    //                var distTotal = getDistance(i.attributes.latStart.value, i.attributes.lonStart.value, i.attributes.latDest.value, i.attributes.lonDest.value);
+    //                var distTraveled = getDistance(i.attributes.latStart.value, i.attributes.lonStart.value, d.latitude, d.longitude);
+                                        
+    //                i.innerHTML =  (distTraveled / distTotal * 100) + "%;";
+    //            }
+    //        });
+    //    });
+    //});
+
+    var t = setTimeout(getPositions, 6000);
+}
+
+function setupMap() {
+
+       
+    var streetmapLayer = new ol.layer.Tile({
+        source: new ol.source.OSM()
+    });    
+
+    var myView = new ol.View({
+        center: ol.proj.transform([-88, 41.888], 'EPSG:4326', 'EPSG:3857'),
+        zoom: 10
+    });
+
+    map = new ol.Map({
+        layers: [streetmapLayer],
+        view: myView,
+        controls: ol.control.defaults().extend(
+            [new ol.control.OverviewMap({})]
+        )
+    });
+
+
+
+    var routeID = document.getElementById("routeId").getAttribute('routeId');
+
+    $.get("api/metra/shapes?route=" + routeID, function (data) {
+
+        var routeCoords = [];
+        var routeColor;
+
         data.forEach(function (d) {
-            prgBars.forEach(function (i) {
-                if (d.tripId === i.attributes.trip_id.value) {
-                    var distTotal = getDistance(i.attributes.latStart.value, i.attributes.lonStart.value, i.attributes.latDest.value, i.attributes.lonDest.value);
-                    var distTraveled = getDistance(i.attributes.latStart.value, i.attributes.lonStart.value, d.latitude, d.longitude);
+            routeColor = d.color;
 
-                    i.setAttribute("aria-valuenow", (distTraveled / distTotal) * 100);
-                    i.setAttribute("style", "height: " + (distTraveled / distTotal * 100) + "%;");
-                }
+            d.points.forEach(function (p) {
+                routeCoords.push([p.lon, p.lat]);
             });
-        });
-    });
 
-    var t = setTimeout(getPositions, 60000);
+        });
+
+
+        transCoords = new ol.geom.LineString(routeCoords)
+
+        transCoords.transform('EPSG:4326', 'EPSG:3857');
+
+        var routeFeature = new ol.Feature({
+            geometry: transCoords
+        });
+
+        var routeStyle = new ol.style.Style({
+            stroke: new ol.style.Stroke({
+                color: '#' + routeColor,
+                width: 5
+            })
+        });
+
+        routeFeature.setStyle(routeStyle);
+
+        var routeLayerSource = new ol.source.Vector({
+            features: [routeFeature]
+        });
+
+        var routeLayer = new ol.layer.Vector({
+            source: routeLayerSource
+        });
+
+        map.addLayer(routeLayer);
+    });
 }
 
 function getDistance(lat1, lon1, lat2, lon2) {
