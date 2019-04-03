@@ -306,9 +306,23 @@ function setupMap() {
     });
 }
 
-function moveMap(divId, shapeId) {     
-    
-    map.setTarget(divId);        
+function sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+async function moveMap(divId, shapeId) {
+
+    if (map.getTarget() === divId) {
+        return;
+    }
+
+    document.getElementById(divId).innerHTML = '<div class="spinner-grow text-primary"></div>';
+
+    await sleep(1000);
+
+    document.getElementById(divId).innerHTML = "";
+
+    map.setTarget(divId);
     
     $.get("api/metra/shapesbyid?id=" + shapeId, function (data) {
                 
@@ -342,9 +356,19 @@ function moveMap(divId, shapeId) {
         });
 
         var routeLayer = new ol.layer.Vector({
+            name: "route",
             source: routeLayerSource
         });
 
+        var removeLayer;
+        map.getLayers().forEach(function (l) {
+            if (l.get('name') != undefined && l.get('name') === "route") {
+
+            removeLayer = l;
+            }
+        });
+
+        map.removeLayer(removeLayer);
         map.addLayer(routeLayer);
               
     });
