@@ -23,12 +23,8 @@
                 <div class="card-header" data-toggle="collapse" data-target="#@($"collapse{t.Id}")" aria-expanded="false" aria-controls="@($"collapse{t.Id}")" style="cursor: pointer;" onclick="moveMap('map_@t.Id', '@t.ShapeId');">
                     <div class="d-flex justify-content-between">
                         <div class="row">
-                            <div width="1px" class="font-weight-bolder mr-3">
-                                <span>
-                                    @t.OriginStop.DepartureTime.ToShortTimeString()
-                                </span>
-
-                                <span width="1px" class="font-weight-lighter" style="font-size:8pt;" name="gpsPositions" trip_id="@t.Id" stop_name="@t.OriginStop.Name" lat="@t.OriginStop.Lat" lon="@t.OriginStop.Lon"></span>
+                            <div width="1px" class="font-weight-bolder mr-3">                                
+                                @t.OriginStop.DepartureTime.ToShortTimeString()           
                             </div>
 
                             <div width="1px" class="font-weight-bolder">
@@ -57,14 +53,13 @@
 
                         <div width="1px" class="text-right font-weight-bolder">
                             @t.DestinationStop.ArrivalTime.ToShortTimeString()
-                            <span width="1px" class="font-weight-lighter" style="font-size:8pt;" name="gpsPositions" trip_id="@t.Id" stop_name="@t.DestinationStop.Name" lat="@t.DestinationStop.Lat" lon="@t.DestinationStop.Lon"></span>
                         </div>
                     </div>
                 </div>
 
                 <div id="@($"collapse{t.Id}")" class="collapse" aria-labelledby="@($"collapse{t.Id}")" data-parent="#accordion">
                     <div class="card-body">
-                        <div class="row mx-3">
+                        <div class="d-flex">
                             <div>
                                 <table class="table table-borderless table-sm small">
                                 
@@ -73,7 +68,7 @@
                                         if (t.TripStops.Contains(t.RouteStops[i]))
                                         {
                                     <tr style="@(i == 0 ? "color:green" : (i == t.RouteStops.Count - 1  || t.TripStops.Last() == t.RouteStops[i] ? "color:red" : "color:black"));
-                                          @(t.RouteStops[i] == t.OriginStop || t.RouteStops[i] == t.DestinationStop ? "font-weight: bold" : "font-weight: normal");">
+                                          @(t.RouteStops[i] == t.OriginStop || t.RouteStops[i] == t.DestinationStop ? "font-weight: bold" : "font-weight: normal"); cursor: pointer;" onclick="showPoint('@(t.RouteStops[i].Lat)', '@(t.RouteStops[i].Lon)');">
                                         <td width="1px">                                            
                                             <i name="stopdot" arrive_time="@t.RouteStops[i].ArrivalTime" class="fas fa-circle font-weight-lighter"></i> 
                                         </td>
@@ -109,7 +104,7 @@
 
                                 </table>
                             </div>
-                            <div name="map" id="map_@t.Id" style="background-color: lightgray; width: 66%; display: inline-block;">
+                            <div class="flex-grow-1" name="map" id="map_@t.Id" style="background-color: lightgray; display: inline-block;">
 
                             </div>
                         </div>

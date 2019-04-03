@@ -372,8 +372,39 @@ async function moveMap(divId, shapeId) {
         map.removeLayer(removeLayer);
         map.addLayer(routeLayer);
 
-        myView.fit(transCoords);
+        myView.fit(transCoords, { padding: [20, 20, 20, 20], constrainResolution: false });
     });
+}
+
+function showPoint(lat, lon) {
+
+    var coord = new ol.geom.Point([lat, lon]);
+
+    coord.transform('EPSG:4326', 'EPSG:3857');
+
+    var stopFeature = new ol.Feature({
+        geometry: new ol.geom.Point(ol.proj.transform([lon, lat], 'EPSG:4326', 'EPSG:3857'))
+    });
+    
+    var stopLayerSource = new ol.source.Vector({
+        features: [stopFeature]
+    });
+    
+    var stopLayer = new ol.layer.Vector({
+        name: "stop",
+        source: stopLayerSource
+    });
+
+    var removeLayer;
+    map.getLayers().forEach(function (l) {
+        if (l.get('name') != undefined && l.get('name') === "stop") {
+
+            removeLayer = l;
+        }
+    });
+
+    map.removeLayer(removeLayer);
+    map.addLayer(stopLayer);
 }
 
 function getDistance(lat1, lon1, lat2, lon2) {
