@@ -107,10 +107,12 @@ namespace Dijitle.Metra.API.Services
                 {
                     using (StreamReader rdr = new StreamReader(entry.Open()))
                     {
+
+                        rdr.ReadLine();
+
                         switch (Path.GetFileNameWithoutExtension(entry.FullName))
                         {
                             case "agency":
-                                rdr.ReadLine();
                                 while (!rdr.EndOfStream)
                                 {
                                     line = rdr.ReadLine();
@@ -118,7 +120,6 @@ namespace Dijitle.Metra.API.Services
                                 }
                                 break;
                             case "calendar":
-                                rdr.ReadLine();
                                 while (!rdr.EndOfStream)
                                 {
                                     line = rdr.ReadLine();
@@ -126,7 +127,6 @@ namespace Dijitle.Metra.API.Services
                                 }
                                 break;
                             case "calendar_dates":
-                                rdr.ReadLine();
                                 while (!rdr.EndOfStream)
                                 {
                                     line = rdr.ReadLine();
@@ -134,7 +134,6 @@ namespace Dijitle.Metra.API.Services
                                 }
                                 break;
                             case "fare_attributes":
-                                rdr.ReadLine();
                                 while (!rdr.EndOfStream)
                                 {
                                     line = rdr.ReadLine();
@@ -142,7 +141,6 @@ namespace Dijitle.Metra.API.Services
                                 }
                                 break;
                             case "fare_rules":
-                                rdr.ReadLine();
                                 while (!rdr.EndOfStream)
                                 {
                                     line = rdr.ReadLine();
@@ -150,7 +148,6 @@ namespace Dijitle.Metra.API.Services
                                 }
                                 break;
                             case "routes":
-                                rdr.ReadLine();
                                 while (!rdr.EndOfStream)
                                 {
                                     line = rdr.ReadLine();
@@ -158,7 +155,6 @@ namespace Dijitle.Metra.API.Services
                                 }
                                 break;
                             case "shapes":
-                                rdr.ReadLine();
                                 while (!rdr.EndOfStream)
                                 {
                                     line = rdr.ReadLine();
@@ -171,7 +167,6 @@ namespace Dijitle.Metra.API.Services
                                 }
                                 break;
                             case "stop_times":
-                                rdr.ReadLine();
                                 while (!rdr.EndOfStream)
                                 {
                                     line = rdr.ReadLine();
@@ -184,7 +179,6 @@ namespace Dijitle.Metra.API.Services
                                 }
                                 break;
                             case "stops":
-                                rdr.ReadLine();
                                 while (!rdr.EndOfStream)
                                 {
                                     line = rdr.ReadLine();
@@ -192,7 +186,6 @@ namespace Dijitle.Metra.API.Services
                                 }
                                 break;
                             case "trips":
-                                rdr.ReadLine();
                                 while (!rdr.EndOfStream)
                                 {
                                     line = rdr.ReadLine();

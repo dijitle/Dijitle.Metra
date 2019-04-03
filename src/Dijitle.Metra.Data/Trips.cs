@@ -19,6 +19,8 @@ namespace Dijitle.Metra.Data
         public Calendar Calendar { get; private set; }
         public List<StopTimes> StopTimes { get; private set; }
 
+        public List<Shapes> Shapes { get; private set; }
+
         public enum Direction
         {
             Outbound = 0,
@@ -41,7 +43,7 @@ namespace Dijitle.Metra.Data
             return trip_id;
         }
 
-        public void Link(IDictionary<string, Routes> routes, IDictionary<string, Calendar> calendars, IDictionary<string, List<StopTimes>> stoptimes, IDictionary<string, Stops> stops)
+        public void Link(IDictionary<string, Routes> routes, IDictionary<string, Calendar> calendars, IDictionary<string, List<StopTimes>> stoptimes, IDictionary<string, Stops> stops, IDictionary<string, List<Shapes>> shapes)
         {
             Route = routes[route_id];
             Route.Trips.Add(this);
@@ -49,6 +51,8 @@ namespace Dijitle.Metra.Data
             Calendar = calendars[service_id];
 
             StopTimes = stoptimes[trip_id];
+
+            Shapes = shapes[shape_id];
             
             foreach(StopTimes st in StopTimes)
             {

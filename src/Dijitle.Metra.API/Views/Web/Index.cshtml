@@ -4,7 +4,7 @@
 }
 
     <div class="row shadow p-3 mb-1 bg-white rounded align-items-center" style="margin-top:64px; position: sticky;">
-        <div class="col font-weight-bolder" id="routeId" routeId="@Model.Trips.FirstOrDefault().Route.Id">
+        <div class="col font-weight-bolder">
                 @Model.Start
         </div>
         <div class="col text-center">
@@ -20,7 +20,7 @@
         @foreach (Trip t in Model.Trips)
         {
             <div class="card">
-                <div class="card-header" data-toggle="collapse" data-target="#@($"collapse{t.Id}")" aria-expanded="false" aria-controls="@($"collapse{t.Id}")" style="cursor: pointer;">
+                <div class="card-header" data-toggle="collapse" data-target="#@($"collapse{t.Id}")" aria-expanded="false" aria-controls="@($"collapse{t.Id}")" style="cursor: pointer;" onclick="moveMap('map_@t.Id', '@t.ShapeId');">
                     <div class="d-flex justify-content-between">
                         <div class="row">
                             <div width="1px" class="font-weight-bolder mr-3">

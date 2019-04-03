@@ -80,11 +80,11 @@ namespace Dijitle.Metra.API.Services
 
             foreach (KeyValuePair<DateTime, IEnumerable<Calendar>> day in days)
             {
-                IEnumerable<Trips> ts = route.Trips.Where(t => day.Value.Contains(t.Calendar));
-                ts = ts.Where(t => t.StopTimes.Any(st => st.Stop == originStop));
-                ts = ts.Where(t => t.StopTimes.Any(st => st.Stop == destinationStop));
-                ts = ts.Where(t => t.StopTimes.Single(st => st.Stop == originStop).stop_sequence < t.StopTimes.Single(st => st.Stop == destinationStop).stop_sequence);
-                ts = ts.OrderBy(t => t.StopTimes.Single(st => st.Stop == originStop).departure_time);
+                IEnumerable<Trips> ts = route.Trips.Where(t => day.Value.Contains(t.Calendar))
+                                                   .Where(t => t.StopTimes.Any(st => st.Stop == originStop))
+                                                   .Where(t => t.StopTimes.Any(st => st.Stop == destinationStop))
+                                                   .Where(t => t.StopTimes.Single(st => st.Stop == originStop).stop_sequence < t.StopTimes.Single(st => st.Stop == destinationStop).stop_sequence)
+                                                   .OrderBy(t => t.StopTimes.Single(st => st.Stop == originStop).departure_time);
                                 
                 foreach (Trips t in ts)
                 {
@@ -106,7 +106,8 @@ namespace Dijitle.Metra.API.Services
                                 LongName = route.route_long_name,
                                 RouteColor = route.route_color,
                                 TextColor = route.route_text_color
-                            }
+                            },
+                            ShapeId = t.shape_id
                         };
 
                         foreach(Stop st in routeStops)
@@ -273,6 +274,33 @@ namespace Dijitle.Metra.API.Services
             }
 
             return shapes;
+        }
+
+        public async Task<Shape> GetShapes(string id)
+        {
+            Routes r = _gtfs.Data.Routes[id.Substring(0, id.IndexOf('_'))];
+
+            IEnumerable<Shapes> shapes = _gtfs.Data.Shapes[id];
+                        
+            Shape s = new Shape()
+            {
+                Id = id,
+                Color = r.route_color,
+                TextColor = r.route_text_color,
+                Points = new List<ShapePoint>()
+            };
+
+            foreach (Shapes shape in shapes)
+            {
+                s.Points.Add(new ShapePoint()
+                {
+                    Lat = shape.shape_pt_lat,
+                    Lon = shape.shape_pt_lon,
+                    Sequence = shape.shape_pt_sequence
+                });
+            }
+            
+            return s;
         }
 
         private double GetDistance(double lat1, double lon1, double lat2, double lon2)

@@ -31,10 +31,10 @@ namespace Dijitle.Metra.API.Controllers
         }
 
         [HttpGet()]
-        [Route("Shapes")]
+        [Route("ShapesByRoute")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> GetShapes(string route = "BNSF")
+        public async Task<IActionResult> GetShapesByRoute(string route = "BNSF")
         {
             if (_gtfs.Data == null)
             {
@@ -46,8 +46,26 @@ namespace Dijitle.Metra.API.Controllers
                 return NotFound($"No route named {route} was found!");
             }
 
-
             return Ok(await _metra.GetShapes(_gtfs.Data.Routes[route]));
+        }
+
+        [HttpGet()]
+        [Route("ShapesById")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> GetShapesById(string id = "BNSF_IB_1")
+        {
+            if (_gtfs.Data == null)
+            {
+                await _gtfs.RefreshData();
+            }
+
+            if (!_gtfs.Data.Shapes.ContainsKey(id))
+            {
+                return NotFound($"No shape with id {id} was found!");
+            }
+
+            return Ok(await _metra.GetShapes(id));
         }
 
         [HttpGet()]

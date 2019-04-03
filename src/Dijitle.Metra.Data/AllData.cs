@@ -52,7 +52,7 @@ namespace Dijitle.Metra.Data
 
             foreach (Trips t in Trips.Values)
             {
-                t.Link(Routes, Calendars, StopTimes, Stops);
+                t.Link(Routes, Calendars, StopTimes, Stops, Shapes);
             }
         }
 

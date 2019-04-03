@@ -24,6 +24,9 @@ namespace Dijitle.Metra.API.Models.Output
         [JsonProperty("route")]
         public Route Route { get; set; }
 
+        [JsonProperty("shapeId")]
+        public string ShapeId { get; set; }
+
         [JsonIgnore]
         public List<Stop> RouteStops { get; set; }
 

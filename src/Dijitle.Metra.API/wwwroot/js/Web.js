@@ -265,16 +265,7 @@ function save(item) {
 
 function getPositions() {
 
-    var maps = document.getElementsByName('map');
-       
-
-    maps.forEach(function (i) {
-
-        if (i.offsetHeight > 0)
-        {
-            map.setTarget(i.id);
-        }
-    });
+    
 
     //$.get("api/gtfs/positions", function (data) {
     //    data.forEach(function (d) {
@@ -292,12 +283,13 @@ function getPositions() {
     var t = setTimeout(getPositions, 6000);
 }
 
+
 function setupMap() {
 
-       
+
     var streetmapLayer = new ol.layer.Tile({
         source: new ol.source.OSM()
-    });    
+    });
 
     var myView = new ol.View({
         center: ol.proj.transform([-88, 41.888], 'EPSG:4326', 'EPSG:3857'),
@@ -307,31 +299,28 @@ function setupMap() {
     map = new ol.Map({
         layers: [streetmapLayer],
         view: myView,
+        maxResolution: 1000,
         controls: ol.control.defaults().extend(
             [new ol.control.OverviewMap({})]
         )
     });
+}
 
-
-
-    var routeID = document.getElementById("routeId").getAttribute('routeId');
-
-    $.get("api/metra/shapes?route=" + routeID, function (data) {
+function moveMap(divId, shapeId) {     
+    
+    map.setTarget(divId);        
+    
+    $.get("api/metra/shapesbyid?id=" + shapeId, function (data) {
+                
+        var routeColor = data.color;
 
         var routeCoords = [];
-        var routeColor;
 
-        data.forEach(function (d) {
-            routeColor = d.color;
-
-            d.points.forEach(function (p) {
-                routeCoords.push([p.lon, p.lat]);
-            });
-
+        data.points.forEach(function (p) {
+            routeCoords.push([p.lon, p.lat]);
         });
 
-
-        transCoords = new ol.geom.LineString(routeCoords)
+        var transCoords = new ol.geom.LineString(routeCoords)
 
         transCoords.transform('EPSG:4326', 'EPSG:3857');
 
@@ -342,7 +331,7 @@ function setupMap() {
         var routeStyle = new ol.style.Style({
             stroke: new ol.style.Stroke({
                 color: '#' + routeColor,
-                width: 5
+                width: 7
             })
         });
 
@@ -357,6 +346,7 @@ function setupMap() {
         });
 
         map.addLayer(routeLayer);
+              
     });
 }
 
