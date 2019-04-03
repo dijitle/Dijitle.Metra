@@ -1,4 +1,5 @@
 ﻿var map;
+var myView;
 
 $(document).ready(function () {
     $('[data-toggle="tooltip"]').tooltip();
@@ -291,7 +292,7 @@ function setupMap() {
         source: new ol.source.OSM()
     });
 
-    var myView = new ol.View({
+    myView = new ol.View({
         center: ol.proj.transform([-88, 41.888], 'EPSG:4326', 'EPSG:3857'),
         zoom: 10
     });
@@ -370,7 +371,8 @@ async function moveMap(divId, shapeId) {
 
         map.removeLayer(removeLayer);
         map.addLayer(routeLayer);
-              
+
+        myView.fit(transCoords);
     });
 }
 
