@@ -59,9 +59,9 @@
 
                 <div id="@($"collapse{t.Id}")" class="collapse" aria-labelledby="@($"collapse{t.Id}")" data-parent="#accordion">
                     <div class="card-body">
-                        <div class="d-flex">
+                        <div class="d-flex flex-column">
                             <div>
-                                <table class="table table-borderless table-sm small">
+                                <table class="table table-hover table-borderless table-sm small">
                                 
                                     @for (int i = 0; i < t.RouteStops.Count; i++)
                                     {
@@ -104,7 +104,7 @@
 
                                 </table>
                             </div>
-                            <div class="flex-grow-1" name="map" id="map_@t.Id" style="background-color: lightgray; display: inline-block;">
+                            <div class="flex-grow-1" name="map" id="map_@t.Id" tripId="@t.Id" style="background-color: lightgray; display: inline-block; height:500px">
 
                             </div>
                         </div>

@@ -172,9 +172,9 @@ function checkTime(i) {
 }
 
 function getTimes() {
-    var from = document.getElementById('stopsFrom').selectedOptions[0].value;
-    var to = document.getElementById('stopsTo').selectedOptions[0].value;
-    var express = document.getElementById('expressOnly').checked
+    var from = $('#stopsFrom option:selected').val();
+    var to = $('#stopsTo option:selected').val();
+    var express = $('#expressOnly').is(':checked')
  
     window.location.href = '?start=' + from +'&dest=' + to + "&expressOnly=" + express;
 }
@@ -266,22 +266,20 @@ function save(item) {
 
 function getPositions() {
 
-    
-
-    //$.get("api/gtfs/positions", function (data) {
-    //    data.forEach(function (d) {
-    //        maps.forEach(function (i) {
-    //            if (d.tripId === i.attributes.trip_id.value) {
-    //                var distTotal = getDistance(i.attributes.latStart.value, i.attributes.lonStart.value, i.attributes.latDest.value, i.attributes.lonDest.value);
-    //                var distTraveled = getDistance(i.attributes.latStart.value, i.attributes.lonStart.value, d.latitude, d.longitude);
+    $.get("api/gtfs/positions", function (data) {
+        data.forEach(function (d) {
+            maps.forEach(function (i) {
+                if (d.tripId === i.attributes.trip_id.value) {
+                    var distTotal = getDistance(i.attributes.latStart.value, i.attributes.lonStart.value, i.attributes.latDest.value, i.attributes.lonDest.value);
+                    var distTraveled = getDistance(i.attributes.latStart.value, i.attributes.lonStart.value, d.latitude, d.longitude);
                                         
-    //                i.innerHTML =  (distTraveled / distTotal * 100) + "%;";
-    //            }
-    //        });
-    //    });
-    //});
+                    i.innerHTML =  (distTraveled / distTotal * 100) + "%;";
+                }
+            });
+        });
+    });
 
-    var t = setTimeout(getPositions, 6000);
+    setTimeout(getPositions, 30000);
 }
 
 
@@ -299,11 +297,7 @@ function setupMap() {
 
     map = new ol.Map({
         layers: [streetmapLayer],
-        view: myView,
-        maxResolution: 1000,
-        controls: ol.control.defaults().extend(
-            [new ol.control.OverviewMap({})]
-        )
+        view: myView
     });
 }
 
@@ -378,13 +372,24 @@ async function moveMap(divId, shapeId) {
 
 function showPoint(lat, lon) {
 
-    var coord = new ol.geom.Point([lat, lon]);
-
-    coord.transform('EPSG:4326', 'EPSG:3857');
-
     var stopFeature = new ol.Feature({
-        geometry: new ol.geom.Point(ol.proj.transform([lon, lat], 'EPSG:4326', 'EPSG:3857'))
+        geometry: new ol.geom.Point(ol.proj.transform([Number(lon), Number(lat)], 'EPSG:4326', 'EPSG:3857'))
     });
+
+    var stroke = new ol.style.Stroke({ color: 'white', width: 3 });
+    var goldFill = new ol.style.Fill({ color: 'red' });
+
+    var squareStyle = new ol.style.Style({
+        image: new ol.style.RegularShape({
+            fill: goldFill,
+            stroke: stroke,
+            points: 8,
+            radius: 10,
+            angle: Math.PI / 8
+        })
+    });
+
+    stopFeature.setStyle(squareStyle);
     
     var stopLayerSource = new ol.source.Vector({
         features: [stopFeature]
@@ -460,8 +465,12 @@ function switchStops() {
 
 function changeExpress() {
 
-    if (document.getElementById('expressOnly').checked) {
+    if (window.location.href.indexOf('?') === -1) {
+        window.history.pushState("", "", '?start=ROUTE59&dest=CUS&expressOnly=false');
+    }
 
+    if (express = $('#expressOnly').is(':checked')) {
+        
         window.location.href = window.location.href.replace('expressOnly=false', 'expressOnly=true');
     }
     else {
