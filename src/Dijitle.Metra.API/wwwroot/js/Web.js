@@ -52,23 +52,9 @@ function startTime() {
 
     items.forEach(function (i) {
 
-        var depart = new Date(i.getAttribute('depart_time')); 
-        var arrive = new Date(i.getAttribute('arrive_time'));
+        var time = new Date(i.getAttribute('time')); 
         
-        var diffDepart = depart - now;
-        var diffArrive = arrive - now;
-
-        var diff;
-        var preText;
-
-        if (diffDepart > 0) {
-            diff = diffDepart;
-            preText = "Departing: ";
-        }
-        else {
-            diff = diffArrive;
-            preText = "Arriving: ";
-        }
+        var diff = time - now;
         
         var diffHours = Math.floor(diff  / (1000 * 60 * 60));
         diff -= diffHours * (1000 * 60 * 60);
@@ -80,11 +66,11 @@ function startTime() {
         diff -= diffSeconds * (1000);
         
         if (diffHours < 0) {
-            i.innerHTML = "Complete";
-            i.setAttribute("class", "text-success")
+            i.innerHTML = "";
+            i.setAttribute("class", "")
         }
         else if(diffHours < 1) {
-            i.innerHTML = preText + diffMinutes + ":" + checkTime(diffSeconds)
+            i.innerHTML = diffMinutes + ":" + checkTime(diffSeconds)
 
             if (diffMinutes < 1) {
                 i.setAttribute("class", "text-danger")
@@ -97,7 +83,7 @@ function startTime() {
             }
         }
         else {
-            i.innerHTML = preText + diffHours + ":" + checkTime(diffMinutes) + ":" + checkTime(diffSeconds)
+            i.innerHTML = diffHours + ":" + checkTime(diffMinutes) + ":" + checkTime(diffSeconds)
             i.setAttribute("class", "")
         }
     });
@@ -396,9 +382,6 @@ function showStop(lat, lon) {
         geometry: new ol.geom.Point(ol.proj.transform([Number(lon), Number(lat)], 'EPSG:4326', 'EPSG:3857'))
     });
 
-    var stroke = new ol.style.Stroke({ color: 'white', width: 3 });
-    var fill = new ol.style.Fill({ color: 'red' });
-
     var iconStyle = new ol.style.Style({
         image: new ol.style.Icon(({
             anchor: [0.5, 1],
@@ -437,9 +420,6 @@ function showTrain() {
     var trainFeature = new ol.Feature({
         geometry: new ol.geom.Point(ol.proj.transform([Number(lon), Number(lat)], 'EPSG:4326', 'EPSG:3857'))
     });
-
-    var stroke = new ol.style.Stroke({ color: 'blue', width: 3 });
-    var fill = new ol.style.Fill({ color: 'white' });
     
     var iconStyle = new ol.style.Style({
         image: new ol.style.Icon(({
