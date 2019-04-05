@@ -4,6 +4,7 @@ metadata:
   labels:
     k8s-app: dijitle-metra
   name: dijitle-metra
+  namespace: metra
 spec:
   progressDeadlineSeconds: 600
   replicas: 1
