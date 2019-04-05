@@ -20,7 +20,7 @@
         @foreach (Trip t in Model.Trips)
         {
             <div class="card">
-                <div class="card-header" data-toggle="collapse" data-target="#@($"collapse{t.Id}")" style="cursor: pointer;" onclick="moveMap('map_@t.Id', '@t.ShapeId');">
+                <div class="card-header" data-toggle="collapse" data-target="#@($"collapse{t.Id}{t.OriginStop.ArrivalTime.Date.Day}")" style="cursor: pointer;" onclick="moveMap('map_@t.Id', '@t.ShapeId');">
                     <div class="d-flex justify-content-between">
                         <div class="row">
                             <div width="1px" class="font-weight-bolder mr-3">                                
@@ -57,7 +57,7 @@
                     </div>
                 </div>
 
-                <div id="@($"collapse{t.Id}")" class="collapse" data-parent="#accordion">
+                <div id="@($"collapse{t.Id}{t.OriginStop.ArrivalTime.Date.Day}")" class="collapse" data-parent="#accordion">
                     <div class="card-body">
                         <div class="d-flex flex-column">
                             <div>

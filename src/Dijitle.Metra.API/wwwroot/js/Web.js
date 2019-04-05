@@ -380,15 +380,10 @@ async function moveMap(divId, shapeId) {
             source: routeLayerSource
         });
 
-        var removeLayer;
-        map.getLayers().forEach(function (l) {
-            if (l.get('name') != undefined && l.get('name') === "route") {
+        removeLayer("train");
+        removeLayer("stop");
+        removeLayer("route");
 
-            removeLayer = l;
-            }
-        });
-
-        map.removeLayer(removeLayer);
         map.addLayer(routeLayer);
 
         myView.fit(transCoords, { padding: [20, 20, 20, 20], constrainResolution: false });
@@ -404,17 +399,14 @@ function showStop(lat, lon) {
     var stroke = new ol.style.Stroke({ color: 'white', width: 3 });
     var fill = new ol.style.Fill({ color: 'red' });
 
-    var squareStyle = new ol.style.Style({
-        image: new ol.style.RegularShape({
-            fill: fill,
-            stroke: stroke,
-            points: 8,
-            radius: 10,
-            angle: Math.PI / 8
-        })
+    var iconStyle = new ol.style.Style({
+        image: new ol.style.Icon(({
+            anchor: [0.5, 1],
+            src: "https://cdn.mapmarker.io/api/v1/pin?icon=fa-flag&size=75"
+        }))
     });
 
-    stopFeature.setStyle(squareStyle);
+    stopFeature.setStyle(iconStyle);
     
     var stopLayerSource = new ol.source.Vector({
         features: [stopFeature]
@@ -425,15 +417,8 @@ function showStop(lat, lon) {
         source: stopLayerSource
     });
 
-    var removeLayer;
-    map.getLayers().forEach(function (l) {
-        if (l.get('name') != undefined && l.get('name') === "stop") {
+    removeLayer("stop");
 
-            removeLayer = l;
-        }
-    });
-
-    map.removeLayer(removeLayer);
     map.addLayer(stopLayer);
 }
 
@@ -455,16 +440,15 @@ function showTrain() {
 
     var stroke = new ol.style.Stroke({ color: 'blue', width: 3 });
     var fill = new ol.style.Fill({ color: 'white' });
-
-    var squareStyle = new ol.style.Style({
-        image: new ol.style.Circle({
-            fill: fill,
-            stroke: stroke,
-            radius: 10
-        })
+    
+    var iconStyle = new ol.style.Style({
+        image: new ol.style.Icon(({
+            anchor: [0.5, 1],
+            src: "https://cdn.mapmarker.io/api/v1/pin?icon=fa-train&size=75&background=0000ff"
+        }))
     });
 
-    trainFeature.setStyle(squareStyle);
+    trainFeature.setStyle(iconStyle);
 
     var trainLayerSource = new ol.source.Vector({
         features: [trainFeature]
@@ -475,18 +459,23 @@ function showTrain() {
         source: trainLayerSource
     });
 
+    removeLayer("train");
+
+    map.addLayer(trainLayer);
+
+    setTimeout(showTrain, 5000);
+}
+
+function removeLayer(layer) {
     var removeLayer;
     map.getLayers().forEach(function (l) {
-        if (l.get('name') != undefined && l.get('name') === "train") {
+        if (l.get('name') != undefined && l.get('name') === layer) {
 
             removeLayer = l;
         }
     });
 
     map.removeLayer(removeLayer);
-    map.addLayer(trainLayer);
-
-    setTimeout(showTrain, 5000);
 }
 
 function getDistance(lat1, lon1, lat2, lon2) {
