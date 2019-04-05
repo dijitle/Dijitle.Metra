@@ -33,6 +33,7 @@ function start() {
     startTime();
     setupMap();
     getPositions();
+    showTrain();
 }
 
 function startTime() {
@@ -183,6 +184,8 @@ function loadRoutes() {
     var routeComboBox = document.getElementById('routes');
     var expressCheck = document.getElementById('expressOnly');
 
+    var cookieRoutes = getCookie("routes")
+
     expressCheck.checked = window.location.href.indexOf("expressOnly=true") > -1;
 
     routeComboBox.innerHTML = "<option selected value='-1'>All Routes</option>";
@@ -190,7 +193,14 @@ function loadRoutes() {
     $.get("api/metra/routes", function (data) {
 
         data.forEach(function (d) {
-            routeComboBox.innerHTML += "<option value=" + d.id + ">" + d.longName + " (" + d.shortName + ")</option>";
+
+            var routeOption = document.createElement("OPTION");
+            if (cookieRoutes == d.id) {
+                routeOption.selected = true;
+            }
+            routeOption.setAttribute("value", d.id)
+            routeOption.innerText = d.longName + " (" + d.shortName + ")";
+            routeComboBox.appendChild(routeOption);
         })
     });
 }
@@ -268,14 +278,29 @@ function getPositions() {
 
     $.get("api/gtfs/positions", function (data) {
         data.forEach(function (d) {
-            maps.forEach(function (i) {
-                if (d.tripId === i.attributes.trip_id.value) {
-                    var distTotal = getDistance(i.attributes.latStart.value, i.attributes.lonStart.value, i.attributes.latDest.value, i.attributes.lonDest.value);
-                    var distTraveled = getDistance(i.attributes.latStart.value, i.attributes.lonStart.value, d.latitude, d.longitude);
-                                        
-                    i.innerHTML =  (distTraveled / distTotal * 100) + "%;";
+            $("[name='map']").each(function (i) {
+                if (d.tripId === this.attributes.tripId.value) {                                        
+                    this.setAttribute("gpsTrainLat", d.latitude);
+                    this.setAttribute("gpsTrainLon", d.longitude);
                 }
             });
+
+            $("[name='distanceFromStation']").each(function (i) {
+                if (d.tripId === this.attributes.tripId.value) {
+                    var distStopToDest = getDistance(this.attributes.stopLat.value, this.attributes.stopLon.value, this.attributes.destLat.value, this.attributes.destLon.value);
+                    var distTrainToStop = getDistance(this.attributes.stopLat.value, this.attributes.stopLon.value, d.latitude, d.longitude);
+                    var distTrainToDest = getDistance(this.attributes.destLat.value, this.attributes.destLon.value, d.latitude, d.longitude);
+
+                    if (distStopToDest < distTrainToDest) {
+                        this.innerHTML = distTrainToStop + "miles";
+                    }
+                    else {
+                        this.innerHTML = "";
+                    }
+
+                }
+            });
+
         });
     });
 
@@ -370,18 +395,18 @@ async function moveMap(divId, shapeId) {
     });
 }
 
-function showPoint(lat, lon) {
+function showStop(lat, lon) {
 
     var stopFeature = new ol.Feature({
         geometry: new ol.geom.Point(ol.proj.transform([Number(lon), Number(lat)], 'EPSG:4326', 'EPSG:3857'))
     });
 
     var stroke = new ol.style.Stroke({ color: 'white', width: 3 });
-    var goldFill = new ol.style.Fill({ color: 'red' });
+    var fill = new ol.style.Fill({ color: 'red' });
 
     var squareStyle = new ol.style.Style({
         image: new ol.style.RegularShape({
-            fill: goldFill,
+            fill: fill,
             stroke: stroke,
             points: 8,
             radius: 10,
@@ -410,6 +435,58 @@ function showPoint(lat, lon) {
 
     map.removeLayer(removeLayer);
     map.addLayer(stopLayer);
+}
+
+function showTrain() {
+
+    var mapDiv = $("#" + map.getTarget())[0];
+
+    if (typeof mapDiv === 'undefined') {
+        setTimeout(showTrain, 5000);
+        return;
+    }
+
+    var lat = mapDiv.getAttribute("gpsTrainLat")
+    var lon = mapDiv.getAttribute("gpsTrainLon")
+
+    var trainFeature = new ol.Feature({
+        geometry: new ol.geom.Point(ol.proj.transform([Number(lon), Number(lat)], 'EPSG:4326', 'EPSG:3857'))
+    });
+
+    var stroke = new ol.style.Stroke({ color: 'blue', width: 3 });
+    var fill = new ol.style.Fill({ color: 'white' });
+
+    var squareStyle = new ol.style.Style({
+        image: new ol.style.Circle({
+            fill: fill,
+            stroke: stroke,
+            radius: 10
+        })
+    });
+
+    trainFeature.setStyle(squareStyle);
+
+    var trainLayerSource = new ol.source.Vector({
+        features: [trainFeature]
+    });
+
+    var trainLayer = new ol.layer.Vector({
+        name: "train",
+        source: trainLayerSource
+    });
+
+    var removeLayer;
+    map.getLayers().forEach(function (l) {
+        if (l.get('name') != undefined && l.get('name') === "train") {
+
+            removeLayer = l;
+        }
+    });
+
+    map.removeLayer(removeLayer);
+    map.addLayer(trainLayer);
+
+    setTimeout(showTrain, 5000);
 }
 
 function getDistance(lat1, lon1, lat2, lon2) {
