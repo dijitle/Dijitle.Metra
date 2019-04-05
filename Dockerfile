@@ -16,7 +16,8 @@ RUN dotnet restore "src/Dijitle.Metra.Data/Dijitle.Metra.Data.csproj"
 COPY . .
 
 RUN dotnet build "Dijitle.Metra.sln" \
---configuration Release 
+--configuration Release \
+--no-restore
 
 RUN dotnet publish "src/Dijitle.Metra.API/Dijitle.Metra.API.csproj" \
 --configuration Release \
