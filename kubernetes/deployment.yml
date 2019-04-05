@@ -28,12 +28,7 @@ spec:
         ports:
         - containerPort: 80
           protocol: TCP
-        resources: {}
-        terminationMessagePath: /dev/termination-log
-        terminationMessagePolicy: File
-        volumeMounts:
-        - mountPath: /tmp
-          name: tmp-volume
+        resources: {}        
       dnsPolicy: ClusterFirst
       restartPolicy: Always
       schedulerName: default-scheduler      
