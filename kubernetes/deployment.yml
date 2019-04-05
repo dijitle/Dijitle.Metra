@@ -27,9 +27,15 @@ spec:
         imagePullPolicy: IfNotPresent
         env:
         - name: secretKey
-          value: 
+          valueFrom:
+            secretKeyRef:
+              name: gtfsSecret
+              key: secretKey 
         - name: accessKey
-          value:     
+          valueFrom:
+            secretKeyRef:
+              name: gtfsSecret
+              key: accessKey     
         name: dijitle-metra
         ports:
         - containerPort: 80
