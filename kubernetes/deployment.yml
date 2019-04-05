@@ -24,7 +24,12 @@ spec:
     spec:
       containers:
       - image: metra:local
-        imagePullPolicy: IfNotPresent        
+        imagePullPolicy: IfNotPresent
+        env:
+        - name: secretKey
+          value: 
+        - name: accessKey
+          value:     
         name: dijitle-metra
         ports:
         - containerPort: 80

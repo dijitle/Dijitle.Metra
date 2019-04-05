@@ -292,7 +292,7 @@ function getPositions() {
                     var distTrainToDest = getDistance(this.attributes.destLat.value, this.attributes.destLon.value, d.latitude, d.longitude);
 
                     if (distStopToDest < distTrainToDest) {
-                        this.innerHTML = distTrainToStop + "miles";
+                        this.innerHTML = distTrainToStop + " miles";
                     }
                     else {
                         this.innerHTML = "";

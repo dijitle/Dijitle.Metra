@@ -43,7 +43,7 @@
 
                             </div>
                         </div>
-                        <div class="font-weight-bolder">
+                        <div class="font-sm">
                             <span width="1px" name="timeUntil"
                                   depart_time="@t.OriginStop.DepartureTime"
                                   arrive_time="@t.DestinationStop.ArrivalTime">
@@ -78,12 +78,12 @@
                                         </td>
 
 
-                                        <td width="1px">
+                                        <td class="text-right "width="1px">
                                             <span name="timeUntilStop" arrive_time="@t.RouteStops[i].ArrivalTime">
                                             </span>
                                         </td>
 
-                                        <td width="1px"> 
+                                        <td class="text-nowrap text-right" width="1px"> 
                                             <span name="distanceFromStation" 
                                                   stopLat="@(t.RouteStops[i].Lat)" stopLon="@t.RouteStops[i].Lon" destLat="@(t.RouteStops.Last().Lat)" destLon="@t.RouteStops.Last().Lon" tripId="@t.Id">
                                             </span>
