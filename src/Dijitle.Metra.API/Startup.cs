@@ -17,6 +17,7 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using Microsoft.Extensions.Configuration;
 using Microsoft.OpenApi.Models;
+using Microsoft.Extensions.Logging;
 
 namespace Dijitle.Metra.API
 {
@@ -68,13 +69,8 @@ namespace Dijitle.Metra.API
             {
                 app.UseDeveloperExceptionPage();
             }
-            else
-            {
-                app.UseHsts();
-            }
 
             app.UseStaticFiles();
-            app.UseHttpsRedirection();
             app.UseSwagger();
 
             app.UseSwaggerUI(c =>
