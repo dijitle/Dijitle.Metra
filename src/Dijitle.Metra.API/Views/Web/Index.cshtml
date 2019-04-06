@@ -17,10 +17,23 @@
 
     <div id="accordion">
 
+        @{ 
+            DateTime nowDate;
+
+            if (Environment.OSVersion.Platform == PlatformID.Unix)
+            {
+                nowDate = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, TimeZoneInfo.FindSystemTimeZoneById("America/Chicago"));
+            }
+            else
+            {
+                nowDate = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, TimeZoneInfo.FindSystemTimeZoneById("Central Standard Time"));
+            }
+        }
+
         @foreach (Trip t in Model.Trips)
         {
             <div class="card">
-                <div class="card-header @(t.DestinationStop.ArrivalTime < DateTime.Now ? "text-muted" : "")" data-toggle="collapse" data-target="#@($"collapse{t.Id}{t.OriginStop.ArrivalTime.Date.Day}")" style="cursor: pointer;" onclick="moveMap('map_@t.Id', '@t.ShapeId');">
+                <div class="card-header @(t.DestinationStop.ArrivalTime < nowDate ? "text-muted" : "")" data-toggle="collapse" data-target="#@($"collapse{t.Id}{t.OriginStop.ArrivalTime.Date.Day}")" style="cursor: pointer;" onclick="moveMap('map_@t.Id', '@t.ShapeId');">
                     <div class="d-flex justify-content-between align-items-center">
                         <div width="1px">
                             <div width="1px" class="font-weight-bolder mr-3">
@@ -66,37 +79,37 @@
                         <div class="d-flex flex-column">
                             <div>
                                 <table class="table table-borderless table-sm small">
-                                
+
                                     @for (int i = 0; i < t.RouteStops.Count; i++)
                                     {
                                         if (t.TripStops.Contains(t.RouteStops[i]))
                                         {
-                                    <tr style="@(i == 0 ? "color:green" : (i == t.RouteStops.Count - 1  || t.TripStops.Last() == t.RouteStops[i] ? "color:red" : "color:black"));
+                                            <tr style="@(i == 0 ? "color:green" : (i == t.RouteStops.Count - 1  || t.TripStops.Last() == t.RouteStops[i] ? "color:red" : "color:black"));
                                           @(t.RouteStops[i] == t.OriginStop || t.RouteStops[i] == t.DestinationStop ? "font-weight: bold" : "font-weight: normal");">
-                                        <td width="1px" style="cursor: pointer;" onclick="showStop('@(t.RouteStops[i].Lat)', '@(t.RouteStops[i].Lon)');">
-                                            <i name="stopdot" arrive_time="@t.RouteStops[i].ArrivalTime" class="fas fa-circle font-weight-lighter"></i> 
-                                        </td>
+                                                <td width="1px" style="cursor: pointer;" onclick="showStop('@(t.RouteStops[i].Lat)', '@(t.RouteStops[i].Lon)');">
+                                                    <i name="stopdot" arrive_time="@t.RouteStops[i].ArrivalTime" class="fas fa-circle font-weight-lighter"></i>
+                                                </td>
 
-                                        <td width="1px">
-                                            <span class="mr-3">@t.RouteStops[i].DepartureTime.ToShortTimeString()</span>
-                                        </td>
+                                                <td width="1px">
+                                                    <span class="mr-3">@t.RouteStops[i].DepartureTime.ToShortTimeString()</span>
+                                                </td>
 
 
-                                        <td class="text-right "width="1px">
-                                            <span name="timeUntilStop" arrive_time="@t.RouteStops[i].ArrivalTime">
-                                            </span>
-                                        </td>
+                                                <td class="text-right " width="1px">
+                                                    <span name="timeUntilStop" arrive_time="@t.RouteStops[i].ArrivalTime">
+                                                    </span>
+                                                </td>
 
-                                        <td class="text-nowrap text-right" width="1px"> 
-                                            <span name="distanceFromStation" 
-                                                  stopLat="@(t.RouteStops[i].Lat)" stopLon="@t.RouteStops[i].Lon" destLat="@(t.RouteStops.Last().Lat)" destLon="@t.RouteStops.Last().Lon" tripId="@t.Id">
-                                            </span>
-                                        </td>
+                                                <td class="text-nowrap text-right" width="1px">
+                                                    <span name="distanceFromStation"
+                                                          stopLat="@(t.RouteStops[i].Lat)" stopLon="@t.RouteStops[i].Lon" destLat="@(t.RouteStops.Last().Lat)" destLon="@t.RouteStops.Last().Lon" tripId="@t.Id">
+                                                    </span>
+                                                </td>
 
-                                        <td>
-                                            <span class="mx-3">@t.RouteStops[i].Name</span>
-                                        </td>
-                                    </tr>
+                                                <td>
+                                                    <span class="mx-3">@t.RouteStops[i].Name</span>
+                                                </td>
+                                            </tr>
 
                                             if (t.TripStops.Last() == t.RouteStops[i])
                                             {
@@ -109,12 +122,12 @@
                             </div>
                             <div class="flex-grow-1" name="map" id="map_@t.Id" tripId="@t.Id" gpsTrainLat="" gpsTrainLon="" style="background-color: lightgray; display: inline-block; height:423px"></div>
                         </div>
-                        
+
                     </div>
                 </div>
             </div>
 
         }
-        </div>
+    </div>
 
 
