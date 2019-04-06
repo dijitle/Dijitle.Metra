@@ -36,7 +36,7 @@ namespace Dijitle.Metra.API.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> GetShapesByRoute(string route = "BNSF")
         {
-            if (_gtfs.Data == null)
+            if (_gtfs.Data.IsStale)
             {
                 await _gtfs.RefreshData();
             }
@@ -55,7 +55,7 @@ namespace Dijitle.Metra.API.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> GetShapesById(string id = "BNSF_IB_1")
         {
-            if (_gtfs.Data == null)
+            if (_gtfs.Data.IsStale)
             {
                 await _gtfs.RefreshData();
             }
@@ -74,7 +74,7 @@ namespace Dijitle.Metra.API.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> GetTrips(string start = "ROUTE59", string dest = "CUS", bool expressOnly = false)
         {
-            if (_gtfs.Data == null)
+            if (_gtfs.Data.IsStale)
             {
                 await _gtfs.RefreshData();
             }

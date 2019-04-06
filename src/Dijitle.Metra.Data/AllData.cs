@@ -19,6 +19,8 @@ namespace Dijitle.Metra.Data
         public Dictionary<string, Stops> Stops { get; set; }
         public Dictionary<string, Trips> Trips { get; set; }
 
+        private DateTime _lastUpdated;
+
         public AllData()
         {
             Agencies = new Dictionary<string, Agency>();
@@ -31,6 +33,24 @@ namespace Dijitle.Metra.Data
             StopTimes = new Dictionary<string, List<StopTimes>>();
             Stops = new Dictionary<string, Stops>();
             Trips = new Dictionary<string, Trips>();
+
+            _lastUpdated = new DateTime(1,1,1);
+        }
+
+        public bool IsStale
+        {
+            get
+            {
+                return _lastUpdated.AddHours(4) < DateTime.Now;
+            }
+        }
+
+        public bool IsFresh
+        {
+            get
+            {
+                return !IsStale;
+            }
         }
 
         public void LinkItems()
@@ -54,6 +74,8 @@ namespace Dijitle.Metra.Data
             {
                 t.Link(Routes, Calendars, StopTimes, Stops, Shapes);
             }
+
+            _lastUpdated = DateTime.Now;
         }
 
 

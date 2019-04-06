@@ -22,7 +22,7 @@ namespace Dijitle.Metra.API.Services
         {
             List<Route> routes = new List<Route>();
 
-            if (_gtfs.Data == null)
+            if (_gtfs.Data.IsStalel)
             {
                 await _gtfs.RefreshData();
             }
@@ -57,7 +57,7 @@ namespace Dijitle.Metra.API.Services
             
             List<Trip> trips = new List<Trip>();
 
-            if (_gtfs.Data == null)
+            if (_gtfs.Data.IsStale)
             {
                 await _gtfs.RefreshData();
             }
@@ -164,7 +164,7 @@ namespace Dijitle.Metra.API.Services
         {
             List<Stop> stops = new List<Stop>();
 
-            if (_gtfs.Data == null)
+            if (_gtfs.Data.IsStale)
             {
                 await _gtfs.RefreshData();
             }
@@ -188,7 +188,7 @@ namespace Dijitle.Metra.API.Services
         {
             List<Stop> stops = new List<Stop>();
 
-            if (_gtfs.Data == null)
+            if (_gtfs.Data.IsStale)
             {
                 await _gtfs.RefreshData();
             }
@@ -212,7 +212,7 @@ namespace Dijitle.Metra.API.Services
         {
             List<Stop> stops = new List<Stop>();
 
-            if (_gtfs.Data == null)
+            if (_gtfs.Data.IsStale)
             {
                 await _gtfs.RefreshData();
             }

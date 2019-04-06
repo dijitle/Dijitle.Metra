@@ -25,7 +25,7 @@ namespace Dijitle.Metra.API.Controllers
         [HttpGet()]
         public async Task<IActionResult> Index(string start = "ROUTE59", string dest = "CUS", bool expressOnly = false)
         {
-            if(_gtfs.Data == null)
+            if(_gtfs.Data.IsStale)
             {
                 await _gtfs.RefreshData();
             }

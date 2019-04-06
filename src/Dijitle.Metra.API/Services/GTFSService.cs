@@ -16,12 +16,13 @@ namespace Dijitle.Metra.API.Services
     public class GTFSService : IGTFSService
     {
         private readonly IHttpClientFactory _httpClientFactory;
-
+        
         public AllData Data { get; private set; }
 
         public GTFSService(IHttpClientFactory httpClientFactory)
         {
             _httpClientFactory = httpClientFactory;
+            Data = new AllData();
         }
 
         public async Task<IEnumerable<Position>> GetPositions()
@@ -94,9 +95,7 @@ namespace Dijitle.Metra.API.Services
             HttpClient client = _httpClientFactory.CreateClient("GTFSClient");
 
             Data = new AllData();
-
-            List<string> entries = new List<string>();
-
+            
             var response = await client.GetAsync("/gtfs/raw/schedule.zip");
             var content = await response.Content.ReadAsStreamAsync();
             string line;
