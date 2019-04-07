@@ -171,7 +171,7 @@ function loadRoutes() {
 
     var cookieRoutes = getCookie("routes")
 
-    expressCheck.checked = window.location.href.indexOf("expressOnly=true") > -1;
+    expressCheck.prop("checked", window.location.href.indexOf("expressOnly=true") > -1);
 
     routeComboBox.empty().append(new Option("All Routes", "-1", true, false));
 
@@ -486,8 +486,4 @@ function changeExpress() {
     else {
         window.location.href = window.location.href.replace('expressOnly=true', 'expressOnly=false');
     }
-
-    
-
-
 }
