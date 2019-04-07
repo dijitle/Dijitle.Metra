@@ -28,8 +28,7 @@ function getCookie(cname) {
 }
 
 function start() {
-    loadRoutes();
-    loadStops();
+    loadRoutes();    
     startTime();
     setupMap();
     getPositions();
@@ -167,37 +166,31 @@ function getTimes() {
 }
 
 function loadRoutes() {
-    var routeComboBox = document.getElementById('routes');
-    var expressCheck = document.getElementById('expressOnly');
+    var routeComboBox = $('#routes');
+    var expressCheck = $('#expressOnly');
 
     var cookieRoutes = getCookie("routes")
 
     expressCheck.checked = window.location.href.indexOf("expressOnly=true") > -1;
 
-    routeComboBox.innerHTML = "<option selected value='-1'>All Routes</option>";
+    routeComboBox.empty().append(new Option("All Routes", "-1", true, false));
 
     $.get("api/metra/routes", function (data) {
-
         data.forEach(function (d) {
-
-            var routeOption = document.createElement("OPTION");
-            if (cookieRoutes == d.id) {
-                routeOption.selected = true;
-            }
-            routeOption.setAttribute("value", d.id)
-            routeOption.innerText = d.longName + " (" + d.shortName + ")";
-            routeComboBox.appendChild(routeOption);
+            routeComboBox.append(new Option(d.longName + " (" + d.shortName + ")", d.id, false, cookieRoutes === d.id));
         })
+
+        loadStops();
     });
 }
 
 function loadStops() {
-    var fromComboBox = document.getElementById('stopsFrom');
-    var toComboBox = document.getElementById('stopsTo');
-    var route = document.getElementById('routes').selectedOptions[0].value;
+    var fromComboBox = $("#stopsFrom");
+    var toComboBox = $("#stopsTo");
+    var route = $("#routes option:selected").val();
 
-    fromComboBox.innerHTML = "<option selected value='ROUTE59' hidden>Choose a origin stop...</option>";
-    toComboBox.innerHTML = "<option selected value='CUS' hidden>Choose a destination stop...</option>";
+    fromComboBox.empty().append(new Option("Choose a origin stop...", "ROUTE59", true, false));
+    toComboBox.empty().append(new Option("Choose a destination stop...", "CUS", true, false));
 
     var cookieStopsFrom = getCookie("stopsFrom")
     var cookieStopsTo = getCookie("stopsTo")
@@ -206,50 +199,21 @@ function loadStops() {
         $.get("api/metra/AllStops", function (data) {
 
             data.forEach(function (d) {
-
-                var fromOption = document.createElement("OPTION");                
-                if (cookieStopsFrom == d.id) {
-                    fromOption.selected = true;
-                }
-                fromOption.setAttribute("value", d.id)
-                fromOption.innerText = d.name;
-                fromComboBox.appendChild(fromOption);
-
-
-                var toOption = document.createElement("OPTION");
-                if (cookieStopsTo == d.id) {
-                    toOption.selected = true;
-                }
-                toOption.setAttribute("value", d.id)
-                toOption.innerText = d.name;
-                toComboBox.appendChild(toOption);
+                fromComboBox.append(new Option(d.name, d.id, false, cookieStopsFrom === d.id));
+                toComboBox.append(new Option(d.name, d.id, false, cookieStopsTo === d.id));
             })
         });
     }
     else {
         $.get("api/metra/StopsByRoute?route=" + route + "&sortAsc=false", function (data) {
-
             data.forEach(function (d) {
-                var fromOption = document.createElement("OPTION");
-                if (cookieStopsFrom == d.id) {
-                    fromOption.selected = true;
-                }
-                fromOption.setAttribute("value", d.id)
-                fromOption.innerText = d.name;
-                fromComboBox.appendChild(fromOption);
+                fromComboBox.append(new Option(d.name, d.id, false, cookieStopsFrom === d.id));
             })
         });
 
         $.get("api/metra/StopsByRoute?route=" + route + "&sortAsc=true", function (data) {
-
             data.forEach(function (d) {
-                var toOption = document.createElement("OPTION");
-                if (cookieStopsTo == d.id) {
-                    toOption.selected = true;
-                }
-                toOption.setAttribute("value", d.id)
-                toOption.innerText = d.name;
-                toComboBox.appendChild(toOption);
+                toComboBox.append(new Option(d.name, d.id, false, cookieStopsTo === d.id));
             })
         });
     }

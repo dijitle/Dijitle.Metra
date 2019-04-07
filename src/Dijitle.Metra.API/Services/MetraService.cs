@@ -22,7 +22,7 @@ namespace Dijitle.Metra.API.Services
         {
             List<Route> routes = new List<Route>();
 
-            if (_gtfs.Data.IsStalel)
+            if (_gtfs.Data.IsStale)
             {
                 await _gtfs.RefreshData();
             }
@@ -142,7 +142,7 @@ namespace Dijitle.Metra.API.Services
                 }
             }
 
-            List<Trip> currentTrips = null;
+            List<Trip> currentTrips = new List<Trip>();
 
             for (int i = 0; i < trips.Count; i++)
             {
