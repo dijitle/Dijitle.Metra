@@ -2,7 +2,7 @@
 var myView;
 
 $(document).ready(function () {
-    $('[data-toggle="tooltip"]').tooltip();
+    $('[data-toggle="popover"]').popover();
 });
 
 function setCookie(cname, cvalue, exdays) {
@@ -33,6 +33,7 @@ function start() {
     setupMap();
     getPositions();
     showTrain();
+    getAlerts();
 }
 
 function startTime() {
@@ -201,20 +202,20 @@ function loadStops() {
             data.forEach(function (d) {
                 fromComboBox.append(new Option(d.name, d.id, false, cookieStopsFrom === d.id));
                 toComboBox.append(new Option(d.name, d.id, false, cookieStopsTo === d.id));
-            })
+            });
         });
     }
     else {
         $.get("api/metra/StopsByRoute?route=" + route + "&sortAsc=false", function (data) {
             data.forEach(function (d) {
                 fromComboBox.append(new Option(d.name, d.id, false, cookieStopsFrom === d.id));
-            })
+            });
         });
 
         $.get("api/metra/StopsByRoute?route=" + route + "&sortAsc=true", function (data) {
             data.forEach(function (d) {
                 toComboBox.append(new Option(d.name, d.id, false, cookieStopsTo === d.id));
-            })
+            });
         });
     }
 }
@@ -224,12 +225,36 @@ function save(item) {
     setCookie(item, document.getElementById(item).selectedOptions[0].value, 365); 
 }
 
+function getAlerts() {
+    $("[name^='alert']").each(function (i) {
+        this.innerHTML = '';
+    });
+
+    $.get("api/gtfs/alerts", function (data) {
+        data.forEach(function (d) {
+            $("[name='alertIcon']").each(function (i) {
+                if (d.affectedIds.indexOf(this.attributes.tripId.value) > -1) {
+                    this.innerHTML = '<i class="fas fa-exclamation-triangle"</i>';
+                }
+            });
+
+            $("[name='alertBody']").each(function (i) {
+                if (d.affectedIds.indexOf(this.attributes.tripId.value) > -1) {
+                    this.innerHTML = ' <h4>' + d.header + '</h4>' + d.description + '<br/><a target="_blank" href="' + d.url + '">Click here for more info</a><br/>';                    
+                }
+            });
+        });
+    });
+
+    setTimeout(getAlerts, 60000);
+}
+
 function getPositions() {
 
     $.get("api/gtfs/positions", function (data) {
         data.forEach(function (d) {
             $("[name='map']").each(function (i) {
-                if (d.tripId === this.attributes.tripId.value) {                                        
+                if (d.tripId === this.attributes.tripId.value) {
                     this.setAttribute("gpsTrainLat", d.latitude);
                     this.setAttribute("gpsTrainLon", d.longitude);
                 }

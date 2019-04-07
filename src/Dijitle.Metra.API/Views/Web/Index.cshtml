@@ -59,8 +59,12 @@
                                 {
                                     <span style="width: 14px; display: inline-block"></span>
                                 }
+
+                                <span name="alertIcon" tripId="@t.Id" class="text-warning">
+                                </span>
                             </div>
                         </div>
+
 
                         <div width="1px" class="text-right font-weight-bolder">
                             @t.DestinationStop.ArrivalTime.ToShortTimeString()
@@ -75,7 +79,11 @@
                 </div>
 
                 <div id="@($"collapse{t.Id}{t.OriginStop.ArrivalTime.Date.Day}")" class="collapse" data-parent="#accordion">
-                    <div class="card-body">
+                    <div class="card-body text-warning">
+                        <div class="mb-3" name="alertBody" tripId ="@t.Id">
+
+                        </div>
+
                         <div class="d-flex flex-column">
                             <div>
                                 <table class="table table-borderless table-sm small">
