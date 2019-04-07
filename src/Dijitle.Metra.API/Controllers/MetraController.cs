@@ -94,7 +94,7 @@ namespace Dijitle.Metra.API.Controllers
         [HttpGet()]
         [Route("StopsByDistance")]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<IActionResult> GetStopsByDistance(double lat = 41.882077d, double lon = -87.627807d, int distance = 5)
+        public async Task<IActionResult> GetStopsByDistance(double lat = 41.881276d, double lon = -87.635305d, int distance = 5)
         {
             return Ok(await _metra.GetStopsByDistance(lat, lon, distance));
         }

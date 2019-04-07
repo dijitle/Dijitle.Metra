@@ -502,13 +502,28 @@ function getRadians(degrees) {
 
 function getLocation() {
     if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(showPosition);
+        navigator.geolocation.getCurrentPosition(loadStopsByLocation);
     } 
 }
 
-function showPosition(position) {
-   alert( "Latitude: " + position.coords.latitude +
-        "<br/>Longitude: " + position.coords.longitude);
+function loadStopsByLocation(position) {
+    var fromComboBox = $("#stopsFrom");
+    var toComboBox = $("#stopsTo");
+
+    fromComboBox.empty();
+    toComboBox.empty();
+
+    $.get("api/metra/StopsByDistance?lat=" + position.coords.latitude + "&lon=" + position.coords.longitude, function (data) {
+        data.forEach(function (d) {
+            fromComboBox.append(new Option(d.name, d.id));
+        });
+    });
+
+    $.get("api/metra/StopsByDistance?distance=1", function (data) {
+        data.forEach(function (d) {
+            toComboBox.append(new Option(d.name, d.id));
+        });
+    });
 }
 
 function switchStops() {
