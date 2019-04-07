@@ -28,12 +28,29 @@ function getCookie(cname) {
 }
 
 function start() {
+    loadURL()
     loadRoutes();    
     startTime();
     setupMap();
     getPositions();
     showTrain();
     getAlerts();
+}
+
+function loadURL() {
+    if (window.location.href.indexOf('?') === -1) {
+
+        var start = getCookie("stopsFrom");
+        var end = getCookie("stopsTo");
+        var express = getCookie("express");
+
+        if (start === "" || end === "" || express === "") {
+            window.history.pushState("", "", '?start=ROUTE59&dest=CUS&expressOnly=false');
+        }
+        else {
+            window.location.href = '?start=' + start + '&dest=' + end + '&expressOnly=' + express
+        }
+    }
 }
 
 function startTime() {
@@ -162,6 +179,8 @@ function getTimes() {
     var from = $('#stopsFrom option:selected').val();
     var to = $('#stopsTo option:selected').val();
     var express = $('#expressOnly').is(':checked')
+
+    save();
  
     window.location.href = '?start=' + from +'&dest=' + to + "&expressOnly=" + express;
 }
@@ -220,9 +239,20 @@ function loadStops() {
     }
 }
 
+function save() {
+    saveCombo("Routes");
+    saveCombo("stopsFrom");
+    saveCombo("stopsTo");
 
-function save(item) {
-    setCookie(item, document.getElementById(item).selectedOptions[0].value, 365); 
+    saveExpress();
+}
+
+function saveCombo(item) {
+    setCookie(item, $('#' + item + ' option:selected').val(), 365); 
+}
+
+function saveExpress() {
+    setCookie("express", $('#expressOnly').is(':checked'), 365);
 }
 
 function getAlerts() {
@@ -281,7 +311,6 @@ function getPositions() {
 
     setTimeout(getPositions, 30000);
 }
-
 
 function setupMap() {
 
@@ -478,7 +507,7 @@ function getLocation() {
 
 function showPosition(position) {
    alert( "Latitude: " + position.coords.latitude +
-        "<br>Longitude: " + position.coords.longitude);
+        "<br/>Longitude: " + position.coords.longitude);
 }
 
 function switchStops() {
@@ -503,6 +532,8 @@ function changeExpress() {
     if (window.location.href.indexOf('?') === -1) {
         window.history.pushState("", "", '?start=ROUTE59&dest=CUS&expressOnly=false');
     }
+
+    saveExpress();
 
     if (express = $('#expressOnly').is(':checked')) {
         
