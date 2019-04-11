@@ -38,5 +38,17 @@ namespace Dijitle.Metra.API.Controllers
 
             return View(tvm);
         }
+
+        [HttpGet()]
+        [Route("map")]
+        public async Task<IActionResult> Map()
+        {
+            if (_gtfs.Data.IsStale)
+            {
+                await _gtfs.RefreshData();
+            }
+
+            return View();
+        }
     }
 }
