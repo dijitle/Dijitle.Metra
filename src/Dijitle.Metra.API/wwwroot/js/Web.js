@@ -198,7 +198,7 @@ function loadRoutes() {
 
     $.get("api/metra/routes", function (data) {
         data.forEach(function (d) {
-            routeComboBox.append(new Option(d.longName + " (" + d.shortName + ")", d.id, false, cookieRoutes === d.id));
+            routeComboBox.append(new Option(d.shortName + " [" + d.longName + "]", d.id, false, cookieRoutes === d.id));
         })
 
         loadStops();
@@ -541,21 +541,4 @@ function switchStops() {
         window.location.href = window.location.href + "?start=CUS&dest=ROUTE59&expressOnly=false";
     }
 
-}
-
-function changeExpress() {
-
-    if (window.location.href.indexOf('?') === -1) {
-        window.history.pushState("", "", '?start=ROUTE59&dest=CUS&expressOnly=false');
-    }
-
-    saveExpress();
-
-    if (express = $('#expressOnly').is(':checked')) {
-        
-        window.location.href = window.location.href.replace('expressOnly=false', 'expressOnly=true');
-    }
-    else {
-        window.location.href = window.location.href.replace('expressOnly=true', 'expressOnly=false');
-    }
 }
