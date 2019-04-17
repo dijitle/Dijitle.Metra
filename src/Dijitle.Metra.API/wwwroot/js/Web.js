@@ -39,10 +39,10 @@ function loadURL() {
         var express = getCookie("express");
 
         if (start === "" || end === "" || express === "") {
-            window.history.pushState("", "", '?start=ROUTE59&dest=CUS&expressOnly=false');
+            window.history.pushState("", "", '/Trips?start=ROUTE59&dest=CUS&expressOnly=false');
         }
         else {
-            window.location.href = '?start=' + start + '&dest=' + end + '&expressOnly=' + express
+            window.location.href = '/Trips?start=' + start + '&dest=' + end + '&expressOnly=' + express
         }
     }
 }

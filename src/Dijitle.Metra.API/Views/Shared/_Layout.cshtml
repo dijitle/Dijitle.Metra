@@ -20,18 +20,21 @@
 </head>
 <body>
     <nav class="navbar bg-primary navbar-dark fixed-top">
-
-        <a asp-area="" asp-controller="Web" asp-action="Index" class="navbar-brand">Dijitle Metra</a>
+        <span>
+            <a asp-area="" asp-controller="Web" asp-action="Index" class="navbar-brand">Dijitle Metra</a>
+        
+            <a class="nav-item" @(ViewContext.RouteData.Values["Action"].ToString() == "Index" ? "" : "hidden") href="/Map">
+                <i class='fas fa-map-marked-alt text-white'></i>
+            </a>
+        </span>
 
         <span id="clock" class="navbar-brand" style="position:absolute; left:50%; top:8px; transform: translateX(-50%);"></span>
-               
 
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">
-            <span class="navbar-toggler-icon"></span>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar" @(ViewContext.RouteData.Values["Action"].ToString() == "Index" ? "" : "hidden")>
+            <i class='fas fa-search-location text-white'></i>
         </button>
 
         <div class="collapse navbar-collapse" id="collapsibleNavbar">
-            
 
             <div class="input-group my-3">
 
@@ -67,14 +70,14 @@
                 </select>
             </div>
 
-            <div class="mb-3 d-flex">                
+            <div class="mb-3 d-flex">
                 <span class="navbar-text font-weight-bolder align-self-start pt-1" style="margin-right:5px;">Express Only</span>
-                
+
 
                 <label class="switch">
                     <input id="expressOnly" type="checkbox" />
                     <span class="slider round"></span>
-                </label>               
+                </label>
 
                 <button class="btn btn-success ml-auto" type="button" onclick="getTimes();">Search...</button>
             </div>
