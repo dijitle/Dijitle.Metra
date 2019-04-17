@@ -64,6 +64,11 @@ namespace Dijitle.Metra.API.Services
 
             Routes route = _gtfs.Data.Routes.Values.Where(r => r.Stops.Contains(originStop) && r.Stops.Contains(destinationStop)).FirstOrDefault();
 
+            if(route == null)
+            {
+                return new List<Trip>();
+            }
+
             Dictionary<DateTime, IEnumerable<Calendar>> days = new Dictionary<DateTime, IEnumerable<Calendar>>();
 
             if(selectedDate.Hour <= 4)

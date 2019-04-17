@@ -2,16 +2,16 @@ apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:  
   labels:
-    k8s-app: dijitle-metra
-  name: dijitle-metra
-  namespace: metra
+    k8s-app: teamcity-server
+  name: teamcity-server
+  namespace: teamcity
 spec:
   progressDeadlineSeconds: 600
   replicas: 1
   revisionHistoryLimit: 10
   selector:
     matchLabels:
-      k8s-app: dijitle-metra
+      k8s-app: teamcity-server
   strategy:
     rollingUpdate:
       maxSurge: 25%
@@ -20,32 +20,27 @@ spec:
   template:
     metadata:
       labels:
-        k8s-app: dijitle-metra
+        k8s-app: teamcity-server
     spec:
       containers:
-      - image: metra:0.0.1
-        imagePullPolicy: IfNotPresent
-        env:
-        - name: secretKey
-          valueFrom:
-            secretKeyRef:
-              name: gtfsSecret
-              key: secretKey 
-        - name: accessKey
-          valueFrom:
-            secretKeyRef:
-              name: gtfsSecret
-              key: accessKey     
-        name: dijitle-metra
-        livenessProbe:
-          httpGet:
-            path: /health
-            port: 80
-          initialDelaySeconds: 3
-          periodSeconds: 3
+      - image: jetbrains/teamcity-server
+        imagePullPolicy: IfNotPresent        
+        name: teamcity-server        
         ports:
-        - containerPort: 80
+        - containerPort: 8111
           protocol: TCP
+        volumeMounts:
+          - name: hosttcdata
+            mountPath: /data/teamcity_server/datadir
+          - name: hosttclogs
+            mountPath: /opt/teamcity/logs 
+      volumes:
+      - name: hosttcdata
+        hostPath:
+          path: /k8s/teamcity/data
+      - name: hosttclogs
+        hostPath:
+          path: /k8s/teamcity/logs
         resources: {}        
       dnsPolicy: ClusterFirst
       restartPolicy: Always

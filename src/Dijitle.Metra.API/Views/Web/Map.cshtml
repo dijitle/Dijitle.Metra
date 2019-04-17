@@ -1,1 +1,7 @@
-﻿<div name="map" style="background-color: lightgray; height:1000px"></div>
+﻿@{
+    ViewData["Title"] = "Map";
+}
+
+
+<div name="map" id="map" style="background-color: lightgray; height:1000px; margin-top:64px;" onload="mapStart();"></div>
+<script src="~/js/Map.js"></script>
