@@ -84,7 +84,7 @@ namespace Dijitle.Metra.Data
             return Calendars.Where(c => c.Value.start_date < date && 
                                    c.Value.end_date.AddDays(1) >= date  && 
                                    c.Value.IsDay(date.DayOfWeek) == true &&
-                                   (c.Value.CalendarDates.Any(cd => cd.exception_type != CalendarDate.Exception_Type.Removed) ||
+                                   (c.Value.CalendarDates.Any(cd => cd.exception_type != CalendarDate.Exception_Type.Removed || cd.date > date) ||
                                    c.Value.CalendarDates.Count == 0)).Select(o => o.Value);
         }
     }
