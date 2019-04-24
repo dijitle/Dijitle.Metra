@@ -233,6 +233,7 @@ function showTrain() {
 
     var lat = mapDiv.getAttribute("gpsTrainLat")
     var lon = mapDiv.getAttribute("gpsTrainLon")
+    var dir = mapDiv.getAttribute("gpsTrainDir")
 
     var trainFeature = new ol.Feature({
         geometry: new ol.geom.Point(ol.proj.transform([Number(lon), Number(lat)], 'EPSG:4326', 'EPSG:3857'))
@@ -240,7 +241,7 @@ function showTrain() {
 
     var color = "2772ea";
 
-    if (d.direction) {
+    if (dir) {
         color = "1df946";
     }
 

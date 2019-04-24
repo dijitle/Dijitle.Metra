@@ -282,6 +282,7 @@ function getPositions() {
                 if (d.tripId === this.attributes.tripId.value) {
                     this.setAttribute("gpsTrainLat", d.latitude);
                     this.setAttribute("gpsTrainLon", d.longitude);
+                    this.setAttribute("gpsTrainDir", d.direction);
                 }
             });
 
