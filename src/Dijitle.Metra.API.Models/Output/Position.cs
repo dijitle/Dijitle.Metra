@@ -13,6 +13,9 @@ namespace Dijitle.Metra.API.Models.Output
         [JsonProperty("tripId")]
         public string TripId { get; set; }
 
+        [JsonProperty("direction")]
+        public bool Direction { get; set; }
+        
         [JsonProperty("label")]
         public string Label { get; set; }
 

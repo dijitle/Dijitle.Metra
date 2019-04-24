@@ -44,6 +44,8 @@ async function loadAllRoutes() {
     $.get("api/metra/routes", function (route) {
         route.forEach(function (r) {
 
+            $("#routeLegend").append("<span class='my-3 mx-5 text-nowrap' style='width:50px'><i class='fas fa-route' style='font-size:24px;color:#" + r.routecolor + "'></i>" + r.shortName + "</span>");
+
             $.get("api/metra/shapesbyroute?route=" + r.id, function (data) {
                                
                 data.forEach(function (s) {
@@ -98,10 +100,16 @@ function getAllPositions() {
                 geometry: new ol.geom.Point(ol.proj.transform([Number(d.longitude), Number(d.latitude)], 'EPSG:4326', 'EPSG:3857'))
             });
 
+            var color = "2772ea";
+
+            if (d.direction) {
+                color = "1df946";
+            }
+
             var iconStyle = new ol.style.Style({
                 image: new ol.style.Icon(({
                     anchor: [0.5, 1],
-                    src: "https://cdn.mapmarker.io/api/v1/pin?icon=fa-train&size=75&background=0000ff"
+                    src: "https://cdn.mapmarker.io/api/v1/pin?icon=fa-train&size=75&background=" + color
                 }))
             });
 
@@ -230,10 +238,16 @@ function showTrain() {
         geometry: new ol.geom.Point(ol.proj.transform([Number(lon), Number(lat)], 'EPSG:4326', 'EPSG:3857'))
     });
 
+    var color = "2772ea";
+
+    if (d.direction) {
+        color = "1df946";
+    }
+
     var iconStyle = new ol.style.Style({
         image: new ol.style.Icon(({
             anchor: [0.5, 1],
-            src: "https://cdn.mapmarker.io/api/v1/pin?icon=fa-train&size=75&background=0000ff"
+            src: "https://cdn.mapmarker.io/api/v1/pin?icon=fa-train&size=75&background=" + color
         }))
     });
 
