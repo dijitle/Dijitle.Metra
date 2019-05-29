@@ -17,5 +17,6 @@ namespace Dijitle.Metra.API.Services
         Task<IEnumerable<Stop>> GetStopsByRoute(string route, bool sortAsc);
         Task<IEnumerable<Shape>> GetShapes(Routes route);
         Task<Shape> GetShapes(string id);
+        Task<IEnumerable<Models.Output.Calendar>> GetCalendars();
     }
 }

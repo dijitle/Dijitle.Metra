@@ -6,7 +6,6 @@ using System.Text;
 using System.Threading.Tasks;
 using Dijitle.Metra.API.Models.Output;
 using System.Text.RegularExpressions;
-
 namespace Dijitle.Metra.API.Services
 {
     public class MetraService : IMetraService
@@ -69,7 +68,7 @@ namespace Dijitle.Metra.API.Services
                 return new List<Trip>();
             }
 
-            Dictionary<DateTime, IEnumerable<Calendar>> days = new Dictionary<DateTime, IEnumerable<Calendar>>();
+            Dictionary<DateTime, IEnumerable<Data.Calendar>> days = new Dictionary<DateTime, IEnumerable<Data.Calendar>>();
 
             if(selectedDate.Hour <= 4)
             {
@@ -83,7 +82,7 @@ namespace Dijitle.Metra.API.Services
                 days.Add(selectedDate.AddDays(1), _gtfs.Data.GetCurrentCalendars(selectedDate.AddDays(1)));
             }
 
-            foreach (KeyValuePair<DateTime, IEnumerable<Calendar>> day in days)
+            foreach (KeyValuePair<DateTime, IEnumerable<Data.Calendar>> day in days)
             {
                 IEnumerable<Trips> ts = route.Trips.Where(t => day.Value.Contains(t.Calendar))
                                                    .Where(t => t.StopTimes.Any(st => st.Stop == originStop))
@@ -167,7 +166,7 @@ namespace Dijitle.Metra.API.Services
 
         public async Task<IEnumerable<Stop>> GetStopsByDistance(double lat, double lon, int milesAway)
         {
-            List<Stop> stops = new List<Stop>();
+            var stops = new List<Stop>();
 
             if (_gtfs.Data.IsStale)
             {
@@ -191,7 +190,7 @@ namespace Dijitle.Metra.API.Services
 
         public async Task<IEnumerable<Stop>> GetAllStops()
         {
-            List<Stop> stops = new List<Stop>();
+            var stops = new List<Stop>();
 
             if (_gtfs.Data.IsStale)
             {
@@ -215,7 +214,7 @@ namespace Dijitle.Metra.API.Services
 
         public async Task<IEnumerable<Stop>> GetStopsByRoute(string route, bool sortAsc)
         {
-            List<Stop> stops = new List<Stop>();
+            var stops = new List<Stop>();
 
             if (_gtfs.Data.IsStale)
             {
@@ -253,11 +252,16 @@ namespace Dijitle.Metra.API.Services
 
         public async Task<IEnumerable<Shape>> GetShapes(Routes route)
         {
-            List<Shape> shapes = new List<Shape>();
+            if (_gtfs.Data.IsStale)
+            {
+                await _gtfs.RefreshData();
+            }
+
+            var shapes = new List<Shape>();
 
             foreach (var skvp in route.Shapes)
             {
-                Shape s = new Shape()
+                var s = new Shape()
                 {
                     Id = skvp.Key,
                     Color = route.route_color,
@@ -283,9 +287,14 @@ namespace Dijitle.Metra.API.Services
 
         public async Task<Shape> GetShapes(string id)
         {
+            if (_gtfs.Data.IsStale)
+            {
+                await _gtfs.RefreshData();
+            }
+
             Routes r = _gtfs.Data.Routes[id.Substring(0, id.IndexOf('_'))];
 
-            IEnumerable<Shapes> shapes = _gtfs.Data.Shapes[id];
+            var shapes = _gtfs.Data.Shapes[id];
                         
             Shape s = new Shape()
             {
@@ -306,6 +315,47 @@ namespace Dijitle.Metra.API.Services
             }
             
             return s;
+        }
+
+        public async Task<IEnumerable<Models.Output.Calendar>> GetCalendars()
+        {
+            if (_gtfs.Data.IsStale)
+            {
+                await _gtfs.RefreshData();
+            }
+
+            var calendars = new List<Models.Output.Calendar>();
+
+            foreach (var ckvp in _gtfs.Data.Calendars)
+            {
+                var c = new Models.Output.Calendar()
+                {
+                    Id = ckvp.Key,
+                    Monday = ckvp.Value.monday,
+                    Tuesday = ckvp.Value.tuesday,
+                    Wednesday = ckvp.Value.wednesday,
+                    Thursday = ckvp.Value.thursday,
+                    Friday = ckvp.Value.friday,
+                    Saturday = ckvp.Value.saturday,
+                    Sunday = ckvp.Value.sunday,
+                    StartDate = ckvp.Value.start_date,
+                    EndDate = ckvp.Value.end_date,
+                    CalendarDates = new List<Models.Output.CalendarDate>()
+                };
+
+                foreach (var cdate in ckvp.Value.CalendarDates)
+                {
+                    c.CalendarDates.Add(new Models.Output.CalendarDate()
+                    {
+                        Date = cdate.date,
+                        ExceptionType = cdate.exception_type.ToString()
+                    });
+                }
+
+                calendars.Add(c);
+            }
+
+            return calendars;
         }
 
         private double GetDistance(double lat1, double lon1, double lat2, double lon2)

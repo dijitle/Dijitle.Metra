@@ -123,14 +123,14 @@ namespace Dijitle.Metra.API.Services
                                 while (!rdr.EndOfStream)
                                 {
                                     line = rdr.ReadLine();
-                                    Data.Calendars.Add(line.Split(",").FirstOrDefault().Trim(), new Calendar(line.Split(",")));
+                                    Data.Calendars.Add(line.Split(",").FirstOrDefault().Trim(), new Data.Calendar(line.Split(",")));
                                 }
                                 break;
                             case "calendar_dates":
                                 while (!rdr.EndOfStream)
                                 {
                                     line = rdr.ReadLine();
-                                    Data.CalendarDates.Add(new CalendarDate(line.Split(",")));
+                                    Data.CalendarDates.Add(new Data.CalendarDate(line.Split(",")));
                                 }
                                 break;
                             case "fare_attributes":

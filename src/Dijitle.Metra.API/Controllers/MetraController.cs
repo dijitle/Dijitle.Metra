@@ -114,5 +114,14 @@ namespace Dijitle.Metra.API.Controllers
         {
             return Ok(await _metra.GetAllStops());
         }
+
+
+        [HttpGet()]
+        [Route("Calendars")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public async Task<IActionResult> GetCalendars()
+        {
+            return Ok(await _metra.GetCalendars());
+        }
     }
 }
