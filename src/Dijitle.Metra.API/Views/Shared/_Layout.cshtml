@@ -30,7 +30,7 @@
 
         <span id="clock" class="navbar-brand" style="position:absolute; left:50%; top:8px; transform: translateX(-50%);"></span>
 
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar" @(ViewContext.RouteData.Values["Action"].ToString() == "Index" ? "" : "hidden")>
+        <button class="navbar-toggler bg-success" type="button" data-toggle="collapse" data-target="#collapsibleNavbar" @(ViewContext.RouteData.Values["Action"].ToString() == "Index" ? "" : "hidden")>
             <i class='fas fa-search-location text-white'></i>
         </button>
 

@@ -18,6 +18,7 @@ using System.Net.Http.Headers;
 using Microsoft.Extensions.Configuration;
 using Microsoft.OpenApi.Models;
 using Microsoft.Extensions.Logging;
+using Prometheus;
 
 namespace Dijitle.Metra.API
 {
@@ -72,6 +73,9 @@ namespace Dijitle.Metra.API
 
             app.UseStaticFiles();
             app.UseSwagger();
+
+            app.UseMetricServer();
+            app.UseHttpMetrics();
 
             app.UseSwaggerUI(c =>
             {
