@@ -71,7 +71,21 @@
                         <div class="font-weight-lighter" style="font-size:0.67em;">
                             <span width="1px" name="timeUntil"
                                   time="@t.DestinationStop.ArrivalTime"
-                                  timeDuration="@(t.OriginStop.DepartureTime < DateTime.Now ? -1 : t.Minutes)">
+                                  @{ 
+
+                                    DateTime now;
+            
+                                    if(Environment.OSVersion.Platform == PlatformID.Unix)
+                                    {
+                                        now = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, TimeZoneInfo.FindSystemTimeZoneById("America/Chicago"));
+                                    }
+                                    else
+                                    {
+                                        now = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, TimeZoneInfo.FindSystemTimeZoneById("Central Standard Time"));
+                                    }
+                                  }
+
+                                  timeDuration="@(t.OriginStop.DepartureTime < now ? -1 : t.Minutes)">
                             </span>
                         </div>
                     </div>
