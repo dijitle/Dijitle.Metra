@@ -64,9 +64,10 @@ function startTime() {
     items.forEach(function (i) {
 
         var time = new Date(i.getAttribute('time')); 
-        
-        var diff = time - now;
-        
+        var timeDuration = i.getAttribute('timeDuration'); 
+
+        var diff = time - now;;
+            
         var diffHours = Math.floor(diff  / (1000 * 60 * 60));
         diff -= diffHours * (1000 * 60 * 60);
 
@@ -78,6 +79,11 @@ function startTime() {
         
         if (diffHours < 0) {
             i.innerHTML = "";
+            i.setAttribute("class", "")
+        }
+        else if (timeDuration !== "-1") {
+
+            i.innerHTML = timeDuration + " min";
             i.setAttribute("class", "")
         }
         else if(diffHours < 1) {

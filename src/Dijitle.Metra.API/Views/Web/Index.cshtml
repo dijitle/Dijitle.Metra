@@ -40,7 +40,8 @@
                             @t.OriginStop.DepartureTime.ToShortTimeString()
                             <div class="font-weight-lighter" style="font-size:0.67em;">
                                 <span width="1px" name="timeUntil"
-                                      time="@t.OriginStop.DepartureTime">
+                                      time="@t.OriginStop.DepartureTime"
+                                      timeDuration="-1">
                                 </span>
                             </div>
                         </div>
@@ -64,14 +65,13 @@
                             </span>
                         </div>
                     </div>
-
-
                     <div width="1px" class="text-right font-weight-bolder">
                         @t.DestinationStop.ArrivalTime.ToShortTimeString()
 
                         <div class="font-weight-lighter" style="font-size:0.67em;">
                             <span width="1px" name="timeUntil"
-                                  time="@t.DestinationStop.ArrivalTime">
+                                  time="@t.DestinationStop.ArrivalTime"
+                                  timeDuration="@(t.OriginStop.DepartureTime < DateTime.Now ? -1 : t.Minutes)">
                             </span>
                         </div>
                     </div>
