@@ -7,6 +7,7 @@
     getPositions();
     showTrain();
     getAlerts();
+    scrollToNext();
 });
 
 function setCookie(cname, cvalue, exdays) {
@@ -45,6 +46,12 @@ function loadURL() {
             window.location.href = '/Trips?start=' + start + '&dest=' + end + '&expressOnly=' + express
         }
     }
+}
+
+function scrollToNext() {
+
+
+    window.scrollTo(0, 300);
 }
 
 function startTime() {
@@ -299,7 +306,12 @@ function getPositions() {
                     var distTrainToDest = getDistance(this.attributes.destLat.value, this.attributes.destLon.value, d.latitude, d.longitude);
 
                     if (distStopToDest < distTrainToDest) {
-                        this.innerHTML = distTrainToStop + " miles";
+                        if (this.attributes.intable.value === 'true') {
+                            this.innerHTML = distTrainToStop + " miles <i class='fas fa-satellite-dish'></i>";
+                        }
+                        else {
+                            this.innerHTML = "<br />" + distTrainToStop + "mi"
+                        }
                     }
                     else {
                         this.innerHTML = "";
