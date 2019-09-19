@@ -17,16 +17,16 @@ namespace Dijitle.Metra.Data
 
         public List<Trips> Trips { get; private set; }
 
-        public Stops(string[] csv)
+        public Stops(Dictionary<string, string> dictData)
         {
-            stop_id = csv[0].Trim();
-            stop_name = csv[1].Trim();
-            stop_desc = csv[2].Trim();
-            stop_lat = Convert.ToDouble(csv[3].Trim());
-            stop_lon = Convert.ToDouble(csv[4].Trim());
-            zone_id = csv[5].Trim();
-            stop_url = csv[6].Trim();
-            wheelchair_boarding = (csv[7].Trim() == "1");
+            stop_id = dictData["stop_id"];
+            stop_name = dictData["stop_name"];
+            stop_desc = dictData["stop_desc"];
+            stop_lat = Convert.ToDouble(dictData["stop_lat"]);
+            stop_lon = Convert.ToDouble(dictData["stop_lon"]);
+            zone_id = dictData["zone_id"];
+            stop_url = dictData["stop_url"];
+            wheelchair_boarding = (dictData["wheelchair_boarding"] == "1");
 
             Trips = new List<Trips>();
         }

@@ -14,6 +14,19 @@ namespace Dijitle.Metra.API.Models.Output
 
         [JsonProperty("id")]
         public string Id { get; set; }
+
+        [JsonProperty("number")]
+        public string Number
+        {
+            get
+            {
+                if (Id.Contains("_"))
+                {
+                    return Id.Split('_')[1].Substring(2);
+                }
+                return Id;
+            }
+        }
               
         [JsonProperty("destinationStop")]
         public Stop DestinationStop { get; set; }

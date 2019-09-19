@@ -8,7 +8,7 @@ namespace Dijitle.Metra.Data
 {
     public class FareAttributes
     {
-        public int fare_id { get; private set; }
+        public string fare_id { get; private set; }
         public decimal price { get; private set; }
         public string currency_type { get; private set; }
         public PaymentMethod payment_method { get; set; }
@@ -29,14 +29,20 @@ namespace Dijitle.Metra.Data
             Unlimited = -1
         }
 
-        public FareAttributes(string[] csv)
+        public FareAttributes(Dictionary<string, string> dictData)
         {
-            fare_id = Convert.ToInt32(csv[0].Trim());
-            price = Convert.ToDecimal(csv[1].Trim());
-            currency_type = csv[2].Trim();
-            payment_method = (PaymentMethod)Convert.ToInt32(csv[3].Trim());
-            transfers = (Transfers)Convert.ToInt32(csv[4].Trim());
-            transfer_duration = Convert.ToInt32(csv[5].Trim());
+            fare_id = dictData["fare_id"];
+            price = Convert.ToDecimal(dictData["price"]);
+            currency_type = dictData["currency_type"];
+            payment_method = (PaymentMethod)Convert.ToInt32(dictData["payment_method"]);
+
+            int.TryParse(dictData["transfers"], out var trans);
+            transfers = (Transfers)trans;
+
+            if (dictData.ContainsKey("transfer_duration"))
+            {
+                transfer_duration = Convert.ToInt32(dictData["transfer_duration"]);
+            }
 
         }
         

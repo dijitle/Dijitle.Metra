@@ -17,15 +17,19 @@ namespace Dijitle.Metra.Data
 
         public List<Routes> Routes { get; private set; }
 
-        public Agency(string[] csv)
+        public Agency(Dictionary<string,string> dictData)
         {
-            agency_id = csv[0].Trim();
-            agency_name = csv[1].Trim();
-            agency_url = csv[2].Trim();
-            agency_timezone = csv[3].Trim();
-            agency_lang = csv[4].Trim();
-            agency_phone = csv[5].Trim();
-            agency_fare_url = csv[6].Trim();
+            agency_id = dictData["agency_id"];
+            agency_name = dictData["agency_name"];
+            agency_url = dictData["agency_url"];
+            agency_timezone = dictData["agency_timezone"];
+            agency_lang = dictData["agency_lang"];
+            agency_phone = dictData["agency_phone"];
+
+            if(dictData.ContainsKey("agency_phone"))
+            {
+                agency_fare_url = dictData["agency_phone"];
+            }
 
             Routes = new List<Routes>();
         }

@@ -27,15 +27,15 @@ namespace Dijitle.Metra.Data
             Inbound = 1
         }
 
-        public Trips(string[] csv)
+        public Trips(Dictionary<string, string> dictData)
         {
-            route_id = csv[0].Trim();
-            service_id = csv[1].Trim();
-            trip_id = csv[2].Trim();
-            trip_headsign = csv[3].Trim();
-            block_id = csv[4].Trim();
-            shape_id = csv[5].Trim();
-            direction_id = (Direction)Convert.ToInt32(csv[6].Trim());
+            route_id = dictData["route_id"];
+            service_id = dictData["service_id"];
+            trip_id = dictData["trip_id"];
+            trip_headsign = dictData["trip_headsign"];
+            block_id = dictData["block_id"];
+            shape_id = dictData["shape_id"];
+            direction_id = (Direction)Convert.ToInt32(dictData["direction_id"]);
         }
 
         public override string ToString()

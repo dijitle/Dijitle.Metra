@@ -20,11 +20,11 @@ namespace Dijitle.Metra.Data
             Removed = 2
         }
 
-        public CalendarDate(string[] csv)
+        public CalendarDate(Dictionary<string, string> dictData)
         {
-            service_id = csv[0].Trim();
-            date = DateTime.ParseExact(csv[1].Trim(),"yyyyMMdd", CultureInfo.InvariantCulture);
-            exception_type = (Exception_Type)Convert.ToInt32(csv[2].Trim());
+            service_id = dictData["service_id"];
+            date = DateTime.ParseExact(dictData["date"], "yyyyMMdd", CultureInfo.InvariantCulture);
+            exception_type = (Exception_Type)Convert.ToInt32(dictData["exception_type"]);
         }
 
         public void Link(IDictionary<string, Calendar> calendars)

@@ -11,7 +11,7 @@ namespace Dijitle.Metra.Data
         public Dictionary<string, Agency> Agencies { get; set; }
         public Dictionary<string, Calendar> Calendars { get; set; }
         public List<CalendarDate> CalendarDates { get; set; }
-        public Dictionary<int, FareAttributes> FareAttributes { get; set; }
+        public Dictionary<string, FareAttributes> FareAttributes { get; set; }
         public List<FareRules> FareRules { get; set; }
         public Dictionary<string, Routes> Routes { get; set; }
         public Dictionary<string, List<Shapes>> Shapes { get; set; }
@@ -26,7 +26,7 @@ namespace Dijitle.Metra.Data
             Agencies = new Dictionary<string, Agency>();
             Calendars = new Dictionary<string, Calendar>();
             CalendarDates = new List<CalendarDate>();
-            FareAttributes = new Dictionary<int, FareAttributes>();
+            FareAttributes = new Dictionary<string, FareAttributes>();
             FareRules = new List<FareRules>();
             Routes = new Dictionary<string, Routes>();
             Shapes = new Dictionary<string, List<Shapes>>();

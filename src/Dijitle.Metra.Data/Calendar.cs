@@ -21,18 +21,18 @@ namespace Dijitle.Metra.Data
 
         public List<CalendarDate> CalendarDates { get; private set; }
 
-        public Calendar(string[] csv)
+        public Calendar(Dictionary<string, string> dictData)
         {
-            service_id = csv[0].Trim();
-            monday = (csv[1].Trim() == "1");
-            tuesday = (csv[2].Trim() == "1");
-            wednesday = (csv[3].Trim() == "1");
-            thursday = (csv[4].Trim() == "1");
-            friday = (csv[5].Trim() == "1");
-            saturday = (csv[6].Trim() == "1");
-            sunday = (csv[7].Trim() == "1");
-            start_date = DateTime.ParseExact(csv[8].Trim(),"yyyyMMdd", CultureInfo.InvariantCulture);
-            end_date = DateTime.ParseExact(csv[9].Trim(), "yyyyMMdd", CultureInfo.InvariantCulture);
+            service_id = dictData["service_id"];
+            monday = (dictData["monday"] == "1");
+            tuesday = (dictData["tuesday"] == "1");
+            wednesday = (dictData["wednesday"] == "1");
+            thursday = (dictData["thursday"] == "1");
+            friday = (dictData["friday"] == "1");
+            saturday = (dictData["saturday"] == "1");
+            sunday = (dictData["sunday"] == "1");
+            start_date = DateTime.ParseExact(dictData["start_date"], "yyyyMMdd", CultureInfo.InvariantCulture);
+            end_date = DateTime.ParseExact(dictData["end_date"], "yyyyMMdd", CultureInfo.InvariantCulture);
 
             CalendarDates = new List<CalendarDate>();
         }

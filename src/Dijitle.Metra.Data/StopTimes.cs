@@ -35,12 +35,16 @@ namespace Dijitle.Metra.Data
             departure_time = csv[2].Trim();
             stop_id = csv[3].Trim();
             stop_sequence = Convert.ToInt32(csv[4].Trim());
-            pickup_type = (StopType)Convert.ToInt32(csv[5].Trim());
-            drop_off_type = (StopType)Convert.ToInt32(csv[6].Trim());
-            center_boarding = (csv[7].Trim() == "1");
-            south_boarding = (csv[8].Trim() == "1");
-            bikes_allowed = (csv[9].Trim() == "1");
-            notice = csv[10].Trim();
+
+            if(csv.Length > 5)
+            {
+                pickup_type = (StopType)Convert.ToInt32(csv[5].Trim());
+                drop_off_type = (StopType)Convert.ToInt32(csv[6].Trim());
+                center_boarding = (csv[7].Trim() == "1");
+                south_boarding = (csv[8].Trim() == "1");
+                bikes_allowed = (csv[9].Trim() == "1");
+                notice = csv[10].Trim();
+            }
         }        
         
         public override string ToString()

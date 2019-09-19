@@ -6,6 +6,8 @@ using System.Text;
 using System.Threading.Tasks;
 using Dijitle.Metra.API.Models.Output;
 using System.Text.RegularExpressions;
+using System.Diagnostics;
+
 namespace Dijitle.Metra.API.Services
 {
     public class MetraService : IMetraService
@@ -292,7 +294,7 @@ namespace Dijitle.Metra.API.Services
                 await _gtfs.RefreshData();
             }
 
-            Routes r = _gtfs.Data.Routes[id.Substring(0, id.IndexOf('_'))];
+            Routes r = _gtfs.Data.Routes[id.StartsWith("south_shore") ? "so_shore" : id.Substring(0, id.IndexOf('_'))];
 
             var shapes = _gtfs.Data.Shapes[id];
                         
@@ -385,8 +387,8 @@ namespace Dijitle.Metra.API.Services
 
         private DateTime GetTime(DateTime date, string time)
         {
-            MatchCollection matches = Regex.Matches(time, @"^(?<hour>\d{2}):(?<minute>\d{2}):(?<second>\d{2})$");
-
+            MatchCollection matches = Regex.Matches(time, @"^(?<hour>\d{1,2}):(?<minute>\d{2}):(?<second>\d{2})$");
+            
             int hour = Convert.ToInt32(matches[0].Groups["hour"].Value);
             int minute = Convert.ToInt32(matches[0].Groups["minute"].Value);
             int second = Convert.ToInt32(matches[0].Groups["second"].Value);

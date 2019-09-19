@@ -96,110 +96,191 @@ namespace Dijitle.Metra.API.Services
             HttpClient client = _httpClientFactory.CreateClient("GTFSClient");
 
             Data = new AllData();
-            
+
+            foreach (var dir in Directory.GetFiles("./wwwroot/nictd"))
+            {
+                using (StreamReader rdr = new StreamReader(dir))
+                {
+
+                    ParseFiles(rdr, Path.GetFileNameWithoutExtension(dir));
+                }   
+            }
+
+
             var response = await client.GetAsync("/gtfs/raw/schedule.zip");
             var content = await response.Content.ReadAsStreamAsync();
-            string line;
+
 
             using (ZipArchive za = new ZipArchive(content, ZipArchiveMode.Read))
             {
-                foreach(ZipArchiveEntry entry in za.Entries)
+                foreach (ZipArchiveEntry entry in za.Entries)
                 {
                     using (StreamReader rdr = new StreamReader(entry.Open()))
                     {
 
-                        rdr.ReadLine();
-
-                        switch (Path.GetFileNameWithoutExtension(entry.FullName))
-                        {
-                            case "agency":
-                                while (!rdr.EndOfStream)
-                                {
-                                    line = rdr.ReadLine();
-                                    Data.Agencies.Add(line.Split(",").FirstOrDefault().Trim(), new Agency(line.Split(",")));
-                                }
-                                break;
-                            case "calendar":
-                                while (!rdr.EndOfStream)
-                                {
-                                    line = rdr.ReadLine();
-                                    Data.Calendars.Add(line.Split(",").FirstOrDefault().Trim(), new Data.Calendar(line.Split(",")));
-                                }
-                                break;
-                            case "calendar_dates":
-                                while (!rdr.EndOfStream)
-                                {
-                                    line = rdr.ReadLine();
-                                    Data.CalendarDates.Add(new Data.CalendarDate(line.Split(",")));
-                                }
-                                break;
-                            case "fare_attributes":
-                                while (!rdr.EndOfStream)
-                                {
-                                    line = rdr.ReadLine();
-                                    Data.FareAttributes.Add(Convert.ToInt32(line.Split(",").FirstOrDefault().Trim()), new FareAttributes(line.Split(",")));
-                                }
-                                break;
-                            case "fare_rules":
-                                while (!rdr.EndOfStream)
-                                {
-                                    line = rdr.ReadLine();
-                                    Data.FareRules.Add(new FareRules(line.Split(",")));
-                                }
-                                break;
-                            case "routes":
-                                while (!rdr.EndOfStream)
-                                {
-                                    line = rdr.ReadLine();
-                                    Data.Routes.Add(line.Split(",").FirstOrDefault().Trim(), new Routes(line.Split(",")));
-                                }
-                                break;
-                            case "shapes":
-                                while (!rdr.EndOfStream)
-                                {
-                                    line = rdr.ReadLine();
-                                    string key = line.Split(",").FirstOrDefault().Trim();
-                                    if(!Data.Shapes.ContainsKey(key))
-                                    {
-                                        Data.Shapes.Add(key, new List<Shapes>());
-                                    }
-                                    Data.Shapes[key].Add(new Shapes(line.Split(",")));
-                                }
-                                break;
-                            case "stop_times":
-                                while (!rdr.EndOfStream)
-                                {
-                                    line = rdr.ReadLine();
-                                    string key = line.Split(",").FirstOrDefault().Trim();
-                                    if (!Data.StopTimes.ContainsKey(key))
-                                    {
-                                        Data.StopTimes.Add(key, new List<StopTimes>());
-                                    }
-                                    Data.StopTimes[key].Add(new StopTimes(line.Split(",")));
-                                }
-                                break;
-                            case "stops":
-                                while (!rdr.EndOfStream)
-                                {
-                                    line = rdr.ReadLine();
-                                    Data.Stops.Add(line.Split(",").FirstOrDefault().Trim(), new Stops(line.Split(",")));
-                                }
-                                break;
-                            case "trips":
-                                while (!rdr.EndOfStream)
-                                {
-                                    line = rdr.ReadLine();
-                                    Data.Trips.Add(line.Split(",")[2].Trim(), new Trips(line.Split(",")));
-                                }
-                                break;
-                            default:
-                                break;
-                        }
+                        ParseFiles(rdr, Path.GetFileNameWithoutExtension(entry.FullName));
                     }
                 }
             }
+
+
             Data.LinkItems();
             return;
+        }
+
+        private void ParseFiles(StreamReader rdr, string fileName)
+        {
+            var keys = rdr.ReadLine().Split(",");
+
+            switch (fileName)
+            {
+                case "agency":
+                    while (!rdr.EndOfStream)
+                    {
+                        var line = rdr.ReadLine().Split(",");
+
+                        var dictData = new Dictionary<string, string>();
+
+                        for (int i = 0; i < keys.Length; i++)
+                        {
+                            dictData.Add(keys[i].Trim(), line[i].Trim());
+                        }
+
+                        Data.Agencies.Add(dictData["agency_id"], new Agency(dictData));
+                    }
+                    break;
+                case "calendar":
+                    while (!rdr.EndOfStream)
+                    {
+                        var line = rdr.ReadLine().Split(",");
+
+                        var dictData = new Dictionary<string, string>();
+
+                        for (int i = 0; i < keys.Length; i++)
+                        {
+                            dictData.Add(keys[i].Trim(), line[i].Trim());
+                        }
+
+                        Data.Calendars.Add(dictData["service_id"], new Data.Calendar(dictData));
+                    }
+                    break;
+                case "calendar_dates":
+                    while (!rdr.EndOfStream)
+                    {
+                        var line = rdr.ReadLine().Split(",");
+
+                        var dictData = new Dictionary<string, string>();
+
+                        for (int i = 0; i < keys.Length; i++)
+                        {
+                            dictData.Add(keys[i].Trim(), line[i].Trim());
+                        }
+
+                        Data.CalendarDates.Add(new Data.CalendarDate(dictData));
+                    }
+                    break;
+                case "fare_attributes":
+                    while (!rdr.EndOfStream)
+                    {
+                        var line = rdr.ReadLine().Split(",");
+
+                        var dictData = new Dictionary<string, string>();
+
+                        for (int i = 0; i < keys.Length; i++)
+                        {
+                            dictData.Add(keys[i].Trim(), line[i].Trim());
+                        }
+
+                        Data.FareAttributes.Add(dictData["fare_id"], new FareAttributes(dictData));
+                    }
+                    break;
+                case "fare_rules":
+                    while (!rdr.EndOfStream)
+                    {
+                        var line = rdr.ReadLine().Split(",");
+
+                        var dictData = new Dictionary<string, string>();
+
+                        for (int i = 0; i < keys.Length; i++)
+                        {
+                            dictData.Add(keys[i].Trim(), line[i].Trim());
+                        }
+
+                        Data.FareRules.Add(new FareRules(dictData));
+                    }
+                    break;
+                case "routes":
+                    while (!rdr.EndOfStream)
+                    {
+                        var line = rdr.ReadLine().Split(",");
+
+                        var dictData = new Dictionary<string, string>();
+
+                        for (int i = 0; i < keys.Length; i++)
+                        {
+                            dictData.Add(keys[i].Trim(), line[i].Trim());
+                        }
+
+                        Data.Routes.Add(dictData["route_id"], new Routes(dictData));
+                    }
+                    break;
+                case "shapes":
+                    while (!rdr.EndOfStream)
+                    {
+                        var line = rdr.ReadLine();
+                        string key = line.Split(",").FirstOrDefault().Trim();
+                        if (!Data.Shapes.ContainsKey(key))
+                        {
+                            Data.Shapes.Add(key, new List<Shapes>());
+                        }
+                        Data.Shapes[key].Add(new Shapes(line.Split(",")));
+                    }
+                    break;
+                case "stop_times":
+                    while (!rdr.EndOfStream)
+                    {
+                        var line = rdr.ReadLine();
+                        string key = line.Split(",").FirstOrDefault().Trim();
+                        if (!Data.StopTimes.ContainsKey(key))
+                        {
+                            Data.StopTimes.Add(key, new List<StopTimes>());
+                        }
+                        Data.StopTimes[key].Add(new StopTimes(line.Split(",")));
+                    }
+                    break;
+                case "stops":
+                    while (!rdr.EndOfStream)
+                    {
+                        var line = rdr.ReadLine().Split(",");
+
+                        var dictData = new Dictionary<string, string>();
+
+                        for (int i = 0; i < keys.Length; i++)
+                        {
+                            dictData.Add(keys[i].Trim(), line[i].Trim());
+                        }
+
+                        Data.Stops.Add(dictData["stop_id"], new Stops(dictData));
+                    }
+                    break;
+                case "trips":
+                    while (!rdr.EndOfStream)
+                    {
+                        var line = rdr.ReadLine().Split(",");
+
+                        var dictData = new Dictionary<string, string>();
+
+                        for (int i = 0; i < keys.Length; i++)
+                        {
+                            dictData.Add(keys[i].Trim(), line[i].Trim());
+                        }
+
+                        Data.Trips.Add(dictData["trip_id"], new Trips(dictData));
+                    }
+                    break;
+                default:
+                    break;
+            }
         }
     }
 }

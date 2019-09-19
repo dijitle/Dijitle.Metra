@@ -32,20 +32,24 @@ namespace Dijitle.Metra.Data
             Ferry = 4,
             CableTram = 5,
             AerialLift = 6,
-            Funicular =7
+            Funicular = 7
         }
 
-        public Routes(string[] csv)
+        public Routes(Dictionary<string, string> dictData)
         {
-            route_id = csv[0].Trim();
-            route_short_name = csv[1].Trim();
-            route_long_name = csv[2].Trim();
-            route_desc = csv[3].Trim();
-            agency_id = csv[4].Trim();
-            route_type = (Route_Type)Convert.ToInt32(csv[5].Trim());
-            route_color = csv[6].Trim();
-            route_text_color = csv[7].Trim();
-            route_url = csv[8].Trim();
+            route_id = dictData["route_id"];
+            route_short_name = dictData["route_short_name"];
+            route_long_name = dictData["route_long_name"];
+            route_desc = dictData["route_desc"];
+            agency_id = dictData["agency_id"];
+            route_type = (Route_Type)Convert.ToInt32(dictData["route_type"]);
+            route_color = dictData["route_color"];
+            route_text_color = dictData["route_text_color"];
+
+            if(dictData.ContainsKey("route_url"))
+            {
+                route_url = dictData["route_url"];
+            }
 
             Trips = new List<Trips>();
             Stops = new List<Stops>();
@@ -60,6 +64,10 @@ namespace Dijitle.Metra.Data
             foreach (var kvp in shapes)
             {
                 if(kvp.Key.Split("_").FirstOrDefault() == route_id)
+                {
+                    Shapes.Add(kvp.Key, kvp.Value);
+                }
+                else if (kvp.Key.StartsWith("south_shore") && route_id == "so_shore")
                 {
                     Shapes.Add(kvp.Key, kvp.Value);
                 }
