@@ -21,7 +21,7 @@
 <body>
     <nav class="navbar bg-primary navbar-dark fixed-top">
         <span>
-            <a asp-area="" asp-controller="Web" asp-action="Index" class="navbar-brand">Dijitle Metra</a>
+            <a asp-area="" asp-controller="Web" asp-action="Index" class="navbar-brand"><img width="30" height="30" src="~/Images/dijitle.png"/> Metra</a>
         
             <a class="nav-item" @(ViewContext.RouteData.Values["Action"].ToString() == "Index" ? "" : "hidden") href="/Map">
                 <i class='fas fa-map-marked-alt text-white'></i>

@@ -55,7 +55,7 @@ namespace Dijitle.Metra.API.Services
             {
                 selectedDate = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, TimeZoneInfo.FindSystemTimeZoneById("Central Standard Time"));
             }
-            
+
             List<Trip> trips = new List<Trip>();
 
             if (_gtfs.Data.IsStale)

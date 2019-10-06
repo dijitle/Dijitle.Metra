@@ -7,7 +7,6 @@
     getPositions();
     showTrain();
     getAlerts();
-    scrollToNext();
 });
 
 function setCookie(cname, cvalue, exdays) {
@@ -46,12 +45,6 @@ function loadURL() {
             window.location.href = '/Trips?start=' + start + '&dest=' + end + '&expressOnly=' + express
         }
     }
-}
-
-function scrollToNext() {
-
-
-    window.scrollTo(0, 300);
 }
 
 function startTime() {
