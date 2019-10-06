@@ -34,7 +34,7 @@
 
     @foreach (Trip t in Model.Trips)
     {
-        if (t.DestinationStop.ArrivalTime > nowDate && !next)
+        if (t.OriginStop.ArrivalTime > nowDate && !next)
         {
             next = true;
 
