@@ -9,6 +9,8 @@
     getAlerts();
 });
 
+var allStops;
+
 function setCookie(cname, cvalue, exdays) {
     var d = new Date();
     d.setTime(d.getTime() + (exdays * 24 * 60 * 60 * 1000));
@@ -196,12 +198,19 @@ function loadRoutes() {
 
     routeComboBox.empty().append(new Option("All Routes", "-1", true, false));
 
-    $.get("api/metra/routes", function (data) {
-        data.forEach(function (d) {
-            routeComboBox.append(new Option(d.shortName + " [" + d.longName + "]", d.id, false, cookieRoutes === d.id));
-        })
+    $.get("api/metra/AllStops", function (data) {
 
-        loadStops();
+        allStops = data;    
+
+        $.get("api/metra/routes", function (data) {
+            data.forEach(function (d) {
+                routeComboBox.append(new Option(d.shortName + " [" + d.longName + "]", d.id, false, cookieRoutes === d.id));
+            })
+
+            loadStops();
+        });
+
+        loadHistory();
     });
 }
 
@@ -213,31 +222,61 @@ function loadStops() {
     fromComboBox.empty().append(new Option("Choose a origin stop...", "ROUTE59", true, false));
     toComboBox.empty().append(new Option("Choose a destination stop...", "CUS", true, false));
 
-    var cookieStopsFrom = getCookie("stopsFrom")
-    var cookieStopsTo = getCookie("stopsTo")
-
+    var cookieStopsFrom = getCookie("stopsFrom");
+    var cookieStopsTo = getCookie("stopsTo");
+    
     if (route === '-1') {
-        $.get("api/metra/AllStops", function (data) {
-
-            data.forEach(function (d) {
-                fromComboBox.append(new Option(d.name, d.id, false, cookieStopsFrom === d.id));
-                toComboBox.append(new Option(d.name, d.id, false, cookieStopsTo === d.id));
-            });
+        allStops.forEach(function (d) {
+            fromComboBox.append(new Option(d.name, d.id, false, cookieStopsFrom === d.id));
+            toComboBox.append(new Option(d.name, d.id, false, cookieStopsTo === d.id));
+           
         });
     }
     else {
-        $.get("api/metra/StopsByRoute?route=" + route + "&sortAsc=false", function (data) {
-            data.forEach(function (d) {
-                fromComboBox.append(new Option(d.name, d.id, false, cookieStopsFrom === d.id));
-            });
+
+        var data = [];
+
+        allStops.forEach(function (s) {
+            if (s.routes.includes(route)) {
+                data.push(s);
+            }
         });
 
-        $.get("api/metra/StopsByRoute?route=" + route + "&sortAsc=true", function (data) {
-            data.forEach(function (d) {
-                toComboBox.append(new Option(d.name, d.id, false, cookieStopsTo === d.id));
-            });
+        data.sort((a, b) => (a.distance > b.distance) ? 1 : -1)
+        
+        data.reverse().forEach(function (d) {
+            fromComboBox.append(new Option(d.name, d.id, false, cookieStopsFrom === d.id));
         });
+        
+        data.reverse().forEach(function (d) {
+            toComboBox.append(new Option(d.name, d.id, false, cookieStopsTo === d.id));
+        });
+        
     }
+}
+
+function filterStops() {
+    
+}
+
+function loadHistory() {
+    //var hist = getCookie("history");
+    var hist = "ROUTE59-CUS-X;OTC-WINFIELD-X;s13-s1"
+    var historyComboBox = $("#history");
+
+
+
+
+}
+
+function goToHistory() {
+    var hist = $('#history option:selected').val();
+
+    var from = hist.split('-')[0];
+    var to = hist.split('-')[1];
+    var express = hist.endsWith('-X');
+
+    window.location.href = '?start=' + from + '&dest=' + to + "&expressOnly=" + express;
 }
 
 function save() {

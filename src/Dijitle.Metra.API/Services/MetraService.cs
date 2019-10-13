@@ -207,7 +207,8 @@ namespace Dijitle.Metra.API.Services
                     Name = s.stop_name,
                     Lat = s.stop_lat,
                     Lon = s.stop_lon,
-                    DistanceAway = 0
+                    DistanceAway = GetDistance(41.882077d, -87.627807d, s.stop_lat, s.stop_lon),
+                    Routes = s.Routes.Select(r => r.route_id)
                 });
             }
 
@@ -231,7 +232,7 @@ namespace Dijitle.Metra.API.Services
                     Name = s.stop_name,
                     Lat = s.stop_lat,
                     Lon = s.stop_lon,
-                    DistanceAway = GetDistance(41.882077d, -87.627807d, s.stop_lat, s.stop_lon)                    
+                    DistanceAway = GetDistance(41.882077d, -87.627807d, s.stop_lat, s.stop_lon)
                 });
             }
 

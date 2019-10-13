@@ -15,7 +15,7 @@ namespace Dijitle.Metra.Data
         public string stop_url { get; private set; }
         public bool wheelchair_boarding { get; private set; }
 
-        public List<Trips> Trips { get; private set; }
+        public List<Routes> Routes { get; private set; }
 
         public Stops(Dictionary<string, string> dictData)
         {
@@ -28,7 +28,7 @@ namespace Dijitle.Metra.Data
             stop_url = dictData["stop_url"];
             wheelchair_boarding = (dictData["wheelchair_boarding"] == "1");
 
-            Trips = new List<Trips>();
+            Routes = new List<Routes>();
         }
 
         public override string ToString()

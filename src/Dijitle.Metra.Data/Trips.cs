@@ -62,6 +62,7 @@ namespace Dijitle.Metra.Data
                 if (!Route.Stops.Contains(s))
                 {
                     Route.Stops.Add(s);
+                    s.Routes.Add(Route);
                 }
             }
         }

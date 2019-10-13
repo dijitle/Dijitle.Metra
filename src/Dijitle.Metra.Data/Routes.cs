@@ -21,7 +21,7 @@ namespace Dijitle.Metra.Data
         public Agency Agency { get; private set; }
         public List<Trips> Trips { get; private set; }
         public List<Stops> Stops { get; private set; }
-        public Dictionary<string, List<Shapes>> Shapes { get; private set; }
+        public Dictionary<string, IEnumerable<Shapes>> Shapes { get; private set; }
 
         public enum Route_Type
         {
@@ -53,10 +53,10 @@ namespace Dijitle.Metra.Data
 
             Trips = new List<Trips>();
             Stops = new List<Stops>();
-            Shapes = new Dictionary<string, List<Shapes>>();
+            Shapes = new Dictionary<string, IEnumerable<Shapes>>();
         }
 
-        public void Link(IDictionary<string, Agency> agencies,IDictionary<string, List<Shapes>> shapes)
+        public void Link(IDictionary<string, Agency> agencies, IDictionary<string, List<Shapes>> shapes)
         {
             Agency = agencies[agency_id];
             Agency.Routes.Add(this);

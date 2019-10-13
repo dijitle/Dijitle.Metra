@@ -41,7 +41,7 @@
             <div class="input-group my-3">
 
                 <div class="input-group-prepend mp-3">
-                    <span class="input-group-text fas fa-route" style="font-size:24px; width:64px;"></span>
+                    <span class="input-group-text fas fa-route" style="font-size:24px; width:48px;"></span>
                 </div>
                 <select id="routes" class="custom-select" onchange="loadStops();">
                     <option selected>All Routes</option>
@@ -51,7 +51,7 @@
             <div class="input-group mb-3">
 
                 <div class="input-group-prepend">
-                    <span class="input-group-text fas fa-home" style="font-size:24px; width:64px;"></span>
+                    <span class="input-group-text fas fa-home" style="font-size:24px; width:48px;"></span>
                 </div>
                 <select id="stopsFrom" class="custom-select">
                     <option selected hidden value="ROUTE59">Choose a origin stop...</option>
@@ -65,10 +65,20 @@
             <div class="input-group mb-3">
 
                 <div class="input-group-prepend">
-                    <span class="input-group-text fas fa-building" style="font-size:24px; width:64px;"></span>
+                    <span class="input-group-text fas fa-building" style="font-size:24px; width:48px;"></span>
                 </div>
                 <select id="stopsTo" class="custom-select">
                     <option selected hidden value="CUS">Choose a destination stop...</option>
+                </select>
+            </div>
+
+            <div class="input-group mb-3">
+
+                <div class="input-group-prepend">
+                    <span class="input-group-text fas fa-history" style="font-size:24px; width:48px;"></span>
+                </div>
+                <select id="history" class="custom-select" onchange="goToHistory();">
+                    <option selected hidden value="ROUTE59-CUS-X">Choose a previous search...</option>
                 </select>
             </div>
 

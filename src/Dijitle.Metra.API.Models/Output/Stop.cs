@@ -1,5 +1,6 @@
 ﻿using Newtonsoft.Json;
 using System;
+using System.Collections.Generic;
 
 namespace Dijitle.Metra.API.Models.Output
 {
@@ -25,5 +26,8 @@ namespace Dijitle.Metra.API.Models.Output
 
         [JsonProperty("departureTime")]
         public DateTime DepartureTime { get; set; }
+
+        [JsonProperty("routes")]
+        public IEnumerable<string> Routes { get; set; }
     }
 }
