@@ -260,13 +260,16 @@ function filterStops() {
 }
 
 function loadHistory() {
-    //var hist = getCookie("history");
-    var hist = "ROUTE59-CUS-X;OTC-WINFIELD-X;s13-s1"
+    var hist = getCookie("history");
     var historyComboBox = $("#history");
 
+    hist.split(',').forEach(function (h) {
+        var from = allStops.find(s => s.id === h.split('-')[0]);
+        var to = allStops.find(s => s.id === h.split('-')[1]);
+        var express = h.endsWith('-X') ? " Express" : "";
 
-
-
+        historyComboBox.append(new Option(from.name + " to " + to.name + express, h, false, false));
+    });
 }
 
 function goToHistory() {
@@ -285,6 +288,7 @@ function save() {
     saveCombo("stopsTo");
 
     saveExpress();
+    saveHistory();
 }
 
 function saveCombo(item) {
@@ -293,6 +297,17 @@ function saveCombo(item) {
 
 function saveExpress() {
     setCookie("express", $('#expressOnly').is(':checked'), 365);
+}
+
+function saveHistory() {
+    var hist = getCookie("history");
+    var item = $('#stopsFrom option:selected').val() + "-" + $('#stopsTo option:selected').val() + ($('#expressOnly').is(':checked') ? "-X" : "");
+
+    if (!hist.includes(item)) {
+        hist = item + "," + hist;
+    }
+
+    setCookie("history", hist, 365);
 }
 
 function getAlerts() {
