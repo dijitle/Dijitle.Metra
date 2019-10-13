@@ -21,9 +21,9 @@
     <link rel="apple-touch-icon" sizes="167x167" href="~/Images/touch-icon-ipad-retina.png">
 </head>
 <body>
-    <nav class="navbar bg-primary navbar-dark fixed-top">
+    <nav class="navbar navbar-dark fixed-top" style="background-color: #0052a7">
         <span>
-            <a asp-area="" asp-controller="Web" asp-action="Index" class="navbar-brand"><img width="30" height="30" src="~/Images/dijitle.png" style="transform: translateY(-8%)"/> Metra</a>
+            <a asp-area="" asp-controller="Web" asp-action="Index" class="navbar-brand"><img width="30" height="30" src="~/Images/dijitle.png" style="transform: translateY(-8%); filter: invert(100%);"/> Metra</a>
         
             <a class="nav-item" @(ViewContext.RouteData.Values["Action"].ToString() == "Index" ? "" : "hidden") href="/Map">
                 <i class='fas fa-map-marked-alt text-white'></i>
