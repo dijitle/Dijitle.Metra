@@ -22,7 +22,7 @@ namespace Dijitle.Metra.API.Controllers
         [HttpGet()]
         [Route("Positions")]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<IActionResult> GetPositions()
+        public async Task<ActionResult<IEnumerable<Models.Output.Position>>> GetPositions()
         {
             return Ok(await _gtfs.GetPositions());
         }
@@ -30,7 +30,7 @@ namespace Dijitle.Metra.API.Controllers
         [HttpGet()]
         [Route("Alerts")]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<IActionResult> GetAlerts()
+        public async Task<ActionResult<IEnumerable<Models.Output.Alert>>> GetAlerts()
         {
             return Ok(await _gtfs.GetAlerts());
         }

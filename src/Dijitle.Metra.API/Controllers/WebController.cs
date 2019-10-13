@@ -11,6 +11,7 @@ namespace Dijitle.Metra.API.Controllers
 {
     [Route("")]
     [Route("Trips")]
+    [ApiExplorerSettings(IgnoreApi = true)]
     public class WebController : Controller
     {
         private IMetraService _metra;

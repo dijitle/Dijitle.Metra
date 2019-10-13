@@ -41,7 +41,7 @@ namespace Dijitle.Metra.Data
         {
             get
             {
-                return _lastUpdated.AddHours(4) < DateTime.Now;
+                return _lastUpdated.AddHours(12) < DateTime.Now;
             }
         }
 

@@ -52,7 +52,7 @@ namespace Dijitle.Metra.API.Services
             return retPositions;
         }
 
-        public async Task<object> GetAlerts()
+        public async Task<IEnumerable<Alert>> GetAlerts()
         {
             HttpClient client = _httpClientFactory.CreateClient("GTFSClient");
 

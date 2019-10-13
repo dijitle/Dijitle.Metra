@@ -25,7 +25,7 @@ namespace Dijitle.Metra.API.Controllers
         [HttpGet()]
         [Route("Routes")]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<IActionResult> GetLines()
+        public async Task<ActionResult<IEnumerable<Models.Output.Route>>> GetLines()
         {
             return Ok(await _metra.GetRoutes());
         }
@@ -34,7 +34,7 @@ namespace Dijitle.Metra.API.Controllers
         [Route("ShapesByRoute")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> GetShapesByRoute(string route = "BNSF")
+        public async Task<ActionResult<IEnumerable<Models.Output.Shape>>> GetShapesByRoute(string route = "BNSF")
         {
             if (_gtfs.Data.IsStale)
             {
@@ -53,7 +53,7 @@ namespace Dijitle.Metra.API.Controllers
         [Route("ShapesById")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> GetShapesById(string id = "BNSF_IB_1")
+        public async Task<ActionResult<Models.Output.Shape>> GetShapesById(string id = "BNSF_IB_1")
         {
             if (_gtfs.Data.IsStale)
             {
@@ -72,7 +72,7 @@ namespace Dijitle.Metra.API.Controllers
         [Route("Trips")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> GetTrips(string start = "ROUTE59", string dest = "CUS", bool expressOnly = false)
+        public async Task<ActionResult<IEnumerable<Models.Output.Trip>>> GetTrips(string start = "ROUTE59", string dest = "CUS", bool expressOnly = false)
         {
             if (_gtfs.Data.IsStale)
             {
@@ -94,7 +94,7 @@ namespace Dijitle.Metra.API.Controllers
         [HttpGet()]
         [Route("StopsByDistance")]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<IActionResult> GetStopsByDistance(double lat = 41.881276d, double lon = -87.635305d, int distance = 5)
+        public async Task<ActionResult<IEnumerable<Models.Output.Stop>>> GetStopsByDistance(double lat = 41.881276d, double lon = -87.635305d, int distance = 5)
         {
             return Ok(await _metra.GetStopsByDistance(lat, lon, distance));
         }
@@ -102,7 +102,7 @@ namespace Dijitle.Metra.API.Controllers
         [HttpGet()]
         [Route("StopsByRoute")]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<IActionResult> GetStopsByRoute(string route = "BNSF", bool sortAsc = true)
+        public async Task<ActionResult<IEnumerable<Models.Output.Stop>>> GetStopsByRoute(string route = "BNSF", bool sortAsc = true)
         {
             return Ok(await _metra.GetStopsByRoute(route, sortAsc));
         }
@@ -110,7 +110,7 @@ namespace Dijitle.Metra.API.Controllers
         [HttpGet()]
         [Route("AllStops")]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<IActionResult> GetAllStops()
+        public async Task<ActionResult<IEnumerable<Models.Output.Stop>>> GetAllStops()
         {
             return Ok(await _metra.GetAllStops());
         }
@@ -119,7 +119,7 @@ namespace Dijitle.Metra.API.Controllers
         [HttpGet()]
         [Route("Calendars")]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<IActionResult> GetCalendars()
+        public async Task<ActionResult<IEnumerable<Models.Output.Calendar>>> GetCalendars()
         {
             return Ok(await _metra.GetCalendars());
         }
