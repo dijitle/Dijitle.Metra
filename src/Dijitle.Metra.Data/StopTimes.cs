@@ -31,8 +31,8 @@ namespace Dijitle.Metra.Data
         public StopTimes(string[] csv)
         {
             trip_id = csv[0].Trim();
-            arrival_time = csv[1].Trim();
-            departure_time = csv[2].Trim();
+            arrival_time = csv[1].Trim().PadLeft(8, '0');
+            departure_time = csv[2].Trim().PadLeft(8, '0');
             stop_id = csv[3].Trim();
             stop_sequence = Convert.ToInt32(csv[4].Trim());
 
