@@ -43,6 +43,74 @@ namespace Dijitle.Metra.API.Services
             return routes;
         }
 
+        public async Task<Trip> GetTrip(string id)
+        {
+            if (_gtfs.Data.IsStale)
+            {
+                await _gtfs.RefreshData();
+            }
+
+            var t = _gtfs.Data.Trips[id];
+
+            if (t == null)
+            {
+                return null;
+            }
+
+            var route = _gtfs.Data.Routes[t.route_id];
+
+            IEnumerable<Stop> routeStops = await GetStopsByRoute(route.route_id, t.direction_id == Trips.Direction.Outbound);
+
+            var trip = new Trip()
+            {
+                Id = t.trip_id,
+                IsExpress = route.Stops.Count >= t.StopTimes.Count * 2,
+                Route = new Route()
+                {
+                    Id = route.route_id,
+                    ShortName = route.route_short_name,
+                    LongName = route.route_long_name,
+                    RouteColor = route.route_color,
+                    TextColor = route.route_text_color
+                },
+                ShapeId = t.shape_id
+            };
+
+            foreach (Stop st in routeStops)
+            {
+                trip.RouteStops.Add(st);
+            }
+
+            trip.OriginStop = trip.RouteStops.FirstOrDefault();
+            trip.DestinationStop = trip.RouteStops.LastOrDefault();
+
+            DateTime day;
+            if (Environment.OSVersion.Platform == PlatformID.Unix)
+            {
+                day = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, TimeZoneInfo.FindSystemTimeZoneById("America/Chicago"));
+            }
+            else
+            {
+                day = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, TimeZoneInfo.FindSystemTimeZoneById("Central Standard Time"));
+            }
+
+            foreach (StopTimes st in t.StopTimes.OrderBy(st => st.stop_sequence))
+            {
+                foreach (Stop s in trip.RouteStops)
+                {
+                    if (s.Id == st.stop_id)
+                    {
+                        s.ArrivalTime = GetTime(day, st.arrival_time);
+                        s.DepartureTime = GetTime(day, st.departure_time);
+                        trip.TripStops.Add(s);
+                        break;
+                    }
+                }
+            }
+
+            return trip;
+        }
+
         public async Task<IEnumerable<Trip>> GetTrips(Stops originStop, Stops destinationStop, bool expressOnly)
         {
             DateTime selectedDate;

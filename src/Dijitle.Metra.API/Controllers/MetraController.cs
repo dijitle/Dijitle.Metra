@@ -43,7 +43,7 @@ namespace Dijitle.Metra.API.Controllers
 
             if (!_gtfs.Data.Routes.ContainsKey(route))
             {
-                return NotFound($"No route named {route} was found!");
+                return NotFound($"No route named '{route}' was found!");
             }
 
             return Ok(await _metra.GetShapes(_gtfs.Data.Routes[route]));
@@ -62,7 +62,7 @@ namespace Dijitle.Metra.API.Controllers
 
             if (!_gtfs.Data.Shapes.ContainsKey(id))
             {
-                return NotFound($"No shape with id {id} was found!");
+                return NotFound($"No shape with id '{id}' was found!");
             }
 
             return Ok(await _metra.GetShapes(id));
@@ -80,15 +80,51 @@ namespace Dijitle.Metra.API.Controllers
             }
             if (!_gtfs.Data.Stops.ContainsKey(start))
             {
-                return NotFound($"No stop named {start} was found!");
+                return NotFound($"No stop named '{start}' was found!");
             }
 
             if (!_gtfs.Data.Stops.ContainsKey(dest))
             {
-                return NotFound($"No stop named {dest} was found!");
+                return NotFound($"No stop named '{dest}' was found!");
             }
 
             return Ok(await _metra.GetTrips(_gtfs.Data.Stops[start], _gtfs.Data.Stops[dest], expressOnly));
+        }
+
+        [HttpGet()]
+        [Route("Trips/{id}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<ActionResult<Models.Output.Trip>> GetTrip(string id)
+        {
+            if (_gtfs.Data.IsStale)
+            {
+                await _gtfs.RefreshData();
+            }
+            if (!_gtfs.Data.Trips.ContainsKey(id))
+            {
+                return NotFound($"No trip with id '{id}' was found!");
+            }
+            
+            return Ok(await _metra.GetTrip(id));
+        }
+
+        [HttpGet()]
+        [Route("Trips/{id}/StopTimes")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<ActionResult<IEnumerable<Models.Output.Stop>>> GetTripStops(string id)
+        {
+            if (_gtfs.Data.IsStale)
+            {
+                await _gtfs.RefreshData();
+            }
+            if (!_gtfs.Data.Trips.ContainsKey(id))
+            {
+                return NotFound($"No trip with id '{id}' was found!");
+            }
+
+            return Ok((await _metra.GetTrip(id)).TripStops);
         }
 
         [HttpGet()]
