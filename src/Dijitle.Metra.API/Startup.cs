@@ -61,7 +61,10 @@ namespace Dijitle.Metra.API
             services.AddSingleton<IGTFSService, GTFSService>();
 
             services.AddHealthChecks();
-            services.AddCors();
+            services.AddCors(c =>
+            {
+                c.AddPolicy("AllowOrigin", options => options.AllowAnyOrigin());
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -71,7 +74,7 @@ namespace Dijitle.Metra.API
             {
                 app.UseDeveloperExceptionPage();
             }
-            app.UseCors();
+            app.UseCors(options => options.AllowAnyOrigin());
             app.UseStaticFiles();
             app.UseSwagger();
 
