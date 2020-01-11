@@ -70,7 +70,7 @@ namespace Dijitle.Metra.API
             {
                 app.UseDeveloperExceptionPage();
             }
-
+            app.UseCors();
             app.UseStaticFiles();
             app.UseSwagger();
 
