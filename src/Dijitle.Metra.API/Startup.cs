@@ -61,6 +61,7 @@ namespace Dijitle.Metra.API
             services.AddSingleton<IGTFSService, GTFSService>();
 
             services.AddHealthChecks();
+            services.AddCors();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
