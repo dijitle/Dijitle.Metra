@@ -65,9 +65,11 @@ namespace Dijitle.Metra.API.Services
             {
                 Id = t.trip_id,
                 IsExpress = route.Stops.Count >= t.StopTimes.Count * 2,
+                Inbound = t.direction_id == Trips.Direction.Inbound,
                 Route = new Route()
                 {
                     Id = route.route_id,
+                    
                     ShortName = route.route_short_name,
                     LongName = route.route_long_name,
                     RouteColor = route.route_color,
@@ -173,6 +175,7 @@ namespace Dijitle.Metra.API.Services
                         {
                             Id = t.trip_id,
                             IsExpress = t.IsExpress(originStopTime, destinationStopTime),
+                            Inbound = t.direction_id == Trips.Direction.Inbound,
                             Route = new Route()
                             {
                                 Id = route.route_id,

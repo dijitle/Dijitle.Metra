@@ -27,7 +27,10 @@ namespace Dijitle.Metra.API.Models.Output
                 return Id;
             }
         }
-              
+
+        [JsonProperty("inbound")]
+        public bool Inbound { get; set; }
+        
         [JsonProperty("destinationStop")]
         public Stop DestinationStop { get; set; }
 
