@@ -4,21 +4,21 @@ type: kubernetes
 name: default
 
 steps:
-  - name: test
+  - name: build
     image: docker:dind
     privileged: true
     volumes:
       - name: dockersock
-        path: /var/run/docker.sock
+        path: /var/run/
     commands:
       - docker build .
 
 volumes:
   - name: dockersock
     host:
-      path: /var/run/docker.sock
+      path: /var/run/
 ---
 kind: signature
-hmac: 5c44d8fec98b3fe045e1423f60644b8bacaa2041becf256cf929527c5a280c0d
+hmac: c2699f564784af04628d85bd0c196087ace98c15d45f59dfb9ca63556f87f843
 
 ...
