@@ -6,6 +6,6 @@ A simple app to track metra train times based on home/destination. Filter by exp
 
 ## endpoints
 
-- [web](metra.dijitle.com)
-- [api](metra.dijitle.com/api)
+- [web](https://metra.dijitle.com)
+- [api](https://metra.dijitle.com/api)
 - [build](https://drone.dijitle.dev/dijitle/Dijitle.Metra)
