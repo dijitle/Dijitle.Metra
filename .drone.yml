@@ -5,7 +5,7 @@ name: default
 
 steps:
   - name: deploy
-    image: dijitle/kubectl:0.0.1
+    image: dijitle/kubectl:0.0.2
     environment:
       KUBERNETES_CERT:
         from_secret: k8s_cert
@@ -17,6 +17,6 @@ steps:
 
 ---
 kind: signature
-hmac: f1aa6a6384a3998cde02c21b9c6ee4ec9a2be5578704b7af24177ddbc337b147
+hmac: 09029131067f770899755f1d569074b280ab6c74cf3fb6f727495c3ba1eb736b
 
 ...
