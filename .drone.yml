@@ -4,7 +4,7 @@ type: kubernetes
 name: default
 
 steps:
- - name: build
+  - name: build
     image: docker:dind
     privileged: true
     volumes:
@@ -47,7 +47,8 @@ volumes:
   - name: dockersock
     host:
       path: /var/run/
-
 ---
 kind: signature
-hmac: 09029131067f770899755f1d569074b280ab6c74cf3fb6f727495c3ba1eb736b
+hmac: 12b6c38e1ccfc17cfefd8cd5d6465430dd939fa51a7867d9c0a262b5d10de96e
+
+...
