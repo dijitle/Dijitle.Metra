@@ -5,19 +5,17 @@ name: default
 
 steps:
   - name: deploy
-    image: sinlead/drone-kubectl
-    settings:
-      kubernetes_server:
-        from_secret: k8s_server
-      kubernetes_cert:
+    image: dijitle/kubectl
+    environment:
+      KUBERNETES_CERT:
         from_secret: k8s_cert
-      kubernetes_token:
+      KUBERNETES_TOKEN:
         from_secret: k8s_token
     commands:
       - kubectl get nodes
 
 ---
 kind: signature
-hmac: 4ae54ec4e1ab02b2ac27bff3e44ac4f02cee16eb7722dd873ada9a49f6af86be
+hmac: aa1cbf745ab00c3a91315fbb7ace670ad43fb4f03887737e84b3742d6af816a7
 
 ...
