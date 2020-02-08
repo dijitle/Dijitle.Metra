@@ -11,14 +11,29 @@ steps:
       - name: dockersock
         path: /var/run/
     commands:
-      - docker build .
-
+      - docker build --tag dijitle/metra:$DRONE_COMMIT .
+  - name: push
+    image: docker:dind
+    privileged: true
+    environment:
+      USERNAME:
+        from_secret: docker_username
+      PASSWORD:
+        from_secret: docker_password
+    volumes:
+      - name: dockersock
+        path: /var/run/
+    commands:
+      - docker tag dijitle/metra:$DRONE_COMMIT dijitle/metra:$DRONE_TAG
+      - docker login -u $USERNAME -p $PASSWORD
+      - docker push dijitle/metra:$DRONE_TAG
+    when:
+      event:
+        - tag
 volumes:
   - name: dockersock
     host:
       path: /var/run/
 ---
 kind: signature
-hmac: c2699f564784af04628d85bd0c196087ace98c15d45f59dfb9ca63556f87f843
-
-...
+hmac: 711585f01bd52e2b94fe1c3d1c18dac22d7ab2c9d2a6ed1eddd494774a3a1371
