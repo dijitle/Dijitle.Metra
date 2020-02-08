@@ -5,7 +5,7 @@ name: default
 
 steps:
   - name: deploy
-    image: dijitle/kubectl:0.0.0
+    image: dijitle/kubectl:0.0.1
     environment:
       KUBERNETES_CERT:
         from_secret: k8s_cert
