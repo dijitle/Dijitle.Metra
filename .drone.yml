@@ -4,36 +4,20 @@ type: kubernetes
 name: default
 
 steps:
-  - name: build
-    image: docker:dind
-    privileged: true
-    volumes:
-      - name: dockersock
-        path: /var/run/
+  - name: deploy
+    image: sinlead/drone-kubectl
+    settings:
+      kubernetes_server:
+        from_secret: k8s_server
+      kubernetes_cert:
+        from_secret: k8s_cert
+      kubernetes_token:
+        from_secret: k8s_token
     commands:
-      - docker build --tag dijitle/metra:$DRONE_COMMIT .
-  - name: push
-    image: docker:dind
-    privileged: true
-    environment:
-      USERNAME:
-        from_secret: docker_username
-      PASSWORD:
-        from_secret: docker_password
-    volumes:
-      - name: dockersock
-        path: /var/run/
-    commands:
-      - docker tag dijitle/metra:$DRONE_COMMIT dijitle/metra:$DRONE_TAG
-      - docker login -u $USERNAME -p $PASSWORD
-      - docker push dijitle/metra:$DRONE_TAG
-    when:
-      event:
-        - tag
-volumes:
-  - name: dockersock
-    host:
-      path: /var/run/
+      - kubectl get nodes
+
 ---
 kind: signature
-hmac: 711585f01bd52e2b94fe1c3d1c18dac22d7ab2c9d2a6ed1eddd494774a3a1371
+hmac: 4ae54ec4e1ab02b2ac27bff3e44ac4f02cee16eb7722dd873ada9a49f6af86be
+
+...
