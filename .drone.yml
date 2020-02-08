@@ -5,17 +5,16 @@ name: default
 
 steps:
   - name: deploy
-    image: dijitle/kubectl
+    image: dijitle/kubectl:0.0.0
     environment:
       KUBERNETES_CERT:
         from_secret: k8s_cert
       KUBERNETES_TOKEN:
         from_secret: k8s_token
     commands:
+      - kubectl-init.sh
       - kubectl get nodes
 
 ---
 kind: signature
 hmac: aa1cbf745ab00c3a91315fbb7ace670ad43fb4f03887737e84b3742d6af816a7
-
-...
