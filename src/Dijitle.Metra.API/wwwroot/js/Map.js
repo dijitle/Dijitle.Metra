@@ -44,7 +44,7 @@ async function loadAllRoutes() {
     $.get("api/metra/routes", function (route) {
         route.forEach(function (r) {
 
-            $("#routeLegend").append("<span class='my-3 mx-5 text-nowrap' style='width:50px'><i class='fas fa-route' style='font-size:24px;color:#" + r.routecolor + "'></i>" + r.shortName + "</span>");
+            $("#routeLegend").append("<span class='my-3 mx-5 text-nowrap' style='width:50px'><i class='fas fa-route' style='font-size:24px;color:#" + r.routeColor + "'></i>" + r.shortName + "</span>");
 
             $.get("api/metra/shapesbyroute?route=" + r.id, function (data) {
                                
@@ -130,7 +130,45 @@ function getAllPositions() {
         });
     });
 
-    setTimeout(getAllPositions, 30000);
+    $.get("api/metra/EstimatedPositions/all", function (data) {
+        data.forEach(function (d) {
+
+
+            var trainFeature = new ol.Feature({
+                geometry: new ol.geom.Point(ol.proj.transform([Number(d.longitude), Number(d.latitude)], 'EPSG:4326', 'EPSG:3857'))
+            });
+
+            var color = "aaaaaa";
+
+            if (d.direction) {
+                color = "111111";
+            }
+
+            var iconStyle = new ol.style.Style({
+                image: new ol.style.Icon(({
+                    anchor: [0.5, 1],
+                    src: "https://cdn.mapmarker.io/api/v1/pin?icon=fa-train&size=75&background=" + color
+                }))
+            });
+
+            trainFeature.setStyle(iconStyle);
+
+            var trainLayerSource = new ol.source.Vector({
+                features: [trainFeature]
+            });
+
+            var trainLayer = new ol.layer.Vector({
+                name: "train" + d.id,
+                source: trainLayerSource
+            });
+
+            removeLayer("train" + d.id);
+
+            map.addLayer(trainLayer);
+        });
+    });
+
+    setTimeout(getAllPositions, 23428);
 }
 
 async function moveMap(divId, shapeId) {

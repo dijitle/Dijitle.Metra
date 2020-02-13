@@ -512,16 +512,39 @@ namespace Dijitle.Metra.API.Services
                 return null;
             }
 
+            decimal lat = 0m;            
+            decimal lon = 0m;
+            var currentTime = GetCurrentTime();
+            var currentStop = t.StopTimes.FirstOrDefault(st => GetTime(currentTime, st.arrival_time) < currentTime.AddSeconds(30) && GetTime(currentTime, st.departure_time) > currentTime.AddSeconds(-30));
+            if (currentStop != null)
+            {
+                lat = Convert.ToDecimal(currentStop.Stop.stop_lat);
+                lon = Convert.ToDecimal(currentStop.Stop.stop_lon);
+            }
+            else
+            {
+                var previousStop = t.StopTimes.Where(st => GetTime(currentTime, st.departure_time) < currentTime.AddSeconds(-30)).OrderBy(st => st.stop_sequence).LastOrDefault();
+                var nextStop = t.StopTimes.Where(st => GetTime(currentTime, st.arrival_time) > currentTime.AddSeconds(30)).OrderBy(st => st.stop_sequence).FirstOrDefault();
+
+                decimal diffFromPrevious = currentTime.Ticks -  GetTime(currentTime, previousStop.departure_time).Ticks;
+                decimal diffToNext = GetTime(currentTime, nextStop.arrival_time).Ticks - currentTime.Ticks;
+
+                var weightNext = diffFromPrevious / (diffFromPrevious + diffToNext);
+                var weightPrevious = diffToNext / (diffFromPrevious + diffToNext);
+
+                lat = Convert.ToDecimal(previousStop.Stop.stop_lat) * weightPrevious + Convert.ToDecimal(nextStop.Stop.stop_lat) * weightNext;
+                lon = Convert.ToDecimal(previousStop.Stop.stop_lon) * weightPrevious + Convert.ToDecimal(nextStop.Stop.stop_lon) * weightNext;
+            }
 
 
             var p = new Position()
             {
-                Id = t.trip_id + "-" + DateTime.UtcNow.ToString("yyyyMMddHHmmss"),
+                Id = t.trip_id + "-Estimate" ,
                 TripId = t.trip_id,
                 Direction = t.direction_id == Trips.Direction.Inbound,
                 Label = t.trip_id.Contains("_") ? Regex.Match(t.trip_id.Split('_')[1], @"\d+$").Value : t.trip_id,
-                Latitude = 0,
-                Longitude = 0
+                Latitude = lat,
+                Longitude = lon
             };
 
             return p;
