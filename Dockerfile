@@ -1,8 +1,8 @@
-FROM mcr.microsoft.com/dotnet/core/aspnet:2.2 AS base
+FROM mcr.microsoft.com/dotnet/core/aspnet:3.1 AS base
 EXPOSE 80
 
 
-FROM mcr.microsoft.com/dotnet/core/sdk:2.2 AS build
+FROM mcr.microsoft.com/dotnet/core/sdk:3.1 AS build
 
 COPY ["src/Dijitle.Metra.API/Dijitle.Metra.API.csproj", "src/Dijitle.Metra.API/"]
 COPY ["src/Dijitle.Metra.API.Models/Dijitle.Metra.API.Models.csproj", "src/Dijitle.Metra.API.Models/"]
@@ -15,14 +15,14 @@ RUN dotnet restore "src/Dijitle.Metra.Data/Dijitle.Metra.Data.csproj"
 COPY . .
 
 RUN dotnet build "Dijitle.Metra.sln" \
---configuration Release \
---no-restore
+    --configuration Release \
+    --no-restore
 
 RUN dotnet publish "src/Dijitle.Metra.API/Dijitle.Metra.API.csproj" \
---configuration Release \
---no-build \
---no-restore \
---output /app
+    --configuration Release \
+    --no-build \
+    --no-restore \
+    --output /app
 
 FROM base AS final
 WORKDIR /app
