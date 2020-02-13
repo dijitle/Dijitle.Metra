@@ -58,7 +58,11 @@ namespace Dijitle.Metra.API
             services.AddHealthChecks();
             services.AddCors(c =>
             {
-                c.AddPolicy("AllowOrigin", b => b.WithOrigins("https://www.edwintrakselis.com"));
+                c.AddPolicy("AllowOrigin", b =>
+                {
+                    b.WithOrigins("https://www.edwintrakselis.com")
+                                  .AllowAnyHeader().AllowAnyMethod();
+                });
             });
         }
 
