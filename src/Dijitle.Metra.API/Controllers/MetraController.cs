@@ -13,7 +13,7 @@ namespace Dijitle.Metra.API.Controllers
     [Route("api/[controller]")]
     public class MetraController : Controller
     {
-        private IMetraService _metra;
+        private readonly IMetraService _metra;
         private readonly IGTFSService _gtfs;
 
         public MetraController(IMetraService metra, IGTFSService gtfs)
