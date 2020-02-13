@@ -113,6 +113,31 @@ namespace Dijitle.Metra.API.Services
             return trip;
         }
 
+        public async Task<IEnumerable<Trip>> GetTripsEnroute()
+        {
+            if (_gtfs.Data.IsStale)
+            {
+                await _gtfs.RefreshData();
+            }
+
+            DateTime selectedDate;
+
+            if (Environment.OSVersion.Platform == PlatformID.Unix)
+            {
+                selectedDate = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, TimeZoneInfo.FindSystemTimeZoneById("America/Chicago"));
+            }
+            else
+            {
+                selectedDate = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, TimeZoneInfo.FindSystemTimeZoneById("Central Standard Time"));
+            }
+
+            var day = _gtfs.Data.GetCurrentCalendars(selectedDate);
+
+            List<Trip> trips = new List<Trip>();
+
+            return trips;
+        }
+
         public async Task<IEnumerable<Trip>> GetTrips(Stops originStop, Stops destinationStop, bool expressOnly)
         {
             DateTime selectedDate;
@@ -466,6 +491,41 @@ namespace Dijitle.Metra.API.Services
             int second = Convert.ToInt32(matches[0].Groups["second"].Value);
 
             return new DateTime(date.Year, date.Month, date.Day).AddHours(hour).AddMinutes(minute).AddSeconds(second);
+        }
+
+        public async Task<IEnumerable<Position>> GetAllEstimatedPositions()
+        {
+            if (_gtfs.Data.IsStale)
+            {
+                await _gtfs.RefreshData();
+            }
+
+            var returnPos = new List<Position>();
+
+
+
+            return returnPos;
+        }
+
+        public async Task<Position> GetEstimatedPosition(string tripId)
+        {
+            if (_gtfs.Data.IsStale)
+            {
+                await _gtfs.RefreshData();
+            }
+
+            var t = _gtfs.Data.Trips[tripId];
+
+            if (t == null)
+            {
+                return null;
+            }
+
+
+            var p = new Position();
+
+
+            return p;
         }
     }
 }

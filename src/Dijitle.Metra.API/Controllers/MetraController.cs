@@ -90,6 +90,20 @@ namespace Dijitle.Metra.API.Controllers
 
             return Ok(await _metra.GetTrips(_gtfs.Data.Stops[start], _gtfs.Data.Stops[dest], expressOnly));
         }
+        
+        [HttpGet()]
+        [Route("Trips/Enroute")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<ActionResult<IEnumerable<Models.Output.Trip>>> GetTripsEnroute()
+        {
+            if (_gtfs.Data.IsStale)
+            {
+                await _gtfs.RefreshData();
+            }
+            
+            return Ok(await _metra.GetTripsEnroute());
+        }
 
         [HttpGet()]
         [Route("Trips/{id}")]
@@ -158,6 +172,35 @@ namespace Dijitle.Metra.API.Controllers
         public async Task<ActionResult<IEnumerable<Models.Output.Calendar>>> GetCalendars()
         {
             return Ok(await _metra.GetCalendars());
+        }
+
+        [HttpGet()]
+        [Route("EstimatedPositions")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public async Task<ActionResult<Models.Output.Position>> GetEstimatedPosition(string tripId)
+        {
+            if (_gtfs.Data.IsStale)
+            {
+                await _gtfs.RefreshData();
+            }
+            if (!_gtfs.Data.Trips.ContainsKey(tripId))
+            {
+                return NotFound($"No trip with id '{tripId}' was found!");
+            }
+
+            return Ok(await _metra.GetEstimatedPosition(tripId));
+        }
+
+        [HttpGet()]
+        [Route("EstimatedPositions/all")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public async Task<ActionResult<IEnumerable<Models.Output.Position>>> GetAllEstimatedPositions()
+        {
+            if (_gtfs.Data.IsStale)
+            {
+                await _gtfs.RefreshData();
+            }
+            return Ok(await _metra.GetAllEstimatedPositions());
         }
     }
 }

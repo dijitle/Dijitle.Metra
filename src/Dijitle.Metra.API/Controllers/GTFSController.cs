@@ -35,7 +35,7 @@ namespace Dijitle.Metra.API.Controllers
             return Ok(await _gtfs.GetAlerts());
         }
 
-        [HttpGet()]
+        [HttpPost()]
         [Route("RefreshData")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         public async Task<IActionResult> RefreshData()

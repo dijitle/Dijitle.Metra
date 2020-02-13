@@ -60,7 +60,7 @@ namespace Dijitle.Metra.API
             {
                 c.AddPolicy("AllowOrigin", b =>
                 {
-                    b.WithOrigins("https://www.edwintrakselis.com")
+                    b.WithOrigins("https://www.edwintrakselis.com", "http://localhost", "https://localhost")
                                   .AllowAnyHeader().AllowAnyMethod();
                 });
             });
