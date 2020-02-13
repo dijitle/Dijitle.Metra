@@ -27,6 +27,11 @@ namespace Dijitle.Metra.API.Services
 
         public async Task<IEnumerable<Position>> GetPositions()
         {
+            if (Data.IsStale)
+            {
+                await RefreshData();
+            }
+
             HttpClient client = _httpClientFactory.CreateClient("GTFSClient");
 
             var response = await client.GetAsync("/gtfs/positions");
@@ -54,6 +59,11 @@ namespace Dijitle.Metra.API.Services
 
         public async Task<IEnumerable<Alert>> GetAlerts()
         {
+            if (Data.IsStale)
+            {
+                await RefreshData();
+            }
+
             HttpClient client = _httpClientFactory.CreateClient("GTFSClient");
 
             var response = await client.GetAsync("/gtfs/alerts");
