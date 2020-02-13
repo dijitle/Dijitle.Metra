@@ -86,15 +86,7 @@ namespace Dijitle.Metra.API.Services
             trip.OriginStop = trip.RouteStops.FirstOrDefault();
             trip.DestinationStop = trip.RouteStops.LastOrDefault();
 
-            DateTime day;
-            if (Environment.OSVersion.Platform == PlatformID.Unix)
-            {
-                day = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, TimeZoneInfo.FindSystemTimeZoneById("America/Chicago"));
-            }
-            else
-            {
-                day = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, TimeZoneInfo.FindSystemTimeZoneById("Central Standard Time"));
-            }
+            DateTime day = GetCurrentTime();
 
             foreach (StopTimes st in t.StopTimes.OrderBy(st => st.stop_sequence))
             {
@@ -113,43 +105,27 @@ namespace Dijitle.Metra.API.Services
             return trip;
         }
 
-        public async Task<IEnumerable<Trip>> GetTripsEnroute()
+        public async Task<IEnumerable<string>> GetTripsEnroute()
         {
             if (_gtfs.Data.IsStale)
             {
                 await _gtfs.RefreshData();
             }
 
-            DateTime selectedDate;
-
-            if (Environment.OSVersion.Platform == PlatformID.Unix)
-            {
-                selectedDate = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, TimeZoneInfo.FindSystemTimeZoneById("America/Chicago"));
-            }
-            else
-            {
-                selectedDate = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, TimeZoneInfo.FindSystemTimeZoneById("Central Standard Time"));
-            }
-
+            DateTime selectedDate = GetCurrentTime();
+            
             var day = _gtfs.Data.GetCurrentCalendars(selectedDate);
+            
+            var tripsEnroute = _gtfs.Data.Trips.Values.Where(t => day.Contains(t.Calendar))
+                                                      .Where(t => GetTime(selectedDate, t.StopTimes.OrderBy(st => st.stop_sequence).First().departure_time) < selectedDate)
+                                                      .Where(t => GetTime(selectedDate, t.StopTimes.OrderBy(st => st.stop_sequence).Last().arrival_time) > selectedDate);
 
-            List<Trip> trips = new List<Trip>();
-
-            return trips;
+            return tripsEnroute.Select(t => t.trip_id);
         }
 
         public async Task<IEnumerable<Trip>> GetTrips(Stops originStop, Stops destinationStop, bool expressOnly)
         {
-            DateTime selectedDate;
-            
-            if(Environment.OSVersion.Platform == PlatformID.Unix)
-            {
-                selectedDate = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, TimeZoneInfo.FindSystemTimeZoneById("America/Chicago"));
-            }
-            else
-            {
-                selectedDate = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, TimeZoneInfo.FindSystemTimeZoneById("Central Standard Time"));
-            }
+            DateTime selectedDate = GetCurrentTime();
 
             List<Trip> trips = new List<Trip>();
 
@@ -493,6 +469,16 @@ namespace Dijitle.Metra.API.Services
             return new DateTime(date.Year, date.Month, date.Day).AddHours(hour).AddMinutes(minute).AddSeconds(second);
         }
 
+        private DateTime GetCurrentTime()
+        {
+            if (Environment.OSVersion.Platform == PlatformID.Unix)
+            {
+                return TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, TimeZoneInfo.FindSystemTimeZoneById("America/Chicago"));
+            }
+
+            return TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, TimeZoneInfo.FindSystemTimeZoneById("Central Standard Time"));
+        }
+
         public async Task<IEnumerable<Position>> GetAllEstimatedPositions()
         {
             if (_gtfs.Data.IsStale)
@@ -502,7 +488,12 @@ namespace Dijitle.Metra.API.Services
 
             var returnPos = new List<Position>();
 
+            var trips = await GetTripsEnroute();
 
+            foreach(var t in trips)
+            {
+                returnPos.Add(await GetEstimatedPosition(t));
+            }
 
             return returnPos;
         }
@@ -522,8 +513,16 @@ namespace Dijitle.Metra.API.Services
             }
 
 
-            var p = new Position();
 
+            var p = new Position()
+            {
+                Id = t.trip_id + "-" + DateTime.UtcNow.ToString("yyyyMMddHHmmss"),
+                TripId = t.trip_id,
+                Direction = t.direction_id == Trips.Direction.Inbound,
+                Label = t.trip_id.Contains("_") ? Regex.Match(t.trip_id.Split('_')[1], @"\d+$").Value : t.trip_id,
+                Latitude = 0,
+                Longitude = 0
+            };
 
             return p;
         }

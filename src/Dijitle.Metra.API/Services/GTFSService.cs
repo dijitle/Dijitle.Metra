@@ -45,13 +45,13 @@ namespace Dijitle.Metra.API.Services
             {
                 retPositions.Add(new Position()
                 {
-                    Id = p.Id,
+                    Id = p.Id.ToString(),
                     TripId = p.Vehicle.Trip.TripId,
                     Direction = Data.Trips[p.Vehicle.Trip.TripId].direction_id == Trips.Direction.Inbound,
                     Label = p.Vehicle.VehicleVehicle.Label,
                     Latitude = p.Vehicle.Position.Latitude,
                     Longitude = p.Vehicle.Position.Longitude
-                }); ;
+                });
             }
 
             return retPositions;

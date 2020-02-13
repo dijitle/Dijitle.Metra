@@ -95,7 +95,7 @@ namespace Dijitle.Metra.API.Controllers
         [Route("Trips/Enroute")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<ActionResult<IEnumerable<Models.Output.Trip>>> GetTripsEnroute()
+        public async Task<ActionResult<IEnumerable<string>>> GetTripsEnroute()
         {
             if (_gtfs.Data.IsStale)
             {

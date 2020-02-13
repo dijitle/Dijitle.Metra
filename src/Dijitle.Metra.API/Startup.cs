@@ -87,6 +87,9 @@ namespace Dijitle.Metra.API
                 c.RoutePrefix = "api";
                 c.EnableDeepLinking();
                 c.EnableFilter();
+                c.InjectJavascript("https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js");
+                c.InjectJavascript("/js/swagger.js");
+                c.InjectStylesheet("/css/swagger.css");
             });
 
             app.UseEndpoints(e => {

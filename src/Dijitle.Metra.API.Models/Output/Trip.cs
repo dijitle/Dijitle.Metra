@@ -1,6 +1,7 @@
 ﻿using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Text.RegularExpressions;
 
 namespace Dijitle.Metra.API.Models.Output
 {
@@ -22,7 +23,7 @@ namespace Dijitle.Metra.API.Models.Output
             {
                 if (Id.Contains("_"))
                 {
-                    return Id.Split('_')[1].Substring(2);
+                    return Regex.Match(Id.Split('_')[1], @"\d+$").Value;
                 }
                 return Id;
             }

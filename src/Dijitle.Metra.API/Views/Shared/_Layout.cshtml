@@ -23,8 +23,8 @@
 <body>
     <nav class="navbar navbar-dark fixed-top" style="background-color: #0052a7">
         <span>
-            <a asp-area="" asp-controller="Web" asp-action="Index" class="navbar-brand"><img width="30" height="30" src="~/Images/dijitle.png" style="transform: translateY(-8%); filter: invert(100%);"/> Metra</a>
-        
+            <a asp-area="" asp-controller="Web" asp-action="Index" class="navbar-brand"><img width="30" height="30" src="~/Images/dijitle.png" style="transform: translateY(-8%); filter: invert(100%);" /> Metra</a>
+
             <a class="nav-item" @(ViewContext.RouteData.Values["Action"].ToString() == "Index" ? "" : "hidden") href="/Map">
                 <i class='fas fa-map-marked-alt text-white'></i>
             </a>
@@ -98,9 +98,12 @@
     <div class="container body-content">
         @RenderBody()
         <hr />
-        <footer>
+        <footer class="d-flex justify-content-between">
             <span>&copy; @DateTime.Now.Year Dijitle.com</span>
-            <span class="text-muted float-right">v1.3.3.7</span>
+            <a class="nav-item" href="/api">
+                <i class='fas fa-code text-body'></i>
+            </a>
+            <span class="text-muted">v1.3.3.7</span>
         </footer>
     </div>    
 </body>

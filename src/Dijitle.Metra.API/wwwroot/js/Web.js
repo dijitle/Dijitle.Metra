@@ -251,7 +251,7 @@ function loadStops() {
       }
     });
 
-    data.sort((a, b) => (a.distance > b.distance ? 1 : -1));
+    data.sort((a, b) => (a.distanceAway > b.distanceAway ? 1 : -1));
 
     data.reverse().forEach(function(d) {
       fromComboBox.append(
@@ -395,7 +395,7 @@ function getPositions() {
           if (distStopToDest < distTrainToDest) {
             if (this.attributes.intable.value === "true") {
               this.innerHTML =
-                distTrainToStop + " mi <i class='fas fa-satellite-dish'></i>";
+                distTrainToStop + "mi";
             } else {
               this.innerHTML = "<br />" + distTrainToStop + "mi";
             }

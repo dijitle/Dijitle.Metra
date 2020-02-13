@@ -5,7 +5,7 @@ namespace Dijitle.Metra.API.Models.Output
     public class Position
     {
         [JsonProperty("id")]
-        public int Id { get; set; }
+        public string Id { get; set; }
                
         [JsonProperty("tripId")]
         public string TripId { get; set; }
