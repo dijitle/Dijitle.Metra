@@ -46,9 +46,15 @@ namespace Dijitle.Metra.API.Services
 
             List<Position> retPositions = new List<Position>();
 
+            foreach (var r in Data.Routes)
+            {
+                TrainsWithGPSGauge.WithLabels("in", r.Key).Set(0);
+                TrainsWithGPSGauge.WithLabels("out", r.Key).Set(0);
+            }
+
             foreach (Positions p in pos)
             {
-                retPositions.Add(new Position()
+                var position = new Position()
                 {
                     Id = p.Id.ToString(),
                     TripId = p.Vehicle.Trip.TripId,
@@ -56,10 +62,13 @@ namespace Dijitle.Metra.API.Services
                     Label = p.Vehicle.VehicleVehicle.Label,
                     Latitude = p.Vehicle.Position.Latitude,
                     Longitude = p.Vehicle.Position.Longitude
-                });
+                };
+
+                TrainsWithGPSGauge.WithLabels(position.Direction ? "in" : "out", Data.Trips[position.TripId].route_id).Inc();
+
+                retPositions.Add(position);
             }
 
-            TrainsWithGPSGauge.Set(retPositions.Count);
             return retPositions;
         }
 

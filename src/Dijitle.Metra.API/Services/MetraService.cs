@@ -15,7 +15,7 @@ namespace Dijitle.Metra.API.Services
     {
         private readonly IGTFSService _gtfs;
         private static readonly Gauge TripsEnrouteGauge = Metrics.CreateGauge("metra_trips_enroute_total", 
-            "Number of trips that are currently enroute based on schedule.");
+            "Number of trips that are currently enroute based on schedule.", new GaugeConfiguration { LabelNames = new[] { "direction", "route" }, SuppressInitialValue = true });
 
         public MetraService(IGTFSService gtfs)
         {
@@ -123,7 +123,16 @@ namespace Dijitle.Metra.API.Services
                                                       .Where(t => GetTime(selectedDate, t.StopTimes.OrderBy(st => st.stop_sequence).First().departure_time) < selectedDate)
                                                       .Where(t => GetTime(selectedDate, t.StopTimes.OrderBy(st => st.stop_sequence).Last().arrival_time) > selectedDate);
 
-            TripsEnrouteGauge.Set(tripsEnroute.Count());
+            foreach (var r in _gtfs.Data.Routes)
+            {
+                TripsEnrouteGauge.WithLabels("inbound", r.Key).Set(0);
+                TripsEnrouteGauge.WithLabels("outbound", r.Key).Set(0);
+            }
+
+            foreach (var t in tripsEnroute)
+            {
+                TripsEnrouteGauge.WithLabels(t.direction_id == Trips.Direction.Inbound ? "in" : "out", t.route_id).Inc();
+            }
             return tripsEnroute.Select(t => t.trip_id);
         }
 
