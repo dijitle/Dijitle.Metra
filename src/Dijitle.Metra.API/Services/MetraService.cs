@@ -125,8 +125,8 @@ namespace Dijitle.Metra.API.Services
 
             foreach (var r in _gtfs.Data.Routes)
             {
-                TripsEnrouteGauge.WithLabels("inbound", r.Key).Set(0);
-                TripsEnrouteGauge.WithLabels("outbound", r.Key).Set(0);
+                TripsEnrouteGauge.WithLabels("in", r.Key).Set(0);
+                TripsEnrouteGauge.WithLabels("out", r.Key).Set(0);
             }
 
             foreach (var t in tripsEnroute)
