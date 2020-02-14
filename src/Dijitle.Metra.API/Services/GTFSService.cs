@@ -18,9 +18,9 @@ namespace Dijitle.Metra.API.Services
     {
         private readonly IHttpClientFactory _httpClientFactory;
         private static readonly Gauge TrainsWithGPSGauge = Metrics.CreateGauge("metra_trains_with_gps_total",
-            "Number of trains with GPS enabled.");
-        private static readonly Gauge AltersGauge = Metrics.CreateGauge("metra_alerts_total",
-            "Number of trains with GPS enabled.");
+            "Number of trains with GPS enabled.", new GaugeConfiguration { LabelNames = new[] { "direction", "route" }, SuppressInitialValue = true });
+        private static readonly Gauge AlertsGauge = Metrics.CreateGauge("metra_alerts_total",
+            "Number of trains with GPS enabled.", new GaugeConfiguration { LabelNames = new[] { "route" }, SuppressInitialValue = true });
 
         public AllData Data { get; private set; }
 
@@ -79,7 +79,13 @@ namespace Dijitle.Metra.API.Services
 
             List<Alert> retAlerts = new List<Alert>();
 
-            foreach(Alerts a in alerts)
+            AlertsGauge.WithLabels("general").Set(0);
+            foreach (var r in Data.Routes)
+            {
+                AlertsGauge.WithLabels(r.Key).Set(0);
+            }
+
+            foreach (Alerts a in alerts)
             {
                 Alert alert = new Alert()
                 {
@@ -101,10 +107,27 @@ namespace Dijitle.Metra.API.Services
                     }
                 }
 
+                foreach(var id in alert.AffectedIds)
+                {
+                    if(id == null)
+                    {
+                        AlertsGauge.WithLabels("general").Inc();
+                    }
+                    else if (Data.Routes.ContainsKey(id))
+                    {
+                        AlertsGauge.WithLabels(id).Inc();
+                    }
+                    else if (Data.Trips.ContainsKey(id))
+                    {
+                        AlertsGauge.WithLabels(Data.Trips[id].route_id).Inc();
+                    }
+                    else
+                    {
+                        AlertsGauge.WithLabels("general").Inc();
+                    }
+                }
                 retAlerts.Add(alert);
             }
-
-            AltersGauge.Set(retAlerts.Count);
 
             return retAlerts;
         }
