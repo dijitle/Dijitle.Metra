@@ -7,12 +7,15 @@ using System.Threading.Tasks;
 using Dijitle.Metra.API.Models.Output;
 using System.Text.RegularExpressions;
 using System.Diagnostics;
+using Prometheus;
 
 namespace Dijitle.Metra.API.Services
 {
     public class MetraService : IMetraService
     {
         private readonly IGTFSService _gtfs;
+        private static readonly Gauge TripsEnrouteGauge = Metrics.CreateGauge("metra_trips_enroute_total", 
+            "Number of trips that are currently enroute based on schedule.");
 
         public MetraService(IGTFSService gtfs)
         {
@@ -120,6 +123,7 @@ namespace Dijitle.Metra.API.Services
                                                       .Where(t => GetTime(selectedDate, t.StopTimes.OrderBy(st => st.stop_sequence).First().departure_time) < selectedDate)
                                                       .Where(t => GetTime(selectedDate, t.StopTimes.OrderBy(st => st.stop_sequence).Last().arrival_time) > selectedDate);
 
+            TripsEnrouteGauge.Set(tripsEnroute.Count());
             return tripsEnroute.Select(t => t.trip_id);
         }
 

@@ -363,7 +363,7 @@ function getAlerts() {
 function getPositions() {
   $.get("api/gtfs/positions", function(data) {
     data.forEach(function(d) {
-      $("[name='map']").each(function(i) {
+      $("[name='map']").each(function() {
         if (d.tripId === this.attributes.tripId.value) {
           this.setAttribute("gpsTrainLat", d.latitude);
           this.setAttribute("gpsTrainLon", d.longitude);
@@ -371,7 +371,7 @@ function getPositions() {
         }
       });
 
-      $("[name='distanceFromStation']").each(function(i) {
+      $("[name='distanceFromStation']").each(function() {
         if (d.tripId === this.attributes.tripId.value) {
           var distStopToDest = getDistance(
             this.attributes.stopLat.value,

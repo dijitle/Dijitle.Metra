@@ -77,7 +77,6 @@ namespace Dijitle.Metra.API
             app.UseRouting();
             app.UseStaticFiles();
 
-            app.UseMetricServer();
             app.UseHttpMetrics();
 
             app.UseSwagger();
@@ -95,6 +94,7 @@ namespace Dijitle.Metra.API
             app.UseEndpoints(e => {
                 e.MapControllers();
                 e.MapRazorPages();
+                e.MapMetrics();
             });
 
             app.UseHealthChecks("/health");

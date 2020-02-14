@@ -10,13 +10,18 @@ using Newtonsoft.Json;
 using System.IO.Compression;
 using Dijitle.Metra.Data;
 using Dijitle.Metra.API.Models.Output;
+using Prometheus;
 
 namespace Dijitle.Metra.API.Services
 {
     public class GTFSService : IGTFSService
     {
         private readonly IHttpClientFactory _httpClientFactory;
-        
+        private static readonly Gauge TrainsWithGPSGauge = Metrics.CreateGauge("metra_trains_with_gps_total",
+            "Number of trains with GPS enabled.");
+        private static readonly Gauge AltersGauge = Metrics.CreateGauge("metra_alerts_total",
+            "Number of trains with GPS enabled.");
+
         public AllData Data { get; private set; }
 
         public GTFSService(IHttpClientFactory httpClientFactory)
@@ -54,6 +59,7 @@ namespace Dijitle.Metra.API.Services
                 });
             }
 
+            TrainsWithGPSGauge.Set(retPositions.Count);
             return retPositions;
         }
 
@@ -97,6 +103,8 @@ namespace Dijitle.Metra.API.Services
 
                 retAlerts.Add(alert);
             }
+
+            AltersGauge.Set(retAlerts.Count);
 
             return retAlerts;
         }
