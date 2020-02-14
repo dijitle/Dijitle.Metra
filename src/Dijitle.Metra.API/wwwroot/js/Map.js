@@ -8,7 +8,8 @@ $(function () {
 function mapStart() {
     setupMap();
     loadAllRoutes();
-    setTimeout(getAllPositions, 5000);
+    setTimeout(getAllPositions, 4815);
+    setTimeout(getAllEstimatedPositions, 2342)
 }
 
 function setupMap() {
@@ -129,7 +130,11 @@ function getAllPositions() {
             map.addLayer(trainLayer);
         });
     });
+    
+    setTimeout(getAllPositions, 23428);
+}
 
+function getAllEstimatedPositions() {
     $.get("api/metra/EstimatedPositions/all", function (data) {
         data.forEach(function (d) {
 
@@ -168,7 +173,7 @@ function getAllPositions() {
         });
     });
 
-    setTimeout(getAllPositions, 23428);
+    setTimeout(getAllEstimatedPositions, 15168);
 }
 
 async function moveMap(divId, shapeId) {

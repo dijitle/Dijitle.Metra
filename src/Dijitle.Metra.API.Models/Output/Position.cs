@@ -17,9 +17,9 @@ namespace Dijitle.Metra.API.Models.Output
         public string Label { get; set; }
 
         [JsonProperty("latitude")]
-        public decimal Latitude { get; set; }
+        public double Latitude { get; set; }
 
         [JsonProperty("longitude")]
-        public decimal Longitude { get; set; }
+        public double Longitude { get; set; }
     }
 }

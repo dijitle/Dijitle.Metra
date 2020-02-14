@@ -22,9 +22,9 @@ namespace Dijitle.Metra.API.Models.Output
     public class ShapePoint
     {
         [JsonProperty("lat")]
-        public decimal Lat { get; set; }
+        public double Lat { get; set; }
         [JsonProperty("lon")]
-        public decimal Lon { get; set; }
+        public double Lon { get; set; }
         [JsonProperty("sequence")]
         public int Sequence { get; set; }
     }

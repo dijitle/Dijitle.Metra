@@ -103,10 +103,10 @@ namespace Dijitle.Metra.Data
     public class VehiclePosition
     {
         [JsonProperty("latitude")]
-        public decimal Latitude { get; set; }
+        public double Latitude { get; set; }
 
         [JsonProperty("longitude")]
-        public decimal Longitude { get; set; }
+        public double Longitude { get; set; }
 
         [JsonProperty("bearing")]
         public string Bearing { get; set; }

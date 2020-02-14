@@ -512,28 +512,84 @@ namespace Dijitle.Metra.API.Services
                 return null;
             }
 
-            decimal lat = 0m;            
-            decimal lon = 0m;
+            double lat = 0d;            
+            double lon = 0d;
             var currentTime = GetCurrentTime();
             var currentStop = t.StopTimes.FirstOrDefault(st => GetTime(currentTime, st.arrival_time) < currentTime.AddSeconds(30) && GetTime(currentTime, st.departure_time) > currentTime.AddSeconds(-30));
             if (currentStop != null)
             {
-                lat = Convert.ToDecimal(currentStop.Stop.stop_lat);
-                lon = Convert.ToDecimal(currentStop.Stop.stop_lon);
+                lat = Convert.ToDouble(currentStop.Stop.stop_lat);
+                lon = Convert.ToDouble(currentStop.Stop.stop_lon);
             }
             else
             {
                 var previousStop = t.StopTimes.Where(st => GetTime(currentTime, st.departure_time) < currentTime.AddSeconds(-30)).OrderBy(st => st.stop_sequence).LastOrDefault();
                 var nextStop = t.StopTimes.Where(st => GetTime(currentTime, st.arrival_time) > currentTime.AddSeconds(30)).OrderBy(st => st.stop_sequence).FirstOrDefault();
 
-                decimal diffFromPrevious = currentTime.Ticks -  GetTime(currentTime, previousStop.departure_time).Ticks;
-                decimal diffToNext = GetTime(currentTime, nextStop.arrival_time).Ticks - currentTime.Ticks;
+                double diffFromPrevious = currentTime.Ticks -  GetTime(currentTime, previousStop.departure_time).Ticks;
+                double diffToNext = GetTime(currentTime, nextStop.arrival_time).Ticks - currentTime.Ticks;
 
-                var weightNext = diffFromPrevious / (diffFromPrevious + diffToNext);
-                var weightPrevious = diffToNext / (diffFromPrevious + diffToNext);
+                var percentTravelled = diffFromPrevious / (diffFromPrevious + diffToNext);
 
-                lat = Convert.ToDecimal(previousStop.Stop.stop_lat) * weightPrevious + Convert.ToDecimal(nextStop.Stop.stop_lat) * weightNext;
-                lon = Convert.ToDecimal(previousStop.Stop.stop_lon) * weightPrevious + Convert.ToDecimal(nextStop.Stop.stop_lon) * weightNext;
+                int startIndex = 0;
+                int endIndex = 0;
+
+                for (int i = 0; i < t.Shapes.Count; i++)
+                {
+                    var d1 = GetDistance(t.Shapes[i].shape_pt_lat, t.Shapes[i].shape_pt_lon, nextStop.Stop.stop_lat, nextStop.Stop.stop_lon);
+                    var d2 = GetDistance(previousStop.Stop.stop_lat, previousStop.Stop.stop_lon, nextStop.Stop.stop_lat, nextStop.Stop.stop_lon);
+
+                    if(d1 < d2)
+                    {
+                        startIndex = i;
+                        break;
+                    }
+                }
+
+                for (int i = startIndex; i < t.Shapes.Count; i++)
+                {
+                    var d1 = GetDistance(t.Shapes[i].shape_pt_lat, t.Shapes[i].shape_pt_lon, previousStop.Stop.stop_lat, previousStop.Stop.stop_lon);
+                    var d2 = GetDistance(nextStop.Stop.stop_lat, nextStop.Stop.stop_lon, previousStop.Stop.stop_lat, previousStop.Stop.stop_lon);
+
+                    if (d1 > d2)
+                    {
+                        endIndex = i - 1;
+                        break;
+                    }
+                }
+
+                if (endIndex == 0)
+                {
+                    endIndex = t.Shapes.Count - 1;
+                }
+
+                double totalDistanceBetweenStops = 0d;
+
+                for (int i = startIndex; i < endIndex; i++)
+                {
+                    totalDistanceBetweenStops += GetDistance(t.Shapes[i].shape_pt_lat, t.Shapes[i].shape_pt_lon, t.Shapes[i + 1].shape_pt_lat, t.Shapes[i + 1].shape_pt_lon);
+                }
+
+                double runningTotal = 0d;
+
+                for (int i = startIndex; i < endIndex; i++)
+                {
+                    var d = GetDistance(t.Shapes[i].shape_pt_lat, t.Shapes[i].shape_pt_lon, t.Shapes[i + 1].shape_pt_lat, t.Shapes[i + 1].shape_pt_lon);
+
+                    if ((runningTotal + d) / totalDistanceBetweenStops < percentTravelled)
+                    {
+                        runningTotal += d;
+                    }
+                    else
+                    {
+                        var percentOfDToGetToPercentTravelled = ((percentTravelled * totalDistanceBetweenStops) - runningTotal) / d;
+
+                        lat = t.Shapes[i].shape_pt_lat * (1 - percentOfDToGetToPercentTravelled) + t.Shapes[i + 1].shape_pt_lat * percentOfDToGetToPercentTravelled;
+                        lon = t.Shapes[i].shape_pt_lon * (1 - percentOfDToGetToPercentTravelled) + t.Shapes[i + 1].shape_pt_lon * percentOfDToGetToPercentTravelled;
+                        break;
+                    }
+                }
+
             }
 
 
