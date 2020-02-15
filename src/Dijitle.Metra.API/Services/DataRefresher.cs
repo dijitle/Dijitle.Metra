@@ -25,10 +25,10 @@ namespace Dijitle.Metra.API.Services
 
         public Task StartAsync(CancellationToken cancellationToken)
         {
-            _refreshDataTimer = new Timer(RefreshData, null, TimeSpan.FromSeconds(5), TimeSpan.FromHours(1));
-            _refreshEnrouteTimer = new Timer(RefreshEnroute, null, TimeSpan.FromSeconds(5), TimeSpan.FromMinutes(1));
-            _refreshAlertsTimer = new Timer(RefreshAlerts, null, TimeSpan.FromSeconds(5), TimeSpan.FromMinutes(15));
-            _refreshGPSTimer = new Timer(RefreshGPS, null, TimeSpan.FromSeconds(5), TimeSpan.FromMinutes(5));
+            _refreshDataTimer = new Timer(RefreshData, null, TimeSpan.FromSeconds(15), TimeSpan.FromHours(1));
+            _refreshEnrouteTimer = new Timer(RefreshEnroute, null, TimeSpan.FromSeconds(30), TimeSpan.FromMinutes(1));
+            _refreshAlertsTimer = new Timer(RefreshAlerts, null, TimeSpan.FromSeconds(45), TimeSpan.FromMinutes(15));
+            _refreshGPSTimer = new Timer(RefreshGPS, null, TimeSpan.FromSeconds(45), TimeSpan.FromMinutes(5));
             return Task.CompletedTask;
         }
 
