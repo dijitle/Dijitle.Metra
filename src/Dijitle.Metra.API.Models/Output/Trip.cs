@@ -1,6 +1,7 @@
 ﻿using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Text.Json.Serialization;
 using System.Text.RegularExpressions;
 
 namespace Dijitle.Metra.API.Models.Output
@@ -44,7 +45,7 @@ namespace Dijitle.Metra.API.Models.Output
         [JsonProperty("shapeId")]
         public string ShapeId { get; set; }
 
-        [JsonIgnore]
+        [System.Text.Json.Serialization.JsonIgnore]
         public List<Stop> RouteStops { get; set; }
 
         [JsonProperty("tripStops")]
