@@ -1,5 +1,4 @@
-﻿using Newtonsoft.Json;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
 using System.Text.RegularExpressions;
@@ -14,10 +13,10 @@ namespace Dijitle.Metra.API.Models.Output
             TripStops = new List<Stop>();
         }
 
-        [JsonProperty("id")]
+        [JsonPropertyName("id")]
         public string Id { get; set; }
 
-        [JsonProperty("number")]
+        [JsonPropertyName("number")]
         public string Number
         {
             get
@@ -30,31 +29,31 @@ namespace Dijitle.Metra.API.Models.Output
             }
         }
 
-        [JsonProperty("inbound")]
+        [JsonPropertyName("inbound")]
         public bool Inbound { get; set; }
         
-        [JsonProperty("destinationStop")]
+        [JsonPropertyName("destinationStop")]
         public Stop DestinationStop { get; set; }
 
-        [JsonProperty("orginStop")]
+        [JsonPropertyName("originStop")]
         public Stop OriginStop { get; set; }
 
-        [JsonProperty("route")]
+        [JsonPropertyName("route")]
         public Route Route { get; set; }
 
-        [JsonProperty("shapeId")]
+        [JsonPropertyName("shapeId")]
         public string ShapeId { get; set; }
 
-        [System.Text.Json.Serialization.JsonIgnore]
+        [JsonIgnore]
         public List<Stop> RouteStops { get; set; }
 
-        [JsonProperty("tripStops")]
+        [JsonPropertyName("tripStops")]
         public List<Stop> TripStops { get; set; }
 
-        [JsonProperty("isExpress")]
+        [JsonPropertyName("isExpress")]
         public bool IsExpress { get; set; }
 
-        [JsonProperty("stopsIn")]
+        [JsonPropertyName("stopsIn")]
         public int StopsIn
         {
             get
@@ -63,7 +62,7 @@ namespace Dijitle.Metra.API.Models.Output
             }
         }
 
-        [JsonProperty("stopsUntil")]
+        [JsonPropertyName("stopsUntil")]
         public int StopsUntil
         {
             get
@@ -72,7 +71,7 @@ namespace Dijitle.Metra.API.Models.Output
             }
         }
 
-        [JsonProperty("minutes")]
+        [JsonPropertyName("minutes")]
         public int Minutes
         {
             get

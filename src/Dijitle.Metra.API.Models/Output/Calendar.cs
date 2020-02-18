@@ -1,51 +1,51 @@
-﻿using Newtonsoft.Json;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using System.Text.Json.Serialization;
 
 namespace Dijitle.Metra.API.Models.Output
 {
     public class Calendar
     {
-        [JsonProperty("id")]
+        [JsonPropertyName("id")]
         public string Id { get; set; }
 
-        [JsonProperty("monday")]
+        [JsonPropertyName("monday")]
         public bool Monday { get; set; }
 
-        [JsonProperty("tueday")]
+        [JsonPropertyName("tueday")]
         public bool Tuesday { get; set; }
 
-        [JsonProperty("wednesday")]
+        [JsonPropertyName("wednesday")]
         public bool Wednesday { get; set; }
 
-        [JsonProperty("thurday")]
+        [JsonPropertyName("thurday")]
         public bool Thursday { get; set; }
 
-        [JsonProperty("friday")]
+        [JsonPropertyName("friday")]
         public bool Friday { get; set; }
 
-        [JsonProperty("satday")]
+        [JsonPropertyName("satday")]
         public bool Saturday { get; set; }
 
-        [JsonProperty("sunday")]
+        [JsonPropertyName("sunday")]
         public bool Sunday { get; set; }
 
-        [JsonProperty("startDate")]
+        [JsonPropertyName("startDate")]
         public DateTime StartDate { get; set; }
 
-        [JsonProperty("endDate")]
+        [JsonPropertyName("endDate")]
         public DateTime EndDate { get; set; }
 
-        [JsonProperty("calendarDates")]
+        [JsonPropertyName("calendarDates")]
         public List<CalendarDate> CalendarDates { get; set; }
     }
 
     public class CalendarDate
     {
-        [JsonProperty("date")]
+        [JsonPropertyName("date")]
         public DateTime Date { get; set; }
 
-        [JsonProperty("exceptionType")]
+        [JsonPropertyName("exceptionType")]
         public string ExceptionType { get; set; }
     }
 }

@@ -1,22 +1,22 @@
-﻿using Newtonsoft.Json;
+﻿using System.Text.Json.Serialization;
 
 namespace Dijitle.Metra.API.Models.Output
 {
     public class Route
     {
-        [JsonProperty("id")]
+        [JsonPropertyName("id")]
         public string Id { get; set; }
 
-        [JsonProperty("shortName")]
+        [JsonPropertyName("shortName")]
         public string ShortName { get; set; }
 
-        [JsonProperty("longName")]
+        [JsonPropertyName("longName")]
         public string LongName { get; set; }
 
-        [JsonProperty("routecolor")]
+        [JsonPropertyName("routecolor")]
         public string RouteColor { get; set; }
 
-        [JsonProperty("textColor")]
+        [JsonPropertyName("textColor")]
         public string TextColor { get; set; }
     }
 }

@@ -525,7 +525,7 @@ namespace Dijitle.Metra.API.Services
                 return null;
             }
 
-            double lat = 0d;            
+            double lat = 0d;
             double lon = 0d;
             var currentTime = GetCurrentTime();
             var currentStop = t.StopTimes.FirstOrDefault(st => GetTime(currentTime, st.arrival_time) < currentTime.AddSeconds(30) && GetTime(currentTime, st.departure_time) > currentTime.AddSeconds(-30));

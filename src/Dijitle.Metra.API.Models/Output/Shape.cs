@@ -1,31 +1,30 @@
-﻿using System;
-using System.Collections.Generic;
-using Newtonsoft.Json;
+﻿using System.Collections.Generic;
+using System.Text.Json.Serialization;
 
 namespace Dijitle.Metra.API.Models.Output
 {
     public class Shape
     {
-        [JsonProperty("id")]
+        [JsonPropertyName("id")]
         public string Id { get; set; }
 
-        [JsonProperty("color")]
+        [JsonPropertyName("color")]
         public string Color { get; set; }
 
-        [JsonProperty("textcolor")]
+        [JsonPropertyName("textcolor")]
         public string TextColor { get; set; }
 
-        [JsonProperty("points")]
+        [JsonPropertyName("points")]
         public List<ShapePoint> Points { get; set; }
     }
 
     public class ShapePoint
     {
-        [JsonProperty("lat")]
+        [JsonPropertyName("lat")]
         public double Lat { get; set; }
-        [JsonProperty("lon")]
+        [JsonPropertyName("lon")]
         public double Lon { get; set; }
-        [JsonProperty("sequence")]
+        [JsonPropertyName("sequence")]
         public int Sequence { get; set; }
     }
 }

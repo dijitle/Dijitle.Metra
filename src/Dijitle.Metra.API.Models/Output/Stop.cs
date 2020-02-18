@@ -1,33 +1,33 @@
-﻿using Newtonsoft.Json;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using System.Text.Json.Serialization;
 
 namespace Dijitle.Metra.API.Models.Output
 {
     public class Stop
     {
-        [JsonProperty("id")]
+        [JsonPropertyName("id")]
         public string Id { get; set; }
 
-        [JsonProperty("name")]
+        [JsonPropertyName("name")]
         public string Name { get; set; }
 
-        [JsonProperty("lat")]
+        [JsonPropertyName("lat")]
         public double Lat { get; set; }
 
-        [JsonProperty("lon")]
+        [JsonPropertyName("lon")]
         public double Lon { get; set; }
 
-        [JsonProperty("distance")]
+        [JsonPropertyName("distance")]
         public double DistanceAway { get; set; }
 
-        [JsonProperty("arrivalTime")]
+        [JsonPropertyName("arrivalTime")]
         public DateTime ArrivalTime { get; set; }
 
-        [JsonProperty("departureTime")]
+        [JsonPropertyName("departureTime")]
         public DateTime DepartureTime { get; set; }
 
-        [JsonProperty("routes")]
+        [JsonPropertyName("routes")]
         public IEnumerable<string> Routes { get; set; }
     }
 }

@@ -1,25 +1,25 @@
-﻿using Newtonsoft.Json;
+﻿using System.Text.Json.Serialization;
 
 namespace Dijitle.Metra.API.Models.Output
 {
     public class Position
     {
-        [JsonProperty("id")]
+        [JsonPropertyName("id")]
         public string Id { get; set; }
                
-        [JsonProperty("tripId")]
+        [JsonPropertyName("tripId")]
         public string TripId { get; set; }
 
-        [JsonProperty("direction")]
+        [JsonPropertyName("direction")]
         public bool Direction { get; set; }
         
-        [JsonProperty("label")]
+        [JsonPropertyName("label")]
         public string Label { get; set; }
 
-        [JsonProperty("latitude")]
+        [JsonPropertyName("latitude")]
         public double Latitude { get; set; }
 
-        [JsonProperty("longitude")]
+        [JsonPropertyName("longitude")]
         public double Longitude { get; set; }
     }
 }

@@ -1,5 +1,5 @@
-﻿using Newtonsoft.Json;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using System.Text.Json.Serialization;
 
 namespace Dijitle.Metra.API.Models.Output
 {
@@ -10,19 +10,19 @@ namespace Dijitle.Metra.API.Models.Output
             AffectedIds = new List<string>();
         }
 
-        [JsonProperty("id")]
+        [JsonPropertyName("id")]
         public string Id { get; set; }
 
-        [JsonProperty("affectedIds")]
+        [JsonPropertyName("affectedIds")]
         public List<string> AffectedIds { get; set; }
 
-        [JsonProperty("url")]
+        [JsonPropertyName("url")]
         public string URL { get; set; }
 
-        [JsonProperty("header")]
+        [JsonPropertyName("header")]
         public string Header { get; set; }
 
-        [JsonProperty("description")]
+        [JsonPropertyName("description")]
         public string Description { get; set; }
     }
 }
