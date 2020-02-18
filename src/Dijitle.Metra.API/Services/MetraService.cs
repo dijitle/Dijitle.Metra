@@ -15,7 +15,21 @@ namespace Dijitle.Metra.API.Services
     {
         private readonly IGTFSService _gtfs;
         private static readonly Gauge TripsEnrouteGauge = Metrics.CreateGauge("metra_trips_enroute_total", 
-            "Number of trips that are currently enroute based on schedule.", new GaugeConfiguration { LabelNames = new[] { "direction", "route" }, SuppressInitialValue = true });
+            "Number of trips that are currently enroute based on schedule.", 
+            new GaugeConfiguration 
+            { 
+                LabelNames = new[] { "direction", "route" }, 
+                SuppressInitialValue = true 
+            });
+
+        private static readonly Histogram GPSVarianceHistogram = Metrics.CreateHistogram("metra_gps_variance_miles",
+            "Differnce between GPS and Estimated location.", 
+            new HistogramConfiguration 
+            {
+                LabelNames = new[] { "direction", "route" }, 
+                Buckets = Histogram.LinearBuckets(1, 1, 9), 
+                SuppressInitialValue = true 
+            });
 
         public MetraService(IGTFSService gtfs)
         {
@@ -520,6 +534,10 @@ namespace Dijitle.Metra.API.Services
                     else
                     {
                         pos.RealTimeCoordinates = rtp.RealTimeCoordinates;
+
+                        GPSVarianceHistogram.WithLabels(pos.Direction ? "in" : "out", _gtfs.Data.Trips[pos.TripId].route_id)
+                            .Observe(GetDistance(pos.RealTimeCoordinates.Latitude, pos.RealTimeCoordinates.Longitude,
+                                                 pos.EstimatedCoordinates.Latitude, pos.EstimatedCoordinates.Longitude));
                     }
                 }
             }

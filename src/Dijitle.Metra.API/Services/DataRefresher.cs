@@ -52,7 +52,7 @@ namespace Dijitle.Metra.API.Services
 
         private async void RefreshGPS(object state)
         {
-            await _gtfs.GetPositions();
+            await _metra.GetAllEstimatedPositions(true);
         }
 
         public Task StopAsync(CancellationToken cancellationToken)
