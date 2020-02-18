@@ -10,6 +10,7 @@ using Newtonsoft.Json;
 namespace Dijitle.Metra.API.Controllers
 {
     [Route("api/[controller]")]
+    [ApiController]
     public class GTFSController : Controller
     {
         private IGTFSService _gtfs;

@@ -11,6 +11,7 @@ using Newtonsoft.Json;
 namespace Dijitle.Metra.API.Controllers
 {
     [Route("api/[controller]")]
+    [ApiController]
     public class MetraController : Controller
     {
         private readonly IMetraService _metra;
@@ -177,6 +178,7 @@ namespace Dijitle.Metra.API.Controllers
         [HttpGet()]
         [Route("EstimatedPositions")]
         [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult<Models.Output.Position>> GetEstimatedPosition(string tripId)
         {
             if (_gtfs.Data.IsStale)
