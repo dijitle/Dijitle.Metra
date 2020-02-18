@@ -194,7 +194,7 @@ namespace Dijitle.Metra.API.Controllers
         }
 
         [HttpGet()]
-        [Route("EstimatedPositions/all")]
+        [Route("EstimatedPositions/All")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<ActionResult<IEnumerable<Models.Output.Position>>> GetAllEstimatedPositions()
         {
@@ -206,7 +206,7 @@ namespace Dijitle.Metra.API.Controllers
         }
 
         [HttpGet()]
-        [Route("Positions/all")]
+        [Route("Positions/All")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<ActionResult<IEnumerable<Models.Output.Position>>> GetAllPositions()
         {
