@@ -361,7 +361,7 @@ function getAlerts() {
 }
 
 function getPositions() {
-  $.get("api/gtfs/positions", function(data) {
+  $.get("api/metra/positions/all", function(data) {
     data.forEach(function(d) {
       $("[name='map']").each(function() {
         if (d.tripId === this.attributes.tripId.value) {
@@ -374,22 +374,22 @@ function getPositions() {
       $("[name='distanceFromStation']").each(function() {
         if (d.tripId === this.attributes.tripId.value) {
           var distStopToDest = getDistance(
-            this.attributes.stopLat.value,
-            this.attributes.stopLon.value,
-            this.attributes.destLat.value,
-            this.attributes.destLon.value
+              this.attributes.stopLat.value,
+              this.attributes.stopLon.value,
+              this.attributes.destLat.value,
+              this.attributes.destLon.value
           );
           var distTrainToStop = getDistance(
-            this.attributes.stopLat.value,
-            this.attributes.stopLon.value,
-            d.latitude,
-            d.longitude
+              this.attributes.stopLat.value,
+              this.attributes.stopLon.value,
+              d.realTimeCoordinates.latitude,
+              d.realTimeCoordinates.longitude
           );
           var distTrainToDest = getDistance(
-            this.attributes.destLat.value,
-            this.attributes.destLon.value,
-            d.latitude,
-            d.longitude
+              this.attributes.destLat.value,
+              this.attributes.destLon.value,
+              d.realTimeCoordinates.latitude,
+              d.realTimeCoordinates.longitude
           );
 
           if (distStopToDest < distTrainToDest) {

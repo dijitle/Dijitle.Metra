@@ -16,6 +16,15 @@ namespace Dijitle.Metra.API.Models.Output
         [JsonPropertyName("label")]
         public string Label { get; set; }
 
+        [JsonPropertyName("realTimeCoordinates")]
+        public PositionCoordinates RealTimeCoordinates { get; set; }
+
+        [JsonPropertyName("estimatedCoordinates")]
+        public PositionCoordinates EstimatedCoordinates { get; set; }
+    }
+
+    public class PositionCoordinates
+    {
         [JsonPropertyName("latitude")]
         public double Latitude { get; set; }
 

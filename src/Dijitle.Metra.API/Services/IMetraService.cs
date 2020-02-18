@@ -20,7 +20,7 @@ namespace Dijitle.Metra.API.Services
         Task<IEnumerable<Shape>> GetShapes(Routes route);
         Task<Shape> GetShapes(string id);
         Task<IEnumerable<Models.Output.Calendar>> GetCalendars();
-        Task<IEnumerable<Position>> GetAllEstimatedPositions();
+        Task<IEnumerable<Position>> GetAllEstimatedPositions(bool withRealTime = false);
         Task<Position> GetEstimatedPosition(string tripId);
     }
 }

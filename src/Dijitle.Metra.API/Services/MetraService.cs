@@ -492,7 +492,7 @@ namespace Dijitle.Metra.API.Services
             return TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, TimeZoneInfo.FindSystemTimeZoneById("Central Standard Time"));
         }
 
-        public async Task<IEnumerable<Position>> GetAllEstimatedPositions()
+        public async Task<IEnumerable<Position>> GetAllEstimatedPositions(bool withRealTime = false)
         {
             if (_gtfs.Data.IsStale)
             {
@@ -506,6 +506,22 @@ namespace Dijitle.Metra.API.Services
             foreach(var t in trips)
             {
                 returnPos.Add(await GetEstimatedPosition(t));
+            }
+
+            if (withRealTime)
+            {
+                foreach(var rtp in await _gtfs.GetPositions())
+                {
+                    var pos = returnPos.FirstOrDefault(p => p.TripId == rtp.TripId);
+                    if(pos == null)
+                    {
+                        returnPos.Add(rtp);
+                    }
+                    else
+                    {
+                        pos.RealTimeCoordinates = rtp.RealTimeCoordinates;
+                    }
+                }
             }
 
             return returnPos;
@@ -608,12 +624,15 @@ namespace Dijitle.Metra.API.Services
 
             var p = new Position()
             {
-                Id = t.trip_id + "-Estimate" ,
+                Id = t.trip_id ,
                 TripId = t.trip_id,
                 Direction = t.direction_id == Trips.Direction.Inbound,
                 Label = t.trip_id.Contains("_") ? Regex.Match(t.trip_id.Split('_')[1], @"\d+$").Value : t.trip_id,
-                Latitude = lat,
-                Longitude = lon
+                EstimatedCoordinates = new PositionCoordinates
+                {
+                    Latitude = lat,
+                    Longitude = lon
+                }
             };
 
             return p;

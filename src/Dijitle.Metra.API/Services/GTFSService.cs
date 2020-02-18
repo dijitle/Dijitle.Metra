@@ -60,8 +60,11 @@ namespace Dijitle.Metra.API.Services
                     TripId = p.Vehicle.Trip.TripId,
                     Direction = Data.Trips[p.Vehicle.Trip.TripId].direction_id == Trips.Direction.Inbound,
                     Label = p.Vehicle.VehicleVehicle.Label,
-                    Latitude = p.Vehicle.Position.Latitude,
-                    Longitude = p.Vehicle.Position.Longitude
+                    RealTimeCoordinates = new PositionCoordinates
+                    {
+                        Latitude = p.Vehicle.Position.Latitude,
+                        Longitude = p.Vehicle.Position.Longitude
+                    }
                 };
 
                 TrainsWithGPSGauge.WithLabels(position.Direction ? "in" : "out", Data.Trips[position.TripId].route_id).Inc();

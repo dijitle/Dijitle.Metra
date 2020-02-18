@@ -204,5 +204,17 @@ namespace Dijitle.Metra.API.Controllers
             }
             return Ok(await _metra.GetAllEstimatedPositions());
         }
+
+        [HttpGet()]
+        [Route("Positions/all")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public async Task<ActionResult<IEnumerable<Models.Output.Position>>> GetAllPositions()
+        {
+            if (_gtfs.Data.IsStale)
+            {
+                await _gtfs.RefreshData();
+            }
+            return Ok(await _metra.GetAllEstimatedPositions(true));
+        }
     }
 }

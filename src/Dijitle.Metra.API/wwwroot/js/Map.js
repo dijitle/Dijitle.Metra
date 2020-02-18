@@ -98,7 +98,7 @@ function getAllPositions() {
 
 
             var trainFeature = new ol.Feature({
-                geometry: new ol.geom.Point(ol.proj.transform([Number(d.longitude), Number(d.latitude)], 'EPSG:4326', 'EPSG:3857'))
+                geometry: new ol.geom.Point(ol.proj.transform([Number(d.realTimeCoordinates.longitude), Number(d.realTimeCoordinates.latitude)], 'EPSG:4326', 'EPSG:3857'))
             });
 
             var color = "2772ea";
@@ -140,7 +140,7 @@ function getAllEstimatedPositions() {
 
 
             var trainFeature = new ol.Feature({
-                geometry: new ol.geom.Point(ol.proj.transform([Number(d.longitude), Number(d.latitude)], 'EPSG:4326', 'EPSG:3857'))
+                geometry: new ol.geom.Point(ol.proj.transform([Number(d.estimatedCoordinates.longitude), Number(d.estimatedCoordinates.latitude)], 'EPSG:4326', 'EPSG:3857'))
             });
 
             var color = "aaaaaa";
