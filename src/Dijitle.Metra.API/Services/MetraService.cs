@@ -103,7 +103,7 @@ namespace Dijitle.Metra.API.Services
             trip.OriginStop = trip.RouteStops.FirstOrDefault();
             trip.DestinationStop = trip.RouteStops.LastOrDefault();
 
-            DateTime day = GetCurrentTime();
+            DateTime day = CurrentTime;
 
             foreach (StopTimes st in t.StopTimes.OrderBy(st => st.stop_sequence))
             {
@@ -129,7 +129,7 @@ namespace Dijitle.Metra.API.Services
                 await _gtfs.RefreshData();
             }
 
-            DateTime selectedDate = GetCurrentTime();
+            DateTime selectedDate = CurrentTime;
             
             var day = _gtfs.Data.GetCurrentCalendars(selectedDate);
             
@@ -150,10 +150,8 @@ namespace Dijitle.Metra.API.Services
             return tripsEnroute.Select(t => t.trip_id);
         }
 
-        public async Task<IEnumerable<Trip>> GetTrips(Stops originStop, Stops destinationStop, bool expressOnly)
+        public async Task<IEnumerable<Trip>> GetTrips(Stops originStop, Stops destinationStop, bool expressOnly, DateTime selectedDate)
         {
-            DateTime selectedDate = GetCurrentTime();
-
             List<Trip> trips = new List<Trip>();
 
             if (_gtfs.Data.IsStale)
@@ -496,14 +494,17 @@ namespace Dijitle.Metra.API.Services
             return new DateTime(date.Year, date.Month, date.Day).AddHours(hour).AddMinutes(minute).AddSeconds(second);
         }
 
-        private DateTime GetCurrentTime()
+        public DateTime CurrentTime
         {
-            if (Environment.OSVersion.Platform == PlatformID.Unix)
+            get
             {
-                return TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, TimeZoneInfo.FindSystemTimeZoneById("America/Chicago"));
-            }
+                if (Environment.OSVersion.Platform == PlatformID.Unix)
+                {
+                    return TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, TimeZoneInfo.FindSystemTimeZoneById("America/Chicago"));
+                }
 
-            return TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, TimeZoneInfo.FindSystemTimeZoneById("Central Standard Time"));
+                return TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, TimeZoneInfo.FindSystemTimeZoneById("Central Standard Time"));
+            }
         }
 
         public async Task<IEnumerable<Position>> GetAllEstimatedPositions(bool withRealTime = false)
@@ -561,7 +562,7 @@ namespace Dijitle.Metra.API.Services
 
             double lat = 0d;
             double lon = 0d;
-            var currentTime = GetCurrentTime();
+            var currentTime = CurrentTime;
             var currentStop = t.StopTimes.FirstOrDefault(st => GetTime(currentTime, st.arrival_time) < currentTime.AddSeconds(30) && GetTime(currentTime, st.departure_time) > currentTime.AddSeconds(-30));
             if (currentStop != null)
             {

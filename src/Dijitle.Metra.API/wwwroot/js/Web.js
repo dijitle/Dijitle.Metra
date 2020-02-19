@@ -1,12 +1,12 @@
 ﻿$(document).ready(function() {
-  $('[data-toggle="popover"]').popover();
-  loadURL();
-  loadRoutes();
-  startTime();
-  setupMap();
-  getPositions();
-  showTrain();
-  getAlerts();
+    $('[data-toggle="popover"]').popover();
+    loadURL();
+    loadRoutes();
+    startTime();
+    setupMap();
+    getPositions();
+    showTrain();
+    getAlerts();
 });
 
 var allStops;
@@ -50,6 +50,10 @@ function loadURL() {
         "/Trips?start=" + start + "&dest=" + end + "&expressOnly=" + express;
     }
   }
+}
+
+function datePicked() {
+    Console.log($('#selectDate').value);
 }
 
 function startTime() {

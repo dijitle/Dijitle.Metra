@@ -24,15 +24,22 @@ namespace Dijitle.Metra.API.Controllers
         }
 
         [HttpGet()]
-        public async Task<IActionResult> Index(string start = "ROUTE59", string dest = "CUS", bool expressOnly = false)
+        public async Task<IActionResult> Index(string start = "ROUTE59", string dest = "CUS", bool expressOnly = false, string selectedDate = "")
         {
             if(_gtfs.Data.IsStale)
             {
                 await _gtfs.RefreshData();
             }
+
+            DateTime d;
+            if(!DateTime.TryParse(selectedDate, out d))
+            {
+                d = _metra.CurrentTime;
+            }
+
             var tvm = new TimeViewModel()
             {
-                Trips = await _metra.GetTrips(_gtfs.Data.Stops[start], _gtfs.Data.Stops[dest], expressOnly),
+                Trips = await _metra.GetTrips(_gtfs.Data.Stops[start], _gtfs.Data.Stops[dest], expressOnly, d),
                 Start = _gtfs.Data.Stops[start].stop_name,
                 Destination = _gtfs.Data.Stops[dest].stop_name
             };

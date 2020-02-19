@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Dijitle.Metra.API.Services;
 using Dijitle.Metra.Data;
@@ -73,7 +74,8 @@ namespace Dijitle.Metra.API.Controllers
         [Route("Trips")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<ActionResult<IEnumerable<Models.Output.Trip>>> GetTrips(string start = "ROUTE59", string dest = "CUS", bool expressOnly = false)
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<ActionResult<IEnumerable<Models.Output.Trip>>> GetTrips(string start = "ROUTE59", string dest = "CUS", bool expressOnly = false, string date = null)
         {
             if (_gtfs.Data.IsStale)
             {
@@ -89,9 +91,22 @@ namespace Dijitle.Metra.API.Controllers
                 return NotFound($"No stop named '{dest}' was found!");
             }
 
-            return Ok(await _metra.GetTrips(_gtfs.Data.Stops[start], _gtfs.Data.Stops[dest], expressOnly));
+            DateTime inputedDate;
+
+            if (date != null)
+            {
+                if(!DateTime.TryParse(date, out inputedDate))
+                {
+                    return BadRequest($"Date '{date}' is of incorrect format");
+                }
+            }
+            else
+            {
+                inputedDate = _metra.CurrentTime;
+            }
+
+            return Ok(await _metra.GetTrips(_gtfs.Data.Stops[start], _gtfs.Data.Stops[dest], expressOnly, inputedDate));
         }
-        
         [HttpGet()]
         [Route("Trips/Enroute")]
         [ProducesResponseType(StatusCodes.Status200OK)]
