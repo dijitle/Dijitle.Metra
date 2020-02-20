@@ -366,49 +366,51 @@ function getAlerts() {
 
 function getPositions() {
   $.get("api/metra/positions/all", function(data) {
-    data.forEach(function(d) {
-      $("[name='map']").each(function() {
-        if (d.tripId === this.attributes.tripId.value) {
-          this.setAttribute("gpsTrainLat", d.latitude);
-          this.setAttribute("gpsTrainLon", d.longitude);
-          this.setAttribute("gpsTrainDir", d.direction);
-        }
-      });
+      data.forEach(function (d) {
 
-      $("[name='distanceFromStation']").each(function() {
-        if (d.tripId === this.attributes.tripId.value) {
-          var distStopToDest = getDistance(
-              this.attributes.stopLat.value,
-              this.attributes.stopLon.value,
-              this.attributes.destLat.value,
-              this.attributes.destLon.value
-          );
-          var distTrainToStop = getDistance(
-              this.attributes.stopLat.value,
-              this.attributes.stopLon.value,
-              d.realTimeCoordinates.latitude,
-              d.realTimeCoordinates.longitude
-          );
-          var distTrainToDest = getDistance(
-              this.attributes.destLat.value,
-              this.attributes.destLon.value,
-              d.realTimeCoordinates.latitude,
-              d.realTimeCoordinates.longitude
-          );
-
-          if (distStopToDest < distTrainToDest) {
-            if (this.attributes.intable.value === "true") {
-              this.innerHTML =
-                distTrainToStop + "mi";
-            } else {
-              this.innerHTML = "<br />" + distTrainToStop + "mi";
+          if (d.realTimeCoordinates == undefined) { return; }
+          $("[name='map']").each(function() {
+            if (d.tripId === this.attributes.tripId.value) {
+              this.setAttribute("gpsTrainLat", d.latitude);
+              this.setAttribute("gpsTrainLon", d.longitude);
+              this.setAttribute("gpsTrainDir", d.direction);
             }
-          } else {
-            this.innerHTML = "";
-          }
-        }
+          });
+
+          $("[name='distanceFromStation']").each(function() {
+            if (d.tripId === this.attributes.tripId.value) {
+              var distStopToDest = getDistance(
+                  this.attributes.stopLat.value,
+                  this.attributes.stopLon.value,
+                  this.attributes.destLat.value,
+                  this.attributes.destLon.value
+              );
+              var distTrainToStop = getDistance(
+                  this.attributes.stopLat.value,
+                  this.attributes.stopLon.value,
+                  d.realTimeCoordinates.latitude,
+                  d.realTimeCoordinates.longitude
+              );
+              var distTrainToDest = getDistance(
+                  this.attributes.destLat.value,
+                  this.attributes.destLon.value,
+                  d.realTimeCoordinates.latitude,
+                  d.realTimeCoordinates.longitude
+              );
+
+              if (distStopToDest < distTrainToDest) {
+                if (this.attributes.intable.value === "true") {
+                  this.innerHTML =
+                    distTrainToStop + "mi";
+                } else {
+                  this.innerHTML = "<br />" + distTrainToStop + "mi";
+                }
+              } else {
+                this.innerHTML = "";
+              }
+            }
+          });
       });
-    });
   });
 
   setTimeout(getPositions, 30000);

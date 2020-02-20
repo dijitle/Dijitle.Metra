@@ -96,6 +96,7 @@ function getAllPositions() {
     $.get("api/gtfs/positions", function (data) {
         data.forEach(function (d) {
 
+            if (d.realTimeCoordinates == undefined) { return; }
 
             var trainFeature = new ol.Feature({
                 geometry: new ol.geom.Point(ol.proj.transform([Number(d.realTimeCoordinates.longitude), Number(d.realTimeCoordinates.latitude)], 'EPSG:4326', 'EPSG:3857'))
@@ -138,6 +139,7 @@ function getAllEstimatedPositions() {
     $.get("api/metra/EstimatedPositions/all", function (data) {
         data.forEach(function (d) {
 
+            if (d.estimatedCoordinates == undefined) { return; }
 
             var trainFeature = new ol.Feature({
                 geometry: new ol.geom.Point(ol.proj.transform([Number(d.estimatedCoordinates.longitude), Number(d.estimatedCoordinates.latitude)], 'EPSG:4326', 'EPSG:3857'))
