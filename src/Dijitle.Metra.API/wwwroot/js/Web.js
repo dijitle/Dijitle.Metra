@@ -371,9 +371,9 @@ function getPositions() {
           if (d.realTimeCoordinates == undefined) { return; }
           $("[name='map']").each(function() {
             if (d.tripId === this.attributes.tripId.value) {
-              this.setAttribute("gpsTrainLat", d.latitude);
-              this.setAttribute("gpsTrainLon", d.longitude);
-              this.setAttribute("gpsTrainDir", d.direction);
+                this.setAttribute("gpsTrainLat", d.realTimeCoordinates.latitude);
+                this.setAttribute("gpsTrainLon", d.realTimeCoordinates.longitude);
+                this.setAttribute("gpsTrainDir", d.direction);
             }
           });
 
