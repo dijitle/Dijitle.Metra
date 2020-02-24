@@ -491,7 +491,7 @@ namespace Dijitle.Metra.API.Services
             int minute = Convert.ToInt32(matches[0].Groups["minute"].Value);
             int second = Convert.ToInt32(matches[0].Groups["second"].Value);
 
-            return new DateTime(date.Year, date.Month, date.Day).AddHours(hour).AddMinutes(minute).AddSeconds(second);
+            return new DateTime(date.Year, date.Month, date.Day, 0, 0, 0, DateTimeKind.Utc).AddHours(hour).AddMinutes(minute).AddSeconds(second);
         }
 
         public DateTime CurrentTime
