@@ -1,7 +1,9 @@
 ﻿using Microsoft.Extensions.Hosting;
+using Prometheus;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -17,10 +19,17 @@ namespace Dijitle.Metra.API.Services
         private readonly IMetraService _metra;
         private readonly IGTFSService _gtfs;
 
-        public DataRefresher(IMetraService metra, IGTFSService gtfs)
+        private readonly IHttpClientFactory _httpClientFactory;
+
+
+        private static readonly Counter ETDSCoutner = Metrics.CreateCounter("metra_calls_to_etds", 
+            "number of times etds endpoint was called", new CounterConfiguration { LabelNames = new[] { "returnCode" }, SuppressInitialValue = true });
+
+        public DataRefresher(IMetraService metra, IGTFSService gtfs, IHttpClientFactory httpClientFactory)
         {
             _metra = metra;
             _gtfs = gtfs;
+            _httpClientFactory = httpClientFactory;
         }
 
         public Task StartAsync(CancellationToken cancellationToken)
@@ -29,9 +38,17 @@ namespace Dijitle.Metra.API.Services
             _refreshEnrouteTimer = new Timer(RefreshEnroute, null, TimeSpan.FromSeconds(30), TimeSpan.FromMinutes(1));
             _refreshAlertsTimer = new Timer(RefreshAlerts, null, TimeSpan.FromSeconds(45), TimeSpan.FromMinutes(15));
             _refreshGPSTimer = new Timer(RefreshGPS, null, TimeSpan.FromSeconds(45), TimeSpan.FromMinutes(5));
+            _refreshDataTimer = new Timer(RefreshETDS, null, TimeSpan.FromMilliseconds(30330), TimeSpan.FromSeconds(10));
             return Task.CompletedTask;
         }
 
+        private async void RefreshETDS(object state)
+        {
+            HttpClient client = _httpClientFactory.CreateClient("Edwin");
+            var response = await client.GetAsync("/etds/train_to_shapeid_log.php");
+            
+            ETDSCoutner.WithLabels(response.StatusCode.ToString()).Inc();
+        }
         private async void RefreshData(object state)
         {
             if (_gtfs.Data.IsStale)
