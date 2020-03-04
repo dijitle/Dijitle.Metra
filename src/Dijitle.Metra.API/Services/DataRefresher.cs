@@ -38,7 +38,7 @@ namespace Dijitle.Metra.API.Services
             _refreshEnrouteTimer = new Timer(RefreshEnroute, null, TimeSpan.FromSeconds(30), TimeSpan.FromMinutes(1));
             _refreshAlertsTimer = new Timer(RefreshAlerts, null, TimeSpan.FromSeconds(45), TimeSpan.FromMinutes(15));
             _refreshGPSTimer = new Timer(RefreshGPS, null, TimeSpan.FromSeconds(45), TimeSpan.FromMinutes(5));
-            _refreshDataTimer = new Timer(RefreshETDS, null, TimeSpan.FromMilliseconds(30330), TimeSpan.FromSeconds(10));
+            _refreshDataTimer = new Timer(RefreshETDS, null, TimeSpan.FromSeconds(10), TimeSpan.FromSeconds(31));
             return Task.CompletedTask;
         }
 
