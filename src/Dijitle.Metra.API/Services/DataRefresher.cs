@@ -19,26 +19,32 @@ namespace Dijitle.Metra.API.Services
         private readonly IMetraService _metra;
         private readonly IGTFSService _gtfs;
 
+        private readonly IHostEnvironment _env;
         private readonly IHttpClientFactory _httpClientFactory;
 
 
         private static readonly Counter ETDSCoutner = Metrics.CreateCounter("metra_calls_to_etds", 
             "number of times etds endpoint was called", new CounterConfiguration { LabelNames = new[] { "returnCode" }, SuppressInitialValue = true });
 
-        public DataRefresher(IMetraService metra, IGTFSService gtfs, IHttpClientFactory httpClientFactory)
+        public DataRefresher(IMetraService metra, IGTFSService gtfs, IHttpClientFactory httpClientFactory, IHostEnvironment env)
         {
             _metra = metra;
             _gtfs = gtfs;
             _httpClientFactory = httpClientFactory;
+            _env = env;
         }
 
         public Task StartAsync(CancellationToken cancellationToken)
         {
-            _refreshDataTimer = new Timer(RefreshData, null, TimeSpan.FromSeconds(15), TimeSpan.FromHours(1));
-            _refreshEnrouteTimer = new Timer(RefreshEnroute, null, TimeSpan.FromSeconds(30), TimeSpan.FromMinutes(1));
-            _refreshAlertsTimer = new Timer(RefreshAlerts, null, TimeSpan.FromSeconds(45), TimeSpan.FromMinutes(15));
-            _refreshGPSTimer = new Timer(RefreshGPS, null, TimeSpan.FromSeconds(45), TimeSpan.FromMinutes(5));
-            _refreshDataTimer = new Timer(RefreshETDS, null, TimeSpan.FromSeconds(10), TimeSpan.FromSeconds(31));
+            if(_env.IsProduction())
+            {
+                _refreshDataTimer = new Timer(RefreshData, null, TimeSpan.FromSeconds(15), TimeSpan.FromHours(1));
+                _refreshEnrouteTimer = new Timer(RefreshEnroute, null, TimeSpan.FromSeconds(30), TimeSpan.FromMinutes(1));
+                _refreshAlertsTimer = new Timer(RefreshAlerts, null, TimeSpan.FromSeconds(45), TimeSpan.FromMinutes(15));
+                _refreshGPSTimer = new Timer(RefreshGPS, null, TimeSpan.FromSeconds(45), TimeSpan.FromMinutes(5));
+                _refreshDataTimer = new Timer(RefreshETDS, null, TimeSpan.FromSeconds(10), TimeSpan.FromSeconds(31));
+            }
+            
             return Task.CompletedTask;
         }
 
