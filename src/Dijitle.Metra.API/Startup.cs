@@ -3,7 +3,6 @@ using System.Text;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.AspNetCore.Mvc;
 using System.Reflection;
 using System.IO;
 using Dijitle.Metra.API.Services;
@@ -25,15 +24,13 @@ namespace Dijitle.Metra.API
 
         public IConfiguration Configuration { get; }
 
-        // This method gets called by the runtime. Use this method to add services to the container.
-        // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddRazorPages();
             services.AddMvcCore().AddApiExplorer();
             services.AddHttpClient("GTFSClient", client =>
             {
-                client.BaseAddress = new Uri("https://gtfsapi.metrarail.com");
+                client.BaseAddress = new Uri(Configuration["gtfsURL"]);
                 client.DefaultRequestHeaders.Clear();
                 client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", Convert.ToBase64String(Encoding.ASCII.GetBytes($"{Configuration["accesskey"]}:{Configuration["secretkey"]}")));
             })
@@ -45,7 +42,7 @@ namespace Dijitle.Metra.API
 
             services.AddHttpClient("Edwin", client =>
             {
-                client.BaseAddress = new Uri("https://www.edwintrakselis.com");
+                client.BaseAddress = new Uri(Configuration["edwinURL"]);
             });
 
             services.AddSwaggerGen(c =>
@@ -65,8 +62,9 @@ namespace Dijitle.Metra.API
             {
                 c.AddPolicy("AllowOrigin", b =>
                 {
-                    b.WithOrigins("https://www.edwintrakselis.com", "http://localhost", "https://localhost")
-                                  .AllowAnyHeader().AllowAnyMethod();
+                    b.WithOrigins(Configuration.GetSection("CORsURLs").Get<string[]>())
+                     .AllowAnyHeader()
+                     .AllowAnyMethod();
                 });
             });
 
