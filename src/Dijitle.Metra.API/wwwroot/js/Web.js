@@ -378,7 +378,7 @@ function getPositions() {
           });
 
           $("[name='distanceFromStation']").each(function() {
-            if (d.tripId === this.attributes.tripId.value) {
+            if (d.tripId === this.attributes.tripId.value && d.attributes.currentDay) {
               var distStopToDest = getDistance(
                   this.attributes.stopLat.value,
                   this.attributes.stopLon.value,

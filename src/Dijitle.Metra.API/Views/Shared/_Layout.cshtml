@@ -1,4 +1,8 @@
-﻿<!DOCTYPE html>
+﻿
+@using Microsoft.Extensions.Configuration
+@inject IConfiguration Configuration
+
+<!DOCTYPE html>
 <html>
 <head>
     <meta charset="utf-8" />
@@ -98,13 +102,13 @@
     <div class="container body-content">
         @RenderBody()
         <hr />
-        <footer class="d-flex justify-content-between">
-            <span>&copy; @DateTime.Now.Year Dijitle.com</span>
-            <a class="nav-item" href="/api">
+        <footer class="row">
+            <span class="col">&copy; @DateTime.Now.Year Dijitle.com</span>
+            <a class="col text-center nav-item" href="/api">
                 <i class='fas fa-code text-body'></i>
             </a>
-            <span class="text-muted">v1.3.3.7</span>
+            <span class="col text-muted text-right">v @Configuration["APP_VERSION"]</span>
         </footer>
-    </div>    
+    </div>
 </body>
 </html>

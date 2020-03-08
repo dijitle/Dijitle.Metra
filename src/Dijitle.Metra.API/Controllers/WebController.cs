@@ -40,6 +40,10 @@ namespace Dijitle.Metra.API.Controllers
             var tvm = new TimeViewModel()
             {
                 Trips = await _metra.GetTrips(_gtfs.Data.Stops[start], _gtfs.Data.Stops[dest], expressOnly, d),
+                StartID = start,
+                DestID = dest,
+                Express = expressOnly,
+                SelectedDate = d,
                 Start = _gtfs.Data.Stops[start].stop_name,
                 Destination = _gtfs.Data.Stops[dest].stop_name
             };
