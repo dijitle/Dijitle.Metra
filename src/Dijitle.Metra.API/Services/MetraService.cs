@@ -133,9 +133,10 @@ namespace Dijitle.Metra.API.Services
             
             var day = _gtfs.Data.GetCurrentCalendars(selectedDate);
             
-            var tripsEnroute = _gtfs.Data.Trips.Values.Where(t => day.Contains(t.Calendar))
-                                                      .Where(t => GetTime(selectedDate, t.StopTimes.OrderBy(st => st.stop_sequence).First().departure_time) < selectedDate)
-                                                      .Where(t => GetTime(selectedDate, t.StopTimes.OrderBy(st => st.stop_sequence).Last().arrival_time) > selectedDate);
+            var tripsEnroute = _gtfs.Data.Trips.Values
+                .Where(t => day.Contains(t.Calendar))
+                .Where(t => GetTime(selectedDate, t.StopTimes.OrderBy(st => st.stop_sequence).First().departure_time) < selectedDate)
+                .Where(t => GetTime(selectedDate, t.StopTimes.OrderBy(st => st.stop_sequence).Last().arrival_time) > selectedDate);
 
             foreach (var r in _gtfs.Data.Routes)
             {
@@ -152,7 +153,7 @@ namespace Dijitle.Metra.API.Services
 
         public async Task<IEnumerable<Trip>> GetTrips(Stops originStop, Stops destinationStop, bool expressOnly, DateTime selectedDate)
         {
-            List<Trip> trips = new List<Trip>();
+            var trips = new List<Trip>();
 
             if (_gtfs.Data.IsStale)
             {
@@ -163,104 +164,75 @@ namespace Dijitle.Metra.API.Services
 
             if(route == null)
             {
-                return new List<Trip>();
+                return trips;
             }
 
-            Dictionary<DateTime, IEnumerable<Data.Calendar>> days = new Dictionary<DateTime, IEnumerable<Data.Calendar>>();
+            var cal = _gtfs.Data.GetCurrentCalendars(selectedDate);
 
-            if(selectedDate.Hour <= 4)
+            IEnumerable<Trips> ts = route.Trips
+                .Where(t => cal.Contains(t.Calendar))
+                .Where(t => t.StopTimes.Any(st => st.Stop == originStop))
+                .Where(t => t.StopTimes.Any(st => st.Stop == destinationStop))
+                .Where(t => t.StopTimes.Single(st => st.Stop == originStop).stop_sequence < t.StopTimes.Single(st => st.Stop == destinationStop).stop_sequence)
+                .OrderBy(t => t.StopTimes.Single(st => st.Stop == originStop).departure_time);
+
+            foreach (Trips t in ts)
             {
-                days.Add(selectedDate.AddDays(-1), _gtfs.Data.GetCurrentCalendars(selectedDate.AddDays(-1)));
-            }
-
-            days.Add(selectedDate, _gtfs.Data.GetCurrentCalendars(selectedDate));
-
-            if (selectedDate.Hour >= 20)
-            {
-                days.Add(selectedDate.AddDays(1), _gtfs.Data.GetCurrentCalendars(selectedDate.AddDays(1)));
-            }
-
-            foreach (KeyValuePair<DateTime, IEnumerable<Data.Calendar>> day in days)
-            {
-                IEnumerable<Trips> ts = route.Trips.Where(t => day.Value.Contains(t.Calendar))
-                                                   .Where(t => t.StopTimes.Any(st => st.Stop == originStop))
-                                                   .Where(t => t.StopTimes.Any(st => st.Stop == destinationStop))
-                                                   .Where(t => t.StopTimes.Single(st => st.Stop == originStop).stop_sequence < t.StopTimes.Single(st => st.Stop == destinationStop).stop_sequence)
-                                                   .OrderBy(t => t.StopTimes.Single(st => st.Stop == originStop).departure_time);
-                                
-                foreach (Trips t in ts)
-                {
-                    StopTimes originStopTime = t.StopTimes.Single(st => st.Stop == originStop);
-                    StopTimes destinationStopTime = t.StopTimes.Single(st => st.Stop == destinationStop);
+                StopTimes originStopTime = t.StopTimes.Single(st => st.Stop == originStop);
+                StopTimes destinationStopTime = t.StopTimes.Single(st => st.Stop == destinationStop);
                     
-                    IEnumerable<Stop> routeStops = await GetStopsByRoute(route.route_id, t.direction_id == Trips.Direction.Outbound);
+                IEnumerable<Stop> routeStops = await GetStopsByRoute(route.route_id, t.direction_id == Trips.Direction.Outbound);
 
-                    if (t.IsExpress(originStopTime, destinationStopTime) || !expressOnly)
-                    {
-                        Trip trip = new Trip()
-                        {
-                            Id = t.trip_id,
-                            IsExpress = t.IsExpress(originStopTime, destinationStopTime),
-                            Inbound = t.direction_id == Trips.Direction.Inbound,
-                            Route = new Route()
-                            {
-                                Id = route.route_id,
-                                ShortName = route.route_short_name,
-                                LongName = route.route_long_name,
-                                RouteColor = route.route_color,
-                                TextColor = route.route_text_color
-                            },
-                            ShapeId = t.shape_id
-                        };
-
-                        foreach(Stop st in routeStops)
-                        {
-                            trip.RouteStops.Add(st);
-
-                            if(st.Id == destinationStopTime.stop_id)
-                            {
-                                trip.DestinationStop = st;
-                            }
-                            else if(st.Id == originStopTime.stop_id)
-                            {
-                                trip.OriginStop = st;
-                            }
-                        }
-
-                        foreach(StopTimes st in t.StopTimes.OrderBy(st => st.stop_sequence))
-                        {
-                            foreach(Stop s in trip.RouteStops)
-                            {
-                                if(s.Id == st.stop_id)
-                                {
-                                    s.ArrivalTime = GetTime(day.Key, st.arrival_time);
-                                    s.DepartureTime = GetTime(day.Key, st.departure_time);
-                                    trip.TripStops.Add(s);
-                                    break;
-                                }
-                            }
-                        }
-                        trips.Add(trip);
-                    }
-                }
-            }
-
-            List<Trip> currentTrips = new List<Trip>();
-
-            for (int i = 0; i < trips.Count; i++)
-            {
-                if (trips[i].DestinationStop.ArrivalTime > selectedDate)
+                if (t.IsExpress(originStopTime, destinationStopTime) || !expressOnly)
                 {
-                    if (i < 3)
+                    Trip trip = new Trip()
                     {
-                        i = 3;
+                        Id = t.trip_id,
+                        IsExpress = t.IsExpress(originStopTime, destinationStopTime),
+                        Inbound = t.direction_id == Trips.Direction.Inbound,
+                        Route = new Route()
+                        {
+                            Id = route.route_id,
+                            ShortName = route.route_short_name,
+                            LongName = route.route_long_name,
+                            RouteColor = route.route_color,
+                            TextColor = route.route_text_color
+                        },
+                        ShapeId = t.shape_id
+                    };
+
+                    foreach(Stop st in routeStops)
+                    {
+                        trip.RouteStops.Add(st);
+
+                        if(st.Id == destinationStopTime.stop_id)
+                        {
+                            trip.DestinationStop = st;
+                        }
+                        else if(st.Id == originStopTime.stop_id)
+                        {
+                            trip.OriginStop = st;
+                        }
                     }
-                    currentTrips = trips.GetRange(i - 3, trips.Count - (i - 3));
-                    break;
+
+                    foreach(StopTimes st in t.StopTimes.OrderBy(st => st.stop_sequence))
+                    {
+                        foreach(Stop s in trip.RouteStops)
+                        {
+                            if(s.Id == st.stop_id)
+                            {
+                                s.ArrivalTime = GetTime(selectedDate, st.arrival_time);
+                                s.DepartureTime = GetTime(selectedDate, st.departure_time);
+                                trip.TripStops.Add(s);
+                                break;
+                            }
+                        }
+                    }
+                    trips.Add(trip);
                 }
             }
 
-            return currentTrips;
+            return trips;
         }
 
         public async Task<IEnumerable<Stop>> GetStopsByDistance(double lat, double lon, int milesAway)
