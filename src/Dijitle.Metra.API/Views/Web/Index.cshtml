@@ -52,7 +52,7 @@
             <div class="text-muted text-center"><i class='far fa-calendar-alt'></i> @Model.SelectedDate.ToShortDateString()</div>
         }
 
-        if (hasOld && !addedOldDiv)
+        if (nowDate.Date == Model.SelectedDate.Date && hasOld && !addedOldDiv)
         {
 
             addedOldDiv = true;
