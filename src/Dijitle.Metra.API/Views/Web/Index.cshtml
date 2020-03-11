@@ -57,11 +57,11 @@
 
             addedOldDiv = true;
             @:<div class="card" id="old">
-                @:<div class="card-header" data-toggle="collapse" data-target="collapseOld" style="cursor: pointer;">
-                    @:<button>Previous Trips</button>
+                @:<div class="card-header" id="accordion2" data-toggle="collapse" data-target="#collapseOld" style="cursor: pointer;">
+                    @:<div class="text-muted text-center"><i class='far fa-calendar-times'></i> Previous Trips</div>
                 @:</div>
 
-                @:<div id="collapseOld" class="collapse">
+                @:<div id="collapseOld" class="collapse" data-parent="#old">
         }
 
         if (hasOld && addedOldDiv && !addedOldDivEnd && t.DestinationStop.ArrivalTime > nowDate)
