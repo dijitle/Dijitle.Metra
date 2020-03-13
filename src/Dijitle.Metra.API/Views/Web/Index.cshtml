@@ -40,6 +40,26 @@
 
     @foreach (Trip t in Model.Trips)
     {
+        if (nowDate.Date == Model.SelectedDate.Date && hasOld && !addedOldDiv)
+        {
+
+            addedOldDiv = true;
+            @:<div class="card" id="old">
+                @:<div class="card-header" id="accordion2" data-toggle="collapse" data-target="#collapseOld" style="cursor: pointer;">
+                    @:<div class="text-muted text-center"><i class='far fa-calendar-times'></i> Previous Trips</div>
+                @:</div>
+
+
+                @:<div id="collapseOld" class="collapse" data-parent="#old">
+                }
+
+                if (hasOld && addedOldDiv && !addedOldDivEnd && t.DestinationStop.ArrivalTime > nowDate)
+                {
+                    addedOldDivEnd = true;
+                @:</div>
+            @:</div>
+        }
+
         if (nowDate.Date == Model.SelectedDate.Date && t.OriginStop.ArrivalTime > nowDate && !next)
         {
             next = true;
@@ -52,24 +72,6 @@
             <div class="text-muted text-center"><i class='far fa-calendar-alt'></i> @Model.SelectedDate.ToShortDateString()</div>
         }
 
-        if (nowDate.Date == Model.SelectedDate.Date && hasOld && !addedOldDiv)
-        {
-
-            addedOldDiv = true;
-            @:<div class="card" id="old">
-                @:<div class="card-header" id="accordion2" data-toggle="collapse" data-target="#collapseOld" style="cursor: pointer;">
-                    @:<div class="text-muted text-center"><i class='far fa-calendar-times'></i> Previous Trips</div>
-                @:</div>
-
-                @:<div id="collapseOld" class="collapse" data-parent="#old">
-        }
-
-        if (hasOld && addedOldDiv && !addedOldDivEnd && t.DestinationStop.ArrivalTime > nowDate)
-        {
-            addedOldDivEnd = true;
-                @:</div>
-            @:</div>
-        }
 
         <div class="card" id="@t.Id">
             <div class="card-header" data-toggle="collapse" data-target="#@($"collapse{t.Id}{t.OriginStop.ArrivalTime.Date.Day}")" style="cursor: pointer;" onclick="moveMap('map_@t.Id', '@t.ShapeId');">

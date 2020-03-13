@@ -52,10 +52,6 @@ function loadURL() {
   }
 }
 
-function datePicked() {
-    Console.log($('#selectDate').value);
-}
-
 function startTime() {
   var today = new Date();
   var h = today.getHours();
@@ -473,14 +469,25 @@ function loadStopsByLocation(position) {
 
 function switchStops() {
   if (window.location.href.indexOf("?") > -1) {
-    var params = window.location.href.split("?")[1];
+    let params = window.location.href.split("?")[1];
 
-    var oldStart = params.split("&")[0].split("=")[1];
-    var oldDest = params.split("&")[1].split("=")[1];
-    var oldExpress = params.split("&")[2].split("=")[1];
+    let oldStart = params.match(/start=([0-9a-zA-z]+)/)[1];
+    let oldDest = params.match(/dest=([0-9a-zA-z]+)/)[1];
+    let oldExpress = params.match(/expressOnly=([0-9a-zA-z]+)/);
+    let oldDate = params.match(/selectedDate=([0-9/]+)/);
 
-    window.location.href =
-      "?start=" + oldDest + "&dest=" + oldStart + "&expressOnly=" + oldExpress;
+    let newParams = "?start=" + oldDest + "&dest=" + oldStart;
+
+    if (oldExpress != null) {
+      newParams += "&expressOnly=" + oldExpress[1];
+    }
+
+    if (oldDate != null) {
+      newParams += "&selectedDate=" + oldDate[1];
+    }
+
+    window.location.href = newParams
+      
   } else {
     window.location.href =
       window.location.href + "?start=CUS&dest=ROUTE59&expressOnly=false";
