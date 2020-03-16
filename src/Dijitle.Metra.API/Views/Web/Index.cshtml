@@ -2,219 +2,217 @@
 @{
     ViewData["Title"] = $"{Model.Start} - {Model.Destination}";
 }
-
-<div class="row shadow p-3 mb-1 bg-light rounded align-items-center sticky-top" style="top:55px;">
-    <div class="col font-weight-bolder p-0">
+  <div class="container">
+    <div class="row shadow p-3 mb-1 bg-dark text-light rounded align-items-center sticky-top" style="top:55px;">
+      <div class="col font-weight-bolder p-0">
         @Model.Start
-    </div>
-    <div class="col text-center p-0">
+      </div>
+      <div class="col text-center p-0">
         <button class="btn btn-outline-primary align-center" onclick="switchStops()"><i class='fas fa-exchange-alt'></i></button>
+      </div>
+      <div class="col font-weight-bolder text-right p-0">
+        @Model.Destination.Replace("Chicago Union Station", "Union Station")
+      </div>
     </div>
-    <div class="col font-weight-bolder text-right p-0">
-        @Model.Destination
-    </div>
-</div>
 
-
-<div id="accordion">
-    <div style="height:55px"></div>
-    @{
+    <div id="accordion">
+      <div style="height:55px"></div>
+      @{
         DateTime nowDate;
 
         if (Environment.OSVersion.Platform == PlatformID.Unix)
         {
-            nowDate = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, TimeZoneInfo.FindSystemTimeZoneById("America/Chicago"));
+          nowDate = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, TimeZoneInfo.FindSystemTimeZoneById("America/Chicago"));
         }
         else
         {
-            nowDate = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, TimeZoneInfo.FindSystemTimeZoneById("Central Standard Time"));
+          nowDate = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, TimeZoneInfo.FindSystemTimeZoneById("Central Standard Time"));
         }
-    }
+      }
 
 
 
-    @{bool next = false;}
-    @{bool hasOld = Model.Trips.Any(t => t.DestinationStop.ArrivalTime > nowDate);}
-    @{bool addedOldDiv = false;}
-    @{bool addedOldDivEnd = false;}
+      @{bool next = false;}
+      @{bool hasOld = Model.Trips.Any(t => t.DestinationStop.ArrivalTime > nowDate);}
+      @{bool addedOldDiv = false;}
+      @{bool addedOldDivEnd = false;}
 
-    @foreach (Trip t in Model.Trips)
-    {
+      @foreach (Trip t in Model.Trips)
+      {
         if (nowDate.Date == Model.SelectedDate.Date && hasOld && !addedOldDiv)
         {
 
-            addedOldDiv = true;
-            @:<div class="card" id="old">
-                @:<div class="card-header" id="accordion2" data-toggle="collapse" data-target="#collapseOld" style="cursor: pointer;">
-                    @:<div class="text-muted text-center"><i class='far fa-calendar-times'></i> Previous Trips</div>
-                @:</div>
-
-
-                @:<div id="collapseOld" class="collapse" data-parent="#old">
-                }
-
-                if (hasOld && addedOldDiv && !addedOldDivEnd && t.DestinationStop.ArrivalTime > nowDate)
-                {
-                    addedOldDivEnd = true;
-                @:</div>
+          addedOldDiv = true;
+          @:<div class="card bg-dark text-light" id="old">
+            @:<div class="card-header" id="accordion2" data-toggle="collapse" data-target="#collapseOld" style="cursor: pointer;">
+              @:<div class="text-muted text-center"><i class='far fa-calendar-times'></i> Previous Trips</div>
             @:</div>
+
+            @:<div id="collapseOld" class="collapse" data-parent="#old">
+            }
+
+            if (hasOld && addedOldDiv && !addedOldDivEnd && t.DestinationStop.ArrivalTime > nowDate)
+            {
+              addedOldDivEnd = true;
+            @:</div>
+          @:</div>
         }
 
         if (nowDate.Date == Model.SelectedDate.Date && t.OriginStop.ArrivalTime > nowDate && !next)
         {
-            next = true;
+          next = true;
 
-            <div class="text-muted text-center"><i class='fas fa-angle-double-down'></i> NEXT <i class='fas fa-angle-double-down'></i></div>
+          <div class="text-muted text-center"><i class='fas fa-angle-double-down'></i> NEXT <i class='fas fa-angle-double-down'></i></div>
         }
         else if (nowDate.Date != Model.SelectedDate.Date && !next)
         {
-            next = true;
-            <div class="text-muted text-center"><i class='far fa-calendar-alt'></i> @Model.SelectedDate.ToShortDateString()</div>
+          next = true;
+          <div class="text-muted text-center"><i class='far fa-calendar-alt'></i> @Model.SelectedDate.ToShortDateString()</div>
         }
 
 
-        <div class="card" id="@t.Id">
-            <div class="card-header" data-toggle="collapse" data-target="#@($"collapse{t.Id}{t.OriginStop.ArrivalTime.Date.Day}")" style="cursor: pointer;" onclick="moveMap('map_@t.Id', '@t.ShapeId');">
-                <div class="d-flex justify-content-between align-items-center">
-                    <div width="1px">
-                        <div width="1px" class="font-weight-bolder mr-3">
-                            @t.OriginStop.DepartureTime.ToShortTimeString()
-                            <div class="font-weight-lighter" style="font-size:0.67em;">
-                                <span width="1px" name="timeUntil"
-                                      time="@t.OriginStop.DepartureTime"
-                                      timeDuration="-1">
-                                </span>
-                                <span name="distanceFromStation"
-                                      intable="false"
-                                      currentDay="@((nowDate.Date == Model.SelectedDate.Date).ToString())"
-                                      stopLat="@(t.OriginStop.Lat)"
-                                      stopLon="@t.OriginStop.Lon"
-                                      destLat="@(t.RouteStops.Last().Lat)"
-                                      destLon="@t.RouteStops.Last().Lon"
-                                      tripId="@t.Id">
-                                </span>
-                            </div>
-                        </div>
-                    </div>
+        <div class="card bg-dark text-light" id="@t.Id">
+          <div class="card-header" data-toggle="collapse" data-target="#@($"collapse{t.Id}{t.OriginStop.ArrivalTime.Date.Day}")" style="cursor: pointer;" onclick="moveMap('map_@t.Id', '@t.ShapeId');">
+            <div class="d-flex justify-content-between align-items-center">
+              <div width="1px">
+                <div width="1px" class="font-weight-bolder mr-3">
+                  @t.OriginStop.DepartureTime.ToShortTimeString()
+                  <div class="font-weight-lighter" style="font-size:0.67em;">
+                    <span width="1px" name="timeUntil"
+                          time="@t.OriginStop.DepartureTime"
+                          timeDuration="-1">
+                    </span>
+                    <span name="distanceFromStation"
+                          intable="false"
+                          currentDay="@((nowDate.Date == Model.SelectedDate.Date).ToString())"
+                          stopLat="@(t.OriginStop.Lat)"
+                          stopLon="@t.OriginStop.Lon"
+                          destLat="@(t.RouteStops.Last().Lat)"
+                          destLon="@t.RouteStops.Last().Lon"
+                          tripId="@t.Id">
+                    </span>
+                  </div>
+                </div>
+              </div>
 
-                    <div width="1px">
-                        <div width="1px" class="font-weight-bold">
-                            <span class="badge-pill" style="font-size:16px; background-color:#@t.Route.RouteColor; foreground-color:#@t.Route.TextColor">@t.Route.ShortName</span>
-                            <span class="badge badge-secondary" style="width: 42px;">@t.Number</span>
+              <div width="1px">
+                <div width="1px" class="font-weight-bold">
+                  <span class="badge-pill" style="font-size:16px; background-color:#@t.Route.RouteColor; color:#@t.Route.TextColor">@t.Route.ShortName</span>
+                  <span class="badge badge-secondary" style="width: 42px;">@t.Number</span>
 
-                            @if (t.IsExpress)
-                            {
-                                <i class='fas fa-angle-double-right text-success'></i>
-                            }
-                            else
-                            {
-                                <span style="width: 14px; display: inline-block"></span>
-                            }
+                  @if (t.IsExpress)
+                  {
+                    <i class='fas fa-angle-double-right text-success'></i>
+                  }
+                  else
+                  {
+                    <span style="width: 14px; display: inline-block"></span>
+                  }
 
-                            <span name="alertIcon" tripId="@t.Id" class="text-warning">
+                <span name="alertIcon" tripId="@t.Id" class="text-warning">
+                </span>
+                </div>
+              </div>
+              <div width="1px" class="text-right font-weight-bolder">
+                @t.DestinationStop.ArrivalTime.ToShortTimeString()
+
+                <div class="font-weight-lighter" style="font-size:0.67em;">
+                  <span width="1px" name="timeUntil"
+                        time="@t.DestinationStop.ArrivalTime"
+                        timeDuration="@(t.OriginStop.DepartureTime < nowDate ? -1 : t.Minutes)">
+                  </span>
+                  <span name="distanceFromStation"
+                        intable="false"
+                        currentDay="@((nowDate.Date == Model.SelectedDate.Date).ToString())"
+                        stopLat="@(t.DestinationStop.Lat)"
+                        stopLon="@t.DestinationStop.Lon"
+                        destLat="@(t.RouteStops.Last().Lat)"
+                        destLon="@t.RouteStops.Last().Lon"
+                        tripId="@t.Id">
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div id="@($"collapse{t.Id}{t.OriginStop.ArrivalTime.Date.Day}")" class="collapse" data-parent="#accordion">
+            <div class="card-body text-warning">
+              <div name="alertBody" tripId="@t.Id">
+
+              </div>
+
+              <div class="d-flex flex-column">
+                <div>
+                  <table class="table table-borderless table-sm small">
+
+                    @for (int i = 0; i < t.RouteStops.Count; i++)
+                    {
+                      if (t.TripStops.Contains(t.RouteStops[i]))
+                      {
+                        <tr style="@(i == 0 ? "color:green" : (i == t.RouteStops.Count - 1  || t.TripStops.Last() == t.RouteStops[i] ? "color:red" : "color:white"));
+                                          @(t.RouteStops[i] == t.OriginStop || t.RouteStops[i] == t.DestinationStop ? "font-weight: bold" : "font-weight: normal");">
+                          <td width="1px" style="cursor: pointer;" onclick="showStop('@(t.RouteStops[i].Lat)', '@(t.RouteStops[i].Lon)');">
+                            <i name="stopdot" arrive_time="@t.RouteStops[i].ArrivalTime" class="fas fa-circle font-weight-lighter"></i>
+                          </td>
+
+                          <td width="1px">
+                            <span class="mr-3">@t.RouteStops[i].DepartureTime.ToShortTimeString()</span>
+                          </td>
+
+
+                          <td class="text-right " width="1px">
+                            <span name="timeUntilStop" arrive_time="@t.RouteStops[i].ArrivalTime">
                             </span>
-                        </div>
-                    </div>
-                    <div width="1px" class="text-right font-weight-bolder">
-                        @t.DestinationStop.ArrivalTime.ToShortTimeString()
+                          </td>
 
-                        <div class="font-weight-lighter" style="font-size:0.67em;">
-                            <span width="1px" name="timeUntil"
-                                  time="@t.DestinationStop.ArrivalTime"
-                                  timeDuration="@(t.OriginStop.DepartureTime < nowDate ? -1 : t.Minutes)">
-                            </span>
+                          <td class="text-nowrap text-right" width="1px">
                             <span name="distanceFromStation"
-                                  intable="false"
+                                  intable="true"
                                   currentDay="@((nowDate.Date == Model.SelectedDate.Date).ToString())"
-                                  stopLat="@(t.DestinationStop.Lat)"
-                                  stopLon="@t.DestinationStop.Lon"
+                                  stopLat="@(t.RouteStops[i].Lat)"
+                                  stopLon="@t.RouteStops[i].Lon"
                                   destLat="@(t.RouteStops.Last().Lat)"
                                   destLon="@t.RouteStops.Last().Lon"
                                   tripId="@t.Id">
                             </span>
-                        </div>
-                    </div>
+                          </td>
+
+                          <td>
+                            <span class="mx-3 text-nowrap">@t.RouteStops[i].Name.Replace("Chicago Union Station", "Union Station")</span>
+                          </td>
+                        </tr>
+
+                        if (t.TripStops.Last() == t.RouteStops[i])
+                        {
+                          break;
+                        }
+                      }
+                    }
+
+                  </table>
                 </div>
+                <div class="flex-grow-1" name="map" id="map_@t.Id" tripId="@t.Id" gpsTrainLat="" gpsTrainLon="" gpsTrainDir="" style="background-color: lightgray; display: inline-block; height:423px"></div>
+              </div>
+
             </div>
-
-            <div id="@($"collapse{t.Id}{t.OriginStop.ArrivalTime.Date.Day}")" class="collapse" data-parent="#accordion">
-                <div class="card-body text-warning">
-                    <div name="alertBody" tripId="@t.Id">
-
-                    </div>
-
-                    <div class="d-flex flex-column">
-                        <div>
-                            <table class="table table-borderless table-sm small">
-
-                                @for (int i = 0; i < t.RouteStops.Count; i++)
-                                {
-                                    if (t.TripStops.Contains(t.RouteStops[i]))
-                                    {
-                                        <tr style="@(i == 0 ? "color:green" : (i == t.RouteStops.Count - 1  || t.TripStops.Last() == t.RouteStops[i] ? "color:red" : "color:black"));
-                                          @(t.RouteStops[i] == t.OriginStop || t.RouteStops[i] == t.DestinationStop ? "font-weight: bold" : "font-weight: normal");">
-                                            <td width="1px" style="cursor: pointer;" onclick="showStop('@(t.RouteStops[i].Lat)', '@(t.RouteStops[i].Lon)');">
-                                                <i name="stopdot" arrive_time="@t.RouteStops[i].ArrivalTime" class="fas fa-circle font-weight-lighter"></i>
-                                            </td>
-
-                                            <td width="1px">
-                                                <span class="mr-3">@t.RouteStops[i].DepartureTime.ToShortTimeString()</span>
-                                            </td>
-
-
-                                            <td class="text-right " width="1px">
-                                                <span name="timeUntilStop" arrive_time="@t.RouteStops[i].ArrivalTime">
-                                                </span>
-                                            </td>
-
-                                            <td class="text-nowrap text-right" width="1px">
-                                                <span name="distanceFromStation"
-                                                      intable="true"
-                                                      currentDay="@((nowDate.Date == Model.SelectedDate.Date).ToString())"
-                                                      stopLat="@(t.RouteStops[i].Lat)"
-                                                      stopLon="@t.RouteStops[i].Lon"
-                                                      destLat="@(t.RouteStops.Last().Lat)"
-                                                      destLon="@t.RouteStops.Last().Lon"
-                                                      tripId="@t.Id">
-                                                </span>
-                                            </td>
-
-                                            <td>
-                                                <span class="mx-3 text-nowrap">@t.RouteStops[i].Name</span>
-                                            </td>
-                                        </tr>
-
-                                        if (t.TripStops.Last() == t.RouteStops[i])
-                                        {
-                                            break;
-                                        }
-                                    }
-                                }
-
-                            </table>
-                        </div>
-                        <div class="flex-grow-1" name="map" id="map_@t.Id" tripId="@t.Id" gpsTrainLat="" gpsTrainLon="" gpsTrainDir="" style="background-color: lightgray; display: inline-block; height:423px"></div>
-                    </div>
-
-                </div>
-            </div>
+          </div>
         </div>
 
-    }
+      }
 
-    <div class="row p-3 mb-1 bg-light rounded align-items-center">
+      <div class="row p-3 mb-1 bg-dark text-light rounded align-items-center sticky-bottom">
         <div class="col font-weight-bolder p-0">
-            <a href="/trips?start=@Model.StartID&dest=@Model.DestID&expressOnly=@Model.Express&selectedDate=@Model.SelectedDate.AddDays(-1).ToShortDateString()"><i class="fas fa-long-arrow-alt-left"></i></a>
+          <a href="/trips?start=@Model.StartID&dest=@Model.DestID&expressOnly=@Model.Express&selectedDate=@Model.SelectedDate.AddDays(-1).ToShortDateString()"><i class="fas fa-long-arrow-alt-left"></i></a>
         </div>
         <div class="col text-center p-0">
-            <a href="/trips?start=@Model.StartID&dest=@Model.DestID&expressOnly=@Model.Express">Today</a>
+          <a href="/trips?start=@Model.StartID&dest=@Model.DestID&expressOnly=@Model.Express">Today</a>
         </div>
         <div class="col font-weight-bolder text-right p-0">
-            <a href="/trips?start=@Model.StartID&dest=@Model.DestID&expressOnly=@Model.Express&selectedDate=@Model.SelectedDate.AddDays(1).ToShortDateString()"><i class="fas fa-long-arrow-alt-right"></i></a>
+          <a href="/trips?start=@Model.StartID&dest=@Model.DestID&expressOnly=@Model.Express&selectedDate=@Model.SelectedDate.AddDays(1).ToShortDateString()"><i class="fas fa-long-arrow-alt-right"></i></a>
         </div>
+      </div>
     </div>
-
-</div>
+    </div>
 
 <script src="~/js/Web.js" asp-append-version="true"></script>
 <script src="~/js/Map.js" asp-append-version="true"></script>

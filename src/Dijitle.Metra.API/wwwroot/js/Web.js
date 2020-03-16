@@ -338,7 +338,7 @@ function getAlerts() {
     data.forEach(function(d) {
       $("[name='alertIcon']").each(function(i) {
         if (d.affectedIds.indexOf(this.attributes.tripId.value) > -1) {
-          this.innerHTML = '<i class="fas fa-exclamation-triangle"</i>';
+          this.innerHTML = '<i class="fas fa-exclamation-triangle"></i>';
         }
       });
 

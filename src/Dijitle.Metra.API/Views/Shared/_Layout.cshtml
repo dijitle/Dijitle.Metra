@@ -24,7 +24,7 @@
     <link rel="apple-touch-icon" sizes="180x180" href="~/Images/touch-icon-iphone-retina.png">
     <link rel="apple-touch-icon" sizes="167x167" href="~/Images/touch-icon-ipad-retina.png">
 </head>
-<body>
+<body class="d-flex flex-column">
     <nav class="navbar navbar-dark fixed-top" style="background-color: #0052a7">
         <span>
             <a asp-area="" asp-controller="Web" asp-action="Index" class="navbar-brand"><img width="30" height="30" src="~/Images/dijitle.png" style="transform: translateY(-8%); filter: invert(100%);" /> Metra</a>
@@ -99,16 +99,16 @@
             </div>
         </div>
     </nav>
-    <div class="container body-content">
+    <div id="page-content" class="container-fluid body-content">
         @RenderBody()
         <hr />
-        <footer class="row">
-            <span class="col">&copy; @DateTime.Now.Year Dijitle.com</span>
-            <a class="col text-center nav-item" href="/api">
-                <i class='fas fa-code text-body'></i>
-            </a>
-            <span class="col text-muted text-right">v @Configuration["APP_VERSION"]</span>
-        </footer>
     </div>
+    <footer id="footer" class="row mx-3">
+    <span class="col">&copy; @DateTime.Now.Year Dijitle.com</span>
+    <a class="col text-center nav-item" href="/api">
+      <i class='fas fa-code text-body'></i>
+    </a>
+    <span class="col text-muted text-right">v @Configuration["APP_VERSION"]</span>
+  </footer>
 </body>
 </html>
