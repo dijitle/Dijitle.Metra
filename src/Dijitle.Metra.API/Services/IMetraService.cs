@@ -23,5 +23,7 @@ namespace Dijitle.Metra.API.Services
         Task<IEnumerable<Models.Output.Calendar>> GetCalendars();
         Task<IEnumerable<Position>> GetAllEstimatedPositions(bool withRealTime = false);
         Task<Position> GetEstimatedPosition(string tripId);
+
+        double GetDistance(double lat1, double lon1, double lat2, double lon2)
     }
 }

@@ -1,17 +1,17 @@
-﻿using System;
-using System.Text;
+﻿using Dijitle.Metra.API.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.DependencyInjection;
-using System.Reflection;
-using System.IO;
-using Dijitle.Metra.API.Services;
-using System.Net.Http;
-using System.Net.Http.Headers;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
 using Prometheus;
-using Microsoft.Extensions.Hosting;
+using System;
+using System.IO;
+using System.Net.Http;
+using System.Net.Http.Headers;
+using System.Reflection;
+using System.Text;
 
 namespace Dijitle.Metra.API
 {
@@ -56,6 +56,7 @@ namespace Dijitle.Metra.API
 
             services.AddSingleton<IMetraService, MetraService>();
             services.AddSingleton<IGTFSService, GTFSService>();
+            services.AddSingleton<IETDSService, ETDSService>();
 
             services.AddHealthChecks();
             services.AddCors(c =>

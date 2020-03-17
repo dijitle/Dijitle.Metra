@@ -67,6 +67,10 @@ namespace Dijitle.Metra.API.Services
                 await _gtfs.RefreshData();
             }
 
+            if (! _gtfs.Data.Trips.ContainsKey(id))
+            {
+                return null;
+            }
             var t = _gtfs.Data.Trips[id];
 
             if (t == null)
@@ -430,7 +434,7 @@ namespace Dijitle.Metra.API.Services
             return calendars;
         }
 
-        private double GetDistance(double lat1, double lon1, double lat2, double lon2)
+        public double GetDistance(double lat1, double lon1, double lat2, double lon2)
         {
             const int EARTH_RADIUS = 3959;
 

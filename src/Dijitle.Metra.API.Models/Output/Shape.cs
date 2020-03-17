@@ -26,5 +26,10 @@ namespace Dijitle.Metra.API.Models.Output
         public double Lon { get; set; }
         [JsonPropertyName("sequence")]
         public int Sequence { get; set; }
+
+        public override string ToString()
+        {
+            return $"{Sequence} - {Lat},{Lon}";
+        }
     }
 }
