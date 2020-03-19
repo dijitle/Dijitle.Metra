@@ -51,9 +51,16 @@ namespace Dijitle.Metra.API.Services
         private async void RefreshETDS(object state)
         {
             HttpClient client = _httpClientFactory.CreateClient("Edwin");
-            var response = await client.GetAsync("/etds/train_to_shapeid_log.php");
-            
-            ETDSCoutner.WithLabels(response.StatusCode.ToString()).Inc();
+            try
+            {
+                var response = await client.GetAsync("/etds/train_to_shapeid_log.php");
+                ETDSCoutner.WithLabels(response.StatusCode.ToString()).Inc();
+            }
+            catch(HttpRequestException e)
+            {
+                Console.Error.WriteLine($"ETDS call failed: {e.Message} {e.StackTrace}");
+                ETDSCoutner.WithLabels(e.Message).Inc();
+            }
         }
         private async void RefreshData(object state)
         {
