@@ -44,8 +44,8 @@ namespace Dijitle.Metra.API.Controllers
                 DestID = dest,
                 Express = expressOnly,
                 SelectedDate = d,
-                Start = _gtfs.Data.Stops[start].stop_name,
-                Destination = _gtfs.Data.Stops[dest].stop_name
+                Start = _gtfs.Data.Stops[start].stop_name.Replace("Chicago Union Station", "Union Station"),
+                Destination = _gtfs.Data.Stops[dest].stop_name.Replace("Chicago Union Station", "Union Station")
             };
 
             return View(tvm);
