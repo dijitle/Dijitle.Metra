@@ -16,7 +16,8 @@ function setupMap() {
 
 
     var streetmapLayer = new ol.layer.Tile({
-        source: new ol.source.OSM()
+      source: new ol.source.OSM({
+        url: "https://{a-c}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}.png"})
     });
 
     myView = new ol.View({
@@ -111,7 +112,7 @@ function getAllPositions() {
             var iconStyle = new ol.style.Style({
                 image: new ol.style.Icon(({
                     anchor: [0.5, 1],
-                    src: "https://cdn.mapmarker.io/api/v1/pin?icon=fa-train&size=75&background=" + color
+                    src: "https://cdn.mapmarker.io/api/v1/pin?icon=fa-train&size=64&background=" + color
                 }))
             });
 
@@ -154,7 +155,7 @@ function getAllEstimatedPositions() {
             var iconStyle = new ol.style.Style({
                 image: new ol.style.Icon(({
                     anchor: [0.5, 1],
-                    src: "https://cdn.mapmarker.io/api/v1/pin?icon=fa-train&size=75&background=" + color
+                    src: "https://cdn.mapmarker.io/api/v1/pin?icon=fa-train&size=64&background=" + color
                 }))
             });
 
@@ -247,7 +248,7 @@ function showStop(lat, lon) {
     var iconStyle = new ol.style.Style({
         image: new ol.style.Icon(({
             anchor: [0.5, 1],
-            src: "https://cdn.mapmarker.io/api/v1/pin?icon=fa-flag&size=75"
+            src: "https://cdn.mapmarker.io/api/v1/pin?icon=fa-flag&size=64"
         }))
     });
 
@@ -293,7 +294,7 @@ function showTrain() {
     var iconStyle = new ol.style.Style({
         image: new ol.style.Icon(({
             anchor: [0.5, 1],
-            src: "https://cdn.mapmarker.io/api/v1/pin?icon=fa-train&size=75&background=" + color
+            src: "https://cdn.mapmarker.io/api/v1/pin?icon=fa-train&size=64&background=" + color
         }))
     });
 
