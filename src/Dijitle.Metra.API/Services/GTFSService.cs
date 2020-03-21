@@ -54,6 +54,10 @@ namespace Dijitle.Metra.API.Services
 
             foreach (Positions p in pos)
             {
+                if (!Data.Trips.ContainsKey(p.Vehicle.Trip.TripId))
+                {
+                    continue;
+                }
                 var position = new Position()
                 {
                     Id = p.Id.ToString(),

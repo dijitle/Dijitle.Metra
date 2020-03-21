@@ -492,7 +492,11 @@ namespace Dijitle.Metra.API.Services
 
             foreach(var t in trips)
             {
-                returnPos.Add(await GetEstimatedPosition(t));
+                var p = await GetEstimatedPosition(t);
+                if(p != null)
+                {
+                    returnPos.Add(p);                    
+                }
             }
 
             if (withRealTime)
@@ -523,6 +527,11 @@ namespace Dijitle.Metra.API.Services
             if (_gtfs.Data.IsStale)
             {
                 await _gtfs.RefreshData();
+            }
+
+            if(!_gtfs.Data.Trips.ContainsKey(tripId))
+            {
+                return null;
             }
 
             var t = _gtfs.Data.Trips[tripId];
