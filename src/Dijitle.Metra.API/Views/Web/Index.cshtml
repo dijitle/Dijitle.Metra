@@ -202,13 +202,13 @@
 
       <div class="row p-3 mb-1 bg-dark text-light rounded align-items-center sticky-bottom">
         <div class="col font-weight-bolder p-0">
-          <a href="/trips?start=@Model.StartID&dest=@Model.DestID&expressOnly=@Model.Express&selectedDate=@Model.SelectedDate.AddDays(-1).ToShortDateString()"><i class="fas fa-long-arrow-alt-left"></i></a>
+          <a href="/trips?start=@Model.StartID&dest=@Model.DestID&selectedDate=@Model.SelectedDate.AddDays(-1).ToShortDateString()"><i class="fas fa-long-arrow-alt-left"></i></a>
         </div>
         <div class="col text-center p-0">
-          <a href="/trips?start=@Model.StartID&dest=@Model.DestID&expressOnly=@Model.Express">Today</a>
+          <a href="/trips?start=@Model.StartID&dest=@Model.DestID">Today</a>
         </div>
         <div class="col font-weight-bolder text-right p-0">
-          <a href="/trips?start=@Model.StartID&dest=@Model.DestID&expressOnly=@Model.Express&selectedDate=@Model.SelectedDate.AddDays(1).ToShortDateString()"><i class="fas fa-long-arrow-alt-right"></i></a>
+          <a href="/trips?start=@Model.StartID&dest=@Model.DestID&selectedDate=@Model.SelectedDate.AddDays(1).ToShortDateString()"><i class="fas fa-long-arrow-alt-right"></i></a>
         </div>
       </div>
     </div>

@@ -24,7 +24,7 @@ namespace Dijitle.Metra.API.Controllers
         }
 
         [HttpGet()]
-        public async Task<IActionResult> Index(string start = "ROUTE59", string dest = "CUS", bool expressOnly = false, string selectedDate = "")
+        public async Task<IActionResult> Index(string start = "ROUTE59", string dest = "CUS", string selectedDate = "")
         {
             if(_gtfs.Data.IsStale)
             {
@@ -39,10 +39,9 @@ namespace Dijitle.Metra.API.Controllers
 
             var tvm = new TimeViewModel()
             {
-                Trips = await _metra.GetTrips(_gtfs.Data.Stops[start], _gtfs.Data.Stops[dest], expressOnly, d),
+                Trips = await _metra.GetTrips(_gtfs.Data.Stops[start], _gtfs.Data.Stops[dest], d),
                 StartID = start,
                 DestID = dest,
-                Express = expressOnly,
                 SelectedDate = d,
                 Start = _gtfs.Data.Stops[start].stop_name.Replace("Chicago Union Station", "Union Station"),
                 Destination = _gtfs.Data.Stops[dest].stop_name.Replace("Chicago Union Station", "Union Station")

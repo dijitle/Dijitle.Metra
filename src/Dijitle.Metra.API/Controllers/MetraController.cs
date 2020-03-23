@@ -75,7 +75,7 @@ namespace Dijitle.Metra.API.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<ActionResult<IEnumerable<Models.Output.Trip>>> GetTrips(string start = "ROUTE59", string dest = "CUS", bool expressOnly = false, string date = null)
+        public async Task<ActionResult<IEnumerable<Models.Output.Trip>>> GetTrips(string start = "ROUTE59", string dest = "CUS", string date = null)
         {
             if (_gtfs.Data.IsStale)
             {
@@ -105,7 +105,7 @@ namespace Dijitle.Metra.API.Controllers
                 inputedDate = _metra.CurrentTime;
             }
 
-            return Ok(await _metra.GetTrips(_gtfs.Data.Stops[start], _gtfs.Data.Stops[dest], expressOnly, inputedDate));
+            return Ok(await _metra.GetTrips(_gtfs.Data.Stops[start], _gtfs.Data.Stops[dest], inputedDate));
         }
         [HttpGet()]
         [Route("Trips/Enroute")]

@@ -13,7 +13,7 @@ namespace Dijitle.Metra.API.Services
         DateTime CurrentTime { get; }
         Task<IEnumerable<Route>> GetRoutes();
         Task<Trip> GetTrip(string id);
-        Task<IEnumerable<Trip>> GetTrips(Stops origin, Stops destination, bool expressOnly, DateTime selectedDate);
+        Task<IEnumerable<Trip>> GetTrips(Stops origin, Stops destination, DateTime selectedDate);
         Task<IEnumerable<string>> GetTripsEnroute();
         Task<IEnumerable<Stop>> GetStopsByDistance(double lat, double lon, int milesAway);
         Task<IEnumerable<Stop>> GetAllStops();

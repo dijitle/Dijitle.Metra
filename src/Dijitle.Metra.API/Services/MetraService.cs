@@ -151,7 +151,7 @@ namespace Dijitle.Metra.API.Services
             return tripsEnroute.Select(t => t.trip_id);
         }
 
-        public async Task<IEnumerable<Trip>> GetTrips(Stops originStop, Stops destinationStop, bool expressOnly, DateTime selectedDate)
+        public async Task<IEnumerable<Trip>> GetTrips(Stops originStop, Stops destinationStop, DateTime selectedDate)
         {
             var trips = new List<Trip>();
 
@@ -183,53 +183,50 @@ namespace Dijitle.Metra.API.Services
                     
                 IEnumerable<Stop> routeStops = await GetStopsByRoute(route.route_id, t.direction_id == Trips.Direction.Outbound);
 
-                if (t.IsExpress(originStopTime, destinationStopTime) || !expressOnly)
+                Trip trip = new Trip()
                 {
-                    Trip trip = new Trip()
+                    Id = t.trip_id,
+                    IsExpress = t.IsExpress(originStopTime, destinationStopTime),
+                    Inbound = t.direction_id == Trips.Direction.Inbound,
+                    Route = new Route()
                     {
-                        Id = t.trip_id,
-                        IsExpress = t.IsExpress(originStopTime, destinationStopTime),
-                        Inbound = t.direction_id == Trips.Direction.Inbound,
-                        Route = new Route()
-                        {
-                            Id = route.route_id,
-                            ShortName = route.route_short_name,
-                            LongName = route.route_long_name,
-                            RouteColor = route.route_color,
-                            TextColor = route.route_text_color
-                        },
-                        ShapeId = t.shape_id
-                    };
+                        Id = route.route_id,
+                        ShortName = route.route_short_name,
+                        LongName = route.route_long_name,
+                        RouteColor = route.route_color,
+                        TextColor = route.route_text_color
+                    },
+                    ShapeId = t.shape_id
+                };
 
-                    foreach(Stop st in routeStops)
+                foreach(Stop st in routeStops)
+                {
+                    trip.RouteStops.Add(st);
+
+                    if(st.Id == destinationStopTime.stop_id)
                     {
-                        trip.RouteStops.Add(st);
-
-                        if(st.Id == destinationStopTime.stop_id)
-                        {
-                            trip.DestinationStop = st;
-                        }
-                        else if(st.Id == originStopTime.stop_id)
-                        {
-                            trip.OriginStop = st;
-                        }
+                        trip.DestinationStop = st;
                     }
-
-                    foreach(StopTimes st in t.StopTimes.OrderBy(st => st.stop_sequence))
+                    else if(st.Id == originStopTime.stop_id)
                     {
-                        foreach(Stop s in trip.RouteStops)
-                        {
-                            if(s.Id == st.stop_id)
-                            {
-                                s.ArrivalTime = GetTime(selectedDate, st.arrival_time);
-                                s.DepartureTime = GetTime(selectedDate, st.departure_time);
-                                trip.TripStops.Add(s);
-                                break;
-                            }
-                        }
+                        trip.OriginStop = st;
                     }
-                    trips.Add(trip);
                 }
+
+                foreach(StopTimes st in t.StopTimes.OrderBy(st => st.stop_sequence))
+                {
+                    foreach(Stop s in trip.RouteStops)
+                    {
+                        if(s.Id == st.stop_id)
+                        {
+                            s.ArrivalTime = GetTime(selectedDate, st.arrival_time);
+                            s.DepartureTime = GetTime(selectedDate, st.departure_time);
+                            trip.TripStops.Add(s);
+                            break;
+                        }
+                    }
+                }
+                trips.Add(trip);
             }
 
             return trips;
