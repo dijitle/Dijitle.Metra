@@ -48,7 +48,7 @@ namespace Dijitle.Metra.API.Services
 
                 currentSpeed = s.AVG_SPEED_FROM_PREV_SEQ;
 
-                while (!found)
+                while (!found && i < shapes.Points.Count)
                 {
                     var p = shapes.Points[i];
 
@@ -107,7 +107,7 @@ namespace Dijitle.Metra.API.Services
 
         private async  Task<IEnumerable<Speeds>> getData()
         {
-            return JsonConvert.DeserializeObject<IEnumerable<Speeds>>(await File.ReadAllTextAsync("./wwwroot/etds/inbound.json"));
+            return JsonConvert.DeserializeObject<IEnumerable<Speeds>>(await File.ReadAllTextAsync("./wwwroot/etds/data.json"));
         }
     }
 }
