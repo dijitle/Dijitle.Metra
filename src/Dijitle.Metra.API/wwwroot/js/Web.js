@@ -1,12 +1,13 @@
 ﻿$(document).ready(function() {
-    $('[data-toggle="popover"]').popover();
-    loadURL();
-    loadRoutes();
-    startTime();
-    setupMap();
-    getPositions();
-    showTrain();
-    getAlerts();
+  $('[data-toggle="popover"]').popover();
+  loadURL();
+  loadRoutes();
+  loadExpress();
+  startTime();
+  setupMap();
+  getPositions();
+  showTrain();
+  getAlerts();
 });
 
 var allStops;
@@ -37,17 +38,16 @@ function loadURL() {
   if (window.location.href.indexOf("?") === -1) {
     var start = getCookie("stopsFrom");
     var end = getCookie("stopsTo");
-    var express = getCookie("express");
 
-    if (start === "" || end === "" || express === "") {
+    if (start === "" || end === "") {
       window.history.pushState(
         "",
         "",
-        "/Trips?start=ROUTE59&dest=CUS&expressOnly=false"
+        "/Trips?start=ROUTE59&dest=CUS"
       );
     } else {
       window.location.href =
-        "/Trips?start=" + start + "&dest=" + end + "&expressOnly=" + express;
+        "/Trips?start=" + start + "&dest=" + end;
     }
   }
 }
@@ -175,12 +175,11 @@ function checkTime(i) {
 function getTimes() {
   var from = $("#stopsFrom option:selected").val();
   var to = $("#stopsTo option:selected").val();
-  var express = $("#expressOnly").is(":checked");
 
   save();
 
   window.location.href =
-    "?start=" + from + "&dest=" + to + "&expressOnly=" + express;
+    "?start=" + from + "&dest=" + to;
 }
 
 function loadRoutes() {
@@ -188,11 +187,6 @@ function loadRoutes() {
   var expressCheck = $("#expressOnly");
 
   var cookieRoutes = getCookie("routes");
-
-  expressCheck.prop(
-    "checked",
-    window.location.href.indexOf("expressOnly=true") > -1
-  );
 
   routeComboBox.empty().append(new Option("All Routes", "-1", true, false));
 
@@ -277,11 +271,29 @@ function loadHistory() {
     if (h.length > 0) {
       var from = allStops.find(s => s.id === h.split("-")[0]);
       var to = allStops.find(s => s.id === h.split("-")[1]);
-      var express = h.endsWith("-X") ? " Express" : "";
 
       historyComboBox.append(
-        new Option(from.name + " to " + to.name + express, h, false, false)
+        new Option(from.name + " to " + to.name, h, false, false)
       );
+    }
+  });
+}
+
+function loadExpress() {
+  $("#expressOnly").prop("checked", getCookie("express") === "true");
+
+  expressChanged();
+}
+
+function expressChanged() {
+  let expressOnly = $("#expressOnly").is(":checked");
+
+
+  $.each($("[name='trip']"), function () {
+    if ($(this).attr("express") !== undefined || !expressOnly) {
+      $(this).show();
+    } else {
+      $(this).hide();
     }
   });
 }
@@ -291,18 +303,16 @@ function goToHistory() {
 
   var from = hist.split("-")[0];
   var to = hist.split("-")[1];
-  var express = hist.endsWith("-X");
 
   window.location.href =
-    "?start=" + from + "&dest=" + to + "&expressOnly=" + express;
+    "?start=" + from + "&dest=" + to;
 }
 
 function save() {
   saveCombo("routes");
   saveCombo("stopsFrom");
   saveCombo("stopsTo");
-
-  saveExpress();
+  
   saveHistory();
 }
 
@@ -319,8 +329,7 @@ function saveHistory() {
   var item =
     $("#stopsFrom option:selected").val() +
     "-" +
-    $("#stopsTo option:selected").val() +
-    ($("#expressOnly").is(":checked") ? "-X" : "");
+    $("#stopsTo option:selected").val()
 
   if (!hist.includes(item)) {
     hist = item + "," + hist;
@@ -423,11 +432,11 @@ function getDistance(lat1, lon1, lat2, lon2) {
   var a =
     Math.sin(deltaLatRadians / 2) * Math.sin(deltaLatRadians / 2) +
     Math.cos(startLatRadians) *
-      Math.cos(destLatRadians) *
-      Math.sin(detlaLonRadians / 2) *
-      Math.sin(detlaLonRadians / 2);
+    Math.cos(destLatRadians) *
+    Math.sin(detlaLonRadians / 2) *
+    Math.sin(detlaLonRadians / 2);
 
-  var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
   return Math.round(EARTH_RADIUS * c * 100) / 100;
 }
 
@@ -473,23 +482,17 @@ function switchStops() {
 
     let oldStart = params.match(/start=([0-9a-zA-z]+)/)[1];
     let oldDest = params.match(/dest=([0-9a-zA-z]+)/)[1];
-    let oldExpress = params.match(/expressOnly=([0-9a-zA-z]+)/);
     let oldDate = params.match(/selectedDate=([0-9/]+)/);
 
     let newParams = "?start=" + oldDest + "&dest=" + oldStart;
-
-    if (oldExpress != null) {
-      newParams += "&expressOnly=" + oldExpress[1];
-    }
 
     if (oldDate != null) {
       newParams += "&selectedDate=" + oldDate[1];
     }
 
     window.location.href = newParams
-      
   } else {
     window.location.href =
-      window.location.href + "?start=CUS&dest=ROUTE59&expressOnly=false";
+      window.location.href + "?start=CUS&dest=ROUTE59";
   }
 }

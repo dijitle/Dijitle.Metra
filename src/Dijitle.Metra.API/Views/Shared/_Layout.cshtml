@@ -25,80 +25,71 @@
     <link rel="apple-touch-icon" sizes="167x167" href="~/Images/touch-icon-ipad-retina.png">
 </head>
 <body class="d-flex flex-column">
-    <nav class="navbar navbar-dark fixed-top" style="background-color: #0052a7">
-        <span>
-            <a asp-area="" asp-controller="Web" asp-action="Index" class="navbar-brand"><img width="30" height="30" src="~/Images/dijitle.png" style="transform: translateY(-8%); filter: invert(100%);" /> Metra</a>
+  <nav class="navbar navbar-dark fixed-top" style="background-color: #0052a7">
+    <span>
+      <a asp-area="" asp-controller="Web" asp-action="Index" class="navbar-brand"><img width="30" height="30" src="~/Images/dijitle.png" style="transform: translateY(-8%); filter: invert(100%);" /> Metra</a>
 
-            <a class="nav-item" @(ViewContext.RouteData.Values["Action"].ToString() == "Index" ? "" : "hidden") href="/Map">
-                <i class='fas fa-map-marked-alt text-white'></i>
-            </a>
-        </span>
+      <a class="nav-item" @(ViewContext.RouteData.Values["Action"].ToString() == "Index" ? "" : "hidden") href="/Map">
+        <i class='fas fa-map-marked-alt text-white'></i>
+      </a>
+    </span>
 
-        <span id="clock" class="navbar-brand" style="position:absolute; left:50%; top:8px; transform: translateX(-50%);"></span>
+    <span id="clock" class="navbar-brand" style="position:absolute; left:50%; top:8px; transform: translateX(-50%);"></span>
+    
+    <button class="navbar-toggler bg-success" type="button" data-toggle="collapse" data-target="#collapsibleNavbar" @(ViewContext.RouteData.Values["Action"].ToString() == "Index" ? "" : "hidden")>
+      <i class='fas fa-search-location text-white'></i>
+    </button>
 
-        <button class="navbar-toggler bg-success" type="button" data-toggle="collapse" data-target="#collapsibleNavbar" @(ViewContext.RouteData.Values["Action"].ToString() == "Index" ? "" : "hidden")>
-            <i class='fas fa-search-location text-white'></i>
-        </button>
+    <div class="collapse navbar-collapse" id="collapsibleNavbar">
 
-        <div class="collapse navbar-collapse" id="collapsibleNavbar">
+      <div class="input-group my-3">
 
-            <div class="input-group my-3">
-
-                <div class="input-group-prepend mp-3">
-                    <span class="input-group-text fas fa-route" style="font-size:24px; width:48px;"></span>
-                </div>
-                <select id="routes" class="custom-select" onchange="loadStops();">
-                    <option selected>All Routes</option>
-                </select>
-            </div>
-
-            <div class="input-group mb-3">
-
-                <div class="input-group-prepend">
-                    <span class="input-group-text fas fa-home" style="font-size:24px; width:48px;"></span>
-                </div>
-                <select id="stopsFrom" class="custom-select">
-                    <option selected hidden value="ROUTE59">Choose a origin stop...</option>
-                </select>
-
-                <div class="input-group-append">
-                    <button class="btn btn-primary" type="button" onclick="getLocation()"><i class='fas fas fa-location-arrow'></i></button>
-                </div>
-            </div>
-
-            <div class="input-group mb-3">
-
-                <div class="input-group-prepend">
-                    <span class="input-group-text fas fa-building" style="font-size:24px; width:48px;"></span>
-                </div>
-                <select id="stopsTo" class="custom-select">
-                    <option selected hidden value="CUS">Choose a destination stop...</option>
-                </select>
-            </div>
-
-            <div class="input-group mb-3">
-
-                <div class="input-group-prepend">
-                    <span class="input-group-text fas fa-history" style="font-size:24px; width:48px;"></span>
-                </div>
-                <select id="history" class="custom-select" onchange="goToHistory();">
-                    <option selected hidden value="ROUTE59-CUS-X">Choose a previous search...</option>
-                </select>
-            </div>
-
-            <div class="mb-3 d-flex">
-                <span class="navbar-text font-weight-bolder align-self-start pt-1" style="margin-right:5px;">Express Only</span>
-
-
-                <label class="switch">
-                    <input id="expressOnly" type="checkbox" />
-                    <span class="slider round"></span>
-                </label>
-
-                <button class="btn btn-success ml-auto" type="button" onclick="getTimes();">Search...</button>
-            </div>
+        <div class="input-group-prepend mp-3">
+          <span class="input-group-text fas fa-route" style="font-size:24px; width:48px;"></span>
         </div>
-    </nav>
+        <select id="routes" class="custom-select" onchange="loadStops();">
+          <option selected>All Routes</option>
+        </select>
+      </div>
+
+      <div class="input-group mb-3">
+
+        <div class="input-group-prepend">
+          <span class="input-group-text fas fa-home" style="font-size:24px; width:48px;"></span>
+        </div>
+        <select id="stopsFrom" class="custom-select">
+          <option selected hidden value="ROUTE59">Choose a origin stop...</option>
+        </select>
+
+        <div class="input-group-append">
+          <button class="btn btn-primary" type="button" onclick="getLocation()"><i class='fas fas fa-location-arrow'></i></button>
+        </div>
+      </div>
+
+      <div class="input-group mb-3">
+
+        <div class="input-group-prepend">
+          <span class="input-group-text fas fa-building" style="font-size:24px; width:48px;"></span>
+        </div>
+        <select id="stopsTo" class="custom-select">
+          <option selected hidden value="CUS">Choose a destination stop...</option>
+        </select>
+      </div>
+
+      <div class="input-group mb-3">
+
+        <div class="input-group-prepend">
+          <span class="input-group-text fas fa-history" style="font-size:24px; width:48px;"></span>
+        </div>
+        <select id="history" class="custom-select" onchange="goToHistory();">
+          <option selected hidden value="ROUTE59-CUS-X">Choose a previous search...</option>
+        </select>
+      </div>
+
+      <button class="btn btn-success btn-block" type="button" onclick="getTimes();">Search...</button>
+
+    </div>
+  </nav>
     <div id="page-content" class="container-fluid body-content">
         @RenderBody()
         <hr />
