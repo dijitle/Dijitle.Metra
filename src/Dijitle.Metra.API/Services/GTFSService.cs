@@ -60,7 +60,7 @@ namespace Dijitle.Metra.API.Services
                 }
                 var position = new Position()
                 {
-                    Id = p.Id.ToString(),
+                    Id = p.Id,
                     TripId = p.Vehicle.Trip.TripId,
                     Direction = Data.Trips[p.Vehicle.Trip.TripId].direction_id == Trips.Direction.Inbound,
                     Label = p.Vehicle.VehicleVehicle.Label,
