@@ -6,7 +6,7 @@ namespace Dijitle.Metra.Data
     public class Positions
     {
         [JsonProperty("id")]
-        public int Id { get; set; }
+        public string Id { get; set; }
 
         [JsonProperty("is_deleted")]
         public bool IsDeleted { get; set; }
@@ -89,7 +89,7 @@ namespace Dijitle.Metra.Data
     public class VehicleVehicle
     {
         [JsonProperty("id")]
-        public int Id { get; set; }
+        public string Id { get; set; }
 
         [JsonProperty("label")]
         public string Label { get; set; }
