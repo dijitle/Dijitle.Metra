@@ -98,3 +98,8 @@ input:checked + .slider:before {
 .element {
     -ms-overflow-style: none;
 }
+
+.card-header {
+  background-color: rgba(0,0,0,.5);
+  border: 1px solid rgba(69,69,69,1);
+}

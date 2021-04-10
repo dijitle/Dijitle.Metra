@@ -16,18 +16,8 @@
       </div>
     </div>
 
-    
-
-
     <div id="accordion">
       <div style="height:59px"></div>
-      <div>
-        <label class="switch">
-          <input id="expressOnly" type="checkbox" onchange="expressChanged();saveExpress();" />
-          <span class="slider round"></span>
-        </label>
-        <span class="navbar-text font-weight-bolder align-self-start pt-1">Express Only</span>
-      </div>
 
       @{
         DateTime nowDate;
@@ -42,12 +32,32 @@
         }
       }
 
+      <div class="d-flex align-self-center justify-content-between">
+        <div class="d-flex flex-nowrap align-self-center">
+          <span class="text-white font-weight-bolder align-self-start pr-1">All</span>
+          <label class="switch">
+            <input id="expressOnly" type="checkbox" onchange="expressChanged();saveExpress();" />
+            <span class="slider round"></span>
+          </label>
+          <span class="text-white font-weight-bolder align-self-start pl-1">Express</span>
+        </div>
+
+        <div class="text-white">
+          <i class='far fa-calendar-alt'></i> @Model.SelectedDate.ToShortDateString()
+          @(nowDate.Date == Model.SelectedDate.Date ? " (Today)"
+      : nowDate.Date.AddDays(1) == Model.SelectedDate.Date ? " (Tomorrow)"
+      : nowDate.Date.AddDays(-1) == Model.SelectedDate.Date ? " (Yesterday)" 
+      : $"({Model.SelectedDate.Date.DayOfWeek})")
+        </div>
+      </div>      
 
 
       @{bool next = false;}
       @{bool hasOld = Model.Trips.Any(t => t.DestinationStop.ArrivalTime > nowDate);}
       @{bool addedOldDiv = false;}
       @{bool addedOldDivEnd = false;}
+
+
 
       @foreach (Trip t in Model.Trips)
       {
@@ -59,6 +69,12 @@
             @:<div class="card-header" id="accordion2" data-toggle="collapse" data-target="#collapseOld" style="cursor: pointer;">
               @:<div class="text-muted text-center"><i class='far fa-calendar-times'></i> Previous Trips</div>
             @:</div>
+
+
+
+
+
+
 
 
             @:<div id="collapseOld" class="collapse" data-parent="#old">
@@ -80,7 +96,6 @@
         else if (nowDate.Date != Model.SelectedDate.Date && !next)
         {
           next = true;
-          <div class="text-muted text-center"><i class='far fa-calendar-alt'></i> @Model.SelectedDate.ToShortDateString()</div>
         }
 
 
@@ -154,7 +169,7 @@
 
               </div>
 
-              <div class="d-flex flex-column">
+              <div class="d-flex flex-sm-row flex-column">
                 <div>
                   <table class="table table-borderless table-sm small">
 
