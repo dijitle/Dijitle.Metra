@@ -44,7 +44,8 @@ namespace Dijitle.Metra.API.Controllers
                 DestID = dest,
                 SelectedDate = d,
                 Start = _gtfs.Data.Stops[start].stop_name.Replace("Chicago Union Station", "Union Station"),
-                Destination = _gtfs.Data.Stops[dest].stop_name.Replace("Chicago Union Station", "Union Station")
+                Destination = _gtfs.Data.Stops[dest].stop_name.Replace("Chicago Union Station", "Union Station"),
+                Price = (await _metra.GetFare(_gtfs.Data.Stops[start].zone_id, _gtfs.Data.Stops[dest].zone_id)).Price
             };
 
             return View(tvm);

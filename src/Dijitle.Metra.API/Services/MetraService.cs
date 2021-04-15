@@ -60,6 +60,52 @@ namespace Dijitle.Metra.API.Services
             return routes;
         }
 
+        public async Task<Fare> GetFare(string origin, string destination)
+        {
+            if (_gtfs.Data.IsStale)
+            {
+                await _gtfs.RefreshData();
+            }
+
+            var fare = _gtfs.Data.FareRules.SingleOrDefault(f => f.origin_id == origin && f.destination_id == destination);
+
+            if(fare != null)
+            {
+                return new Fare()
+                {
+                    Id = fare.fare_id,
+                    Origin = fare.origin_id,
+                    Destination = fare.destination_id,
+                    Price = fare.Fare.price
+                };
+            }
+
+            return null;
+        }
+
+        public async Task<IEnumerable<Fare>> GetFares()
+        {
+            if (_gtfs.Data.IsStale)
+            {
+                await _gtfs.RefreshData();
+            }
+
+            var fares = new List<Fare>();
+
+            foreach(var fare in _gtfs.Data.FareRules)
+            {
+                fares.Add(new Fare()
+                {
+                    Id = fare.fare_id,
+                    Origin = fare.origin_id,
+                    Destination = fare.destination_id,
+                    Price = fare.Fare.price
+                });
+            }
+
+            return fares;
+        }
+
         public async Task<Trip> GetTrip(string id)
         {
             if (_gtfs.Data.IsStale)
@@ -249,7 +295,8 @@ namespace Dijitle.Metra.API.Services
                     Name = s.stop_name,
                     Lat = s.stop_lat,
                     Lon = s.stop_lon,
-                    DistanceAway = GetDistance(lat, lon, s.stop_lat, s.stop_lon)
+                    DistanceAway = GetDistance(lat, lon, s.stop_lat, s.stop_lon),
+                    Zone = s.zone_id
                 });
             }
 
@@ -274,7 +321,8 @@ namespace Dijitle.Metra.API.Services
                     Lat = s.stop_lat,
                     Lon = s.stop_lon,
                     DistanceAway = GetDistance(41.882077d, -87.627807d, s.stop_lat, s.stop_lon),
-                    Routes = s.Routes.Select(r => r.route_id)
+                    Routes = s.Routes.Select(r => r.route_id),
+                    Zone = s.zone_id
                 });
             }
 
@@ -298,7 +346,8 @@ namespace Dijitle.Metra.API.Services
                     Name = s.stop_name,
                     Lat = s.stop_lat,
                     Lon = s.stop_lon,
-                    DistanceAway = GetDistance(41.882077d, -87.627807d, s.stop_lat, s.stop_lon)
+                    DistanceAway = GetDistance(41.882077d, -87.627807d, s.stop_lat, s.stop_lon),
+                    Zone = s.zone_id
                 });
             }
 

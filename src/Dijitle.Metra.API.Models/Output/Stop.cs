@@ -29,5 +29,8 @@ namespace Dijitle.Metra.API.Models.Output
 
         [JsonPropertyName("routes")]
         public IEnumerable<string> Routes { get; set; }
-    }
+
+        [JsonPropertyName("zone")]
+        public string Zone { get; set; }
+  }
 }

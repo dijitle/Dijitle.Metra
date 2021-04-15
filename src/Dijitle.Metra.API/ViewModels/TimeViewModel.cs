@@ -14,5 +14,6 @@ namespace Dijitle.Metra.API.ViewModels
         public string DestID { get; set; }
         public DateTime SelectedDate{ get; set; }
         public IEnumerable<Trip> Trips { get; set; }
+        public decimal Price { get; set; }
     }
 }

@@ -12,6 +12,8 @@ namespace Dijitle.Metra.API.Services
     {
         DateTime CurrentTime { get; }
         Task<IEnumerable<Route>> GetRoutes();
+        Task<Fare> GetFare(string origin, string destination);
+        Task<IEnumerable<Fare>> GetFares();
         Task<Trip> GetTrip(string id);
         Task<IEnumerable<Trip>> GetTrips(Stops origin, Stops destination, DateTime selectedDate);
         Task<IEnumerable<string>> GetTripsEnroute();

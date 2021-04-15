@@ -32,24 +32,30 @@
         }
       }
 
-      <div class="d-flex align-self-center justify-content-between">
-        <div class="d-flex flex-nowrap align-self-center">
-          <span class="text-white font-weight-bolder align-self-start pr-1">All</span>
-          <label class="switch">
-            <input id="expressOnly" type="checkbox" onchange="expressChanged();saveExpress();" />
-            <span class="slider round"></span>
-          </label>
-          <span class="text-white font-weight-bolder align-self-start pl-1">Express</span>
+    <div class="d-flex align-self-center justify-content-between">
+        <div class="d-flex flex-nowrap align-self-center w-50">
+            <span class="text-white font-weight-bolder align-self-start pr-1">All</span>
+            <label class="switch">
+                <input id="expressOnly" type="checkbox" onchange="expressChanged();saveExpress();" />
+                <span class="slider round"></span>
+            </label>
+            <span class="text-white font-weight-bolder align-self-start pl-1">Express</span>
         </div>
 
-        <div class="text-white">
-          <i class='far fa-calendar-alt'></i> @Model.SelectedDate.ToShortDateString()
-          @(nowDate.Date == Model.SelectedDate.Date ? " (Today)"
+        <div class="text-success font-weight-bolder">
+            $@Model.Price
+        </div>
+
+        <div class="text-white text-right w-50">
+            <i class='far fa-calendar-alt'></i> @Model.SelectedDate.ToShortDateString()
+            @(nowDate.Date == Model.SelectedDate.Date ? " (Today)"
       : nowDate.Date.AddDays(1) == Model.SelectedDate.Date ? " (Tomorrow)"
-      : nowDate.Date.AddDays(-1) == Model.SelectedDate.Date ? " (Yesterday)" 
+      : nowDate.Date.AddDays(-1) == Model.SelectedDate.Date ? " (Yesterday)"
       : $"({Model.SelectedDate.Date.DayOfWeek})")
         </div>
-      </div>      
+
+
+    </div>      
 
 
       @{bool next = false;}

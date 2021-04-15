@@ -33,6 +33,50 @@ namespace Dijitle.Metra.API.Controllers
         }
 
         [HttpGet()]
+        [Route("Fare")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<ActionResult<Models.Output.Fare>> GetFare(string start = "ROUTE59", string dest = "CUS")
+        {
+            if (_gtfs.Data.IsStale)
+            {
+                await _gtfs.RefreshData();
+            }
+            if (!_gtfs.Data.Stops.ContainsKey(start))
+            {
+                return NotFound($"No stop named '{start}' was found!");
+            }
+
+            if (!_gtfs.Data.Stops.ContainsKey(dest))
+            {
+                return NotFound($"No stop named '{dest}' was found!");
+            }
+
+            var fare = await _metra.GetFare(_gtfs.Data.Stops[start].zone_id, _gtfs.Data.Stops[dest].zone_id);
+
+            if(fare != null)
+            {
+                return Ok(fare);
+            }
+
+            return NotFound($"No fare between '{start}' and '{dest}' was found!");
+        }
+
+        [HttpGet()]
+        [Route("Fares")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public async Task<ActionResult<Models.Output.Fare>> GetFares()
+        {
+            if (_gtfs.Data.IsStale)
+            {
+                await _gtfs.RefreshData();
+            }
+
+            return Ok(await _metra.GetFares());
+        }
+
+        [HttpGet()]
         [Route("ShapesByRoute")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -107,6 +151,7 @@ namespace Dijitle.Metra.API.Controllers
 
             return Ok(await _metra.GetTrips(_gtfs.Data.Stops[start], _gtfs.Data.Stops[dest], inputedDate));
         }
+
         [HttpGet()]
         [Route("Trips/Enroute")]
         [ProducesResponseType(StatusCodes.Status200OK)]
