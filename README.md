@@ -1,6 +1,5 @@
 # Dijitle Metra
 
-[![Build Status](https://drone.dijitle.dev/api/badges/dijitle/Dijitle.Metra/status.svg)](https://drone.dijitle.dev/dijitle/Dijitle.Metra)
 [![GitHub tag (latest by date)](https://img.shields.io/github/v/tag/dijitle/Dijitle.Metra?label=release)](https://github.com/dijitle/Dijitle.Metra/releases)
 [![Docker Pulls](https://img.shields.io/docker/pulls/dijitle/metra)](https://hub.docker.com/r/dijitle/metra)
 
