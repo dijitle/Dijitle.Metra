@@ -40,11 +40,6 @@ namespace Dijitle.Metra.API
                 AutomaticDecompression = System.Net.DecompressionMethods.GZip
             });
 
-            services.AddHttpClient("Edwin", client =>
-            {
-                client.BaseAddress = new Uri(Configuration["edwinURL"]);
-            });
-
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "Dijitle Metra API", Version = "v1" });
